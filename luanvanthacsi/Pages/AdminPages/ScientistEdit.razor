@@ -1,0 +1,47 @@
+﻿<Form Model="EditModel">
+    <Template style="height:90%">
+        <Row Gutter="16">
+            <AntDesign.Col Span="20">
+                <Text>Mã nhà khoa học:</Text>
+                <Input @bind-Value="@EditModel.Code" Style="text-align: left;" />
+            </AntDesign.Col>
+        </Row>
+        <br />
+        <Row Gutter="16">
+            <AntDesign.Col Span="20">
+                <Text>Tên nhà khoa học:</Text>
+                <Input @bind-Value="@EditModel.Name" Style="text-align: left;" />
+            </AntDesign.Col>
+        </Row>
+        <br />
+        <Row Gutter="16">
+            <AntDesign.Col Span="20">
+                <Text>Email:</Text>
+                <Input @bind-Value="@EditModel.Email" Style="text-align: left;" />
+            </AntDesign.Col>
+        </Row>
+        <br />
+        <Row Gutter="16">
+            <AntDesign.Col Span="20">
+                <Text>Số điện thoại:</Text>
+                <Input @bind-Value="@EditModel.PhoneNumber" Style="text-align: left;" />
+            </AntDesign.Col>
+        </Row>
+        <br />
+        <Row Gutter="16">
+
+        </Row>
+        <br />
+        <br />
+        <br />
+        <Row>
+            <AntDesign.Col Span="7">
+
+            </AntDesign.Col>
+            <AntDesign.Col Span="12">
+                @*  <Button Type="default" OnClick="Cancel">Cancel</Button>
+                <Button Type="primary" OnClick="UpdateStudent">Submit</Button>*@
+            </AntDesign.Col>
+        </Row>
+    </Template>
+</Form>

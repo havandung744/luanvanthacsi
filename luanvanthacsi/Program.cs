@@ -1,5 +1,6 @@
 using luanvanthacsi.Areas.Identity;
 using luanvanthacsi.Data;
+using luanvanthacsi.Data.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -22,6 +23,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddAntDesign();
+builder.Services.AddSingleton <IScientistService, ScientistService>();
 
 var app = builder.Build();
 
