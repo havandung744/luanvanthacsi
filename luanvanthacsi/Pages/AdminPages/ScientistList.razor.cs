@@ -63,5 +63,12 @@ namespace luanvanthacsi.Pages.AdminPages
             visible = true;
         }
 
+        async Task Save(Scientist data)
+        {
+            var resultAdd = await ScientistService.AddOrUpdateScientist(data);
+            await LoadAsync();
+            visible= false;
+        }
+
     }
 }

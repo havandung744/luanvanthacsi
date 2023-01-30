@@ -6,13 +6,13 @@
 </div>
 <Table DataSource="scientistDatas" PageSize="10" Loading="loading">
     <Column @bind-Field="context.stt" Sortable></Column>
-    <Column @bind-Field="context.Name" Sortable></Column>
     <Column @bind-Field="context.Code"></Column>
+    <Column @bind-Field="context.Name" Sortable></Column>
     <Column @bind-Field="context.Email"></Column>
     <Column @bind-Field="context.PhoneNumber"></Column>
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Nhà khoa học")' OnClose="() => visible = false">
     @*<EditStudent @ref="editStudent" Cancel="() => visible = false" ValueChange="Save"></EditStudent>*@
-    <ScientistEdit @ref="scientistEdit" Cancel="() => visible = false"></ScientistEdit>
+    <ScientistEdit @ref="scientistEdit" Cancel="() => visible = false" ValueChange="Save"></ScientistEdit>
 </Drawer>

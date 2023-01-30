@@ -4,7 +4,7 @@ namespace luanvanthacsi.Data.Entities
 {
     public class Scientist
     {
-        public virtual Guid Id { get; set; }
+        public virtual string Id { get; set; }
         public virtual string? Code { get; set; }
         public virtual string? Name { get; set; }
         public virtual string? Email { get; set; }

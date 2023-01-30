@@ -20,5 +20,18 @@ namespace luanvanthacsi.Pages.AdminPages
             StateHasChanged();
         }
 
+        public void UpdateScientist()
+        {
+            Scientist scientist = new Scientist();
+            scientist.Id = EditModel.Id;
+            scientist.Name= EditModel.Name;
+            scientist.Code= EditModel.Code;
+            scientist.Email= EditModel.Email;
+            scientist.PhoneNumber= EditModel.PhoneNumber;
+            ValueChange.InvokeAsync(scientist);
+
+        }
+
+
     }
 }

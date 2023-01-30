@@ -17,14 +17,14 @@
         <Row Gutter="16">
             <AntDesign.Col Span="20">
                 <Text>Email:</Text>
-                <Input @bind-Value="@EditModel.Email" Style="text-align: left;" />
+                <Input @bind-Value="@EditModel.Email" Style="text-align: left;" type="email" />
             </AntDesign.Col>
         </Row>
         <br />
         <Row Gutter="16">
             <AntDesign.Col Span="20">
                 <Text>Số điện thoại:</Text>
-                <Input @bind-Value="@EditModel.PhoneNumber" Style="text-align: left;" />
+                <Input @bind-Value="@EditModel.PhoneNumber" Style="text-align: left;" Type="number" />
             </AntDesign.Col>
         </Row>
         <br />
@@ -39,8 +39,8 @@
 
             </AntDesign.Col>
             <AntDesign.Col Span="12">
-                @*  <Button Type="default" OnClick="Cancel">Cancel</Button>
-                <Button Type="primary" OnClick="UpdateStudent">Submit</Button>*@
+                <Button Type="default" OnClick="Cancel">Cancel</Button>
+                <Button Type="primary" OnClick="UpdateScientist">Submit</Button>
             </AntDesign.Col>
         </Row>
     </Template>
