@@ -6,5 +6,8 @@ namespace luanvanthacsi.Data.Services
     {
         Task<List<Scientist>> GetAll();
         Task<bool> AddOrUpdateScientist(Scientist scientist);
+        Task<Scientist> GetScientistByIdAsync(string id);
+        Task<bool> DeleteScientistAsync(Scientist scientist);
+
     }
 }

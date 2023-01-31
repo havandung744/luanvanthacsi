@@ -7,6 +7,7 @@ using FluentNHibernate.Cfg.Db;
 using NHibernate.Tool.hbm2ddl;
 using System.Linq;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace luanvanthacsi.Data.Services
 {
@@ -41,6 +42,7 @@ namespace luanvanthacsi.Data.Services
                         if (string.IsNullOrEmpty(scientist.Id))
                         {
                             scientist.Id = Guid.NewGuid().ToString();
+                            scientist.CreateDate = DateTime.Now;
                             await session.SaveAsync(scientist);
                         }
                         else
@@ -59,6 +61,51 @@ namespace luanvanthacsi.Data.Services
                 return result;
             }
 
+        }
+
+        public async Task<Scientist> GetScientistByIdAsync(string id)
+        {
+            Scientist scientist;
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        scientist = await session.GetAsync<Scientist>(id);
+                        return scientist;
+                    }
+                    catch (Exception ex)
+                    {
+                        //await transaction.RollbackAsync();
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> DeleteScientistAsync(Scientist scientist)
+        {
+            bool result = false;
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+
+                        await session.DeleteAsync(scientist);
+                        await transaction.CommitAsync();
+                        result = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw ex;
+                    }
+                }
+            }
+            return result;
         }
     }
 }

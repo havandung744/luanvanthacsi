@@ -1,47 +1,34 @@
-﻿<Form Model="EditModel">
+﻿<Form @ref="form"
+      Model="EditModel" LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed">
     <Template style="height:90%">
-        <Row Gutter="16">
-            <AntDesign.Col Span="20">
-                <Text>Mã nhà khoa học:</Text>
-                <Input @bind-Value="@EditModel.Code" Style="text-align: left;" />
-            </AntDesign.Col>
-        </Row>
-        <br />
-        <Row Gutter="16">
-            <AntDesign.Col Span="20">
-                <Text>Tên nhà khoa học:</Text>
-                <Input @bind-Value="@EditModel.Name" Style="text-align: left;" />
-            </AntDesign.Col>
-        </Row>
-        <br />
-        <Row Gutter="16">
-            <AntDesign.Col Span="20">
-                <Text>Email:</Text>
-                <Input @bind-Value="@EditModel.Email" Style="text-align: left;" type="email" />
-            </AntDesign.Col>
-        </Row>
-        <br />
-        <Row Gutter="16">
-            <AntDesign.Col Span="20">
-                <Text>Số điện thoại:</Text>
-                <Input @bind-Value="@EditModel.PhoneNumber" Style="text-align: left;" Type="number" />
-            </AntDesign.Col>
-        </Row>
-        <br />
-        <Row Gutter="16">
-
-        </Row>
-        <br />
-        <br />
-        <br />
-        <Row>
-            <AntDesign.Col Span="7">
-
-            </AntDesign.Col>
-            <AntDesign.Col Span="12">
-                <Button Type="default" OnClick="Cancel">Cancel</Button>
-                <Button Type="primary" OnClick="UpdateScientist">Submit</Button>
-            </AntDesign.Col>
-        </Row>
+        <FormItem Label="Mã nhà khoa học">
+            <Input @bind-Value="@context.Code" />
+        </FormItem>
+        <FormItem Label="Tên nhà khoa học">
+            <Input @bind-Value="@context.Name" />
+        </FormItem>
+        <FormItem Label="Email">
+            <Input @bind-Value="@context.Email" />
+        </FormItem>
+        <FormItem Label="Số điện thoại">
+            <Input @bind-Value="@context.PhoneNumber" />
+        </FormItem>
+         <FormItem Label="Học hàm">
+            <Input @bind-Value="@context.AcademicRank" />
+        </FormItem>
+         <FormItem Label="Học vị">
+            <Input @bind-Value="@context.Degree" />
+        </FormItem>
+        <FormItem WrapperColOffset="8" WrapperColSpan="16">
+            <Button Type="@ButtonType.Primary" HtmlType="submit">
+                Lưu
+            </Button>
+            <Button OnClick="Reset">
+                Reset
+            </Button>
+        </FormItem>
     </Template>
 </Form>

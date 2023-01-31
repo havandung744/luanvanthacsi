@@ -12,5 +12,6 @@ namespace luanvanthacsi.Data.Entities
         public virtual string? Cv { get; set; }
         public virtual string? AcademicRank { get; set; }
         public virtual string? Degree { get; set; }
+        public virtual DateTime CreateDate { get; set; }
     }
 }

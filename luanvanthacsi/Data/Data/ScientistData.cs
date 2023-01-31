@@ -6,7 +6,7 @@ namespace luanvanthacsi.Data.Data
     {
         [Display(Name = "STT")]
         public int stt;
-        public Guid Id;
+        public string Id;
         [Display(Name = "Mã")]
         public string Code;
         [Display(Name = "Họ tên")]
@@ -15,6 +15,13 @@ namespace luanvanthacsi.Data.Data
         public string PhoneNumber;
         [Display(Name = "Email")]
         public string Email;
+        [Display(Name = "Học hàm")]
+        public string AcademicRank;
+        [Display(Name = "Học vị")]
+        public string Degree;
+        [Display(Name = "Ngày tạo")]
+        public DateTime CreateDate;
+
     }
 
 }
