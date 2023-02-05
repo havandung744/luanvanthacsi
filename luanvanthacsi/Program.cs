@@ -28,6 +28,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddAntDesign();
 builder.Services.AddSingleton<IScientistService, ScientistService>();
 builder.Services.AddSingleton<IStudentService, StudentService>();
+builder.Services.AddSingleton<IFileUpload, FileUpload>();
 builder.Services.AddSingleton<TableLocale>(c =>
 {
     var locale = new TableLocale()

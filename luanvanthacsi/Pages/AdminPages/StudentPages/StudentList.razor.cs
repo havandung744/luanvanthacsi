@@ -17,12 +17,15 @@ using OfficeOpenXml;
 using Microsoft.JSInterop;
 using luanvanthacsi.Ultils;
 using Color = System.Drawing.Color;
+using BlazorInputFile;
+using OneOf.Types;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
 {
     public partial class StudentList : ComponentBase
     {
         [Inject] TableLocale TableLocale { get; set; }
+        [Inject] IFileUpload fileUpload { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
@@ -38,6 +41,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         bool visible = false;
         bool loading = false;
         bool loadingExcel = false;
+        bool showExcelForm = false;
         string txtValue { get; set; }
         protected override async Task OnInitializedAsync()
         {
@@ -178,13 +182,13 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         {
             try
             {
-                var deleteModel = studentDatas.Where(c=> selectedRows.Select(r=>r.Id).Contains(c.Id)).ToList();
-                List<Student> students= new List<Student>();
+                var deleteModel = studentDatas.Where(c => selectedRows.Select(r => r.Id).Contains(c.Id)).ToList();
+                List<Student> students = new List<Student>();
                 // maping từ studentData thành student
                 foreach (var studentData in deleteModel)
                 {
                     Student student = new Student();
-                    student.Id = studentData.Id;                 
+                    student.Id = studentData.Id;
                     students.Add(student);
                 }
                 var result = await StudentService.DeleteStudentListAsync(students);
@@ -249,7 +253,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 workSheet.Cells[3, 4].Value = "Chức danh";
                 workSheet.Cells[3, 5].Value = "Bộ phận";
                 workSheet.Cells[3, 6].Value = "Ngày sinh";
-               
+
 
                 foreach (var item in studentDatas)
                 {
@@ -258,7 +262,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     workSheet.Cells[row, 3].Value = item.Name;
                     workSheet.Cells[row, 4].Value = item.PhoneNumber;
                     workSheet.Cells[row, 5].Value = item.Email;
-                    workSheet.Cells[row, 6].Value = item.DateOfBirth.ToString();                 
+                    workSheet.Cells[row, 6].Value = item.DateOfBirth.ToString();
                     stt++;
                     row++;
                 }
@@ -272,6 +276,38 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 throw;
             }
             loadingExcel = false;
+        }
+
+        void OpenExcelForm()
+        {
+            showExcelForm = true;
+        }
+
+        void OnChangeIsShow(bool isShow)
+        {
+            showExcelForm = isShow;
+        }
+
+        IFileListEntry file;
+        public async Task LoadFile(IFileListEntry[] files)
+        {
+            file = files.FirstOrDefault();
+            if (file != null)
+            {
+                await fileUpload.UploadAsync(file);
+            }
+        }
+        public async Task InputFile()
+        {
+            await fileUpload.InputFile();
+            file = null;
+            await LoadAsync();
+        }
+
+        public void CancelImportExcelForm()
+        {
+            showExcelForm = false;
+            file = null;
         }
 
     }

@@ -39,16 +39,17 @@
             }
         </SpaceItem>
         <SpaceItem>
+            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => OpenExcelForm()" Loading="loadingExcel">
+                Nhập Excel
+            </Button>
+        </SpaceItem>
+        <SpaceItem>
             <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => ExportExcelAllowance()" Loading="loadingExcel">
                 Xuất Excel
             </Button>
         </SpaceItem>
     </Space>
 </Row>
-@*<div style="display: flex; align-items: center">
-    <Button Type="primary" @onclick="AddStudent" Style="margin-right:10px; margin-bottom: 5px" Color="Color.Green7">Thêm</Button>
-</div>*@
-
 
 <Form Model="@taskSearchStudent" Style="display:flex; width: 500px; height: 40px;"
       OnFinish="Search">
@@ -87,3 +88,15 @@
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Học viên")' OnClose="OnClose">
     <StudentEdit @ref="studentEdit" Cancel="() => visible = false" ValueChange="Save"></StudentEdit>
 </Drawer>
+
+<Modal Title="Import danh sách học viên" Visible="showExcelForm"
+       OnOk="InputFile" OnCancel="CancelImportExcelForm">
+    <BlazorInputFile.InputFile OnChange="LoadFile"></BlazorInputFile.InputFile>
+    @if (file != null)
+    {
+        <p>Name: @file.Name</p>
+        <p>Size in bytes: @file.Size</p>
+        <p>Last modified date: @file.LastModified.ToShortDateString()</p>
+        <p>Content type (not always supplied by the browser): @file.Type</p>
+    }
+</Modal>

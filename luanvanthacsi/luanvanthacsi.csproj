@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="AntDesign" Version="0.13.3" />
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="BlazorInputFile" Version="0.2.0" />
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
     <PackageReference Include="FluentNHibernate" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.0" />
@@ -22,6 +23,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.3" />
     <PackageReference Include="NHibernate" Version="5.4.0" />
+    <PackageReference Include="NPOI" Version="2.6.0" />
     <PackageReference Include="Remotion.Linq" Version="2.2.0" />
     <PackageReference Include="Remotion.Linq.EagerFetching" Version="2.2.0" />
     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.4.0.48" />
