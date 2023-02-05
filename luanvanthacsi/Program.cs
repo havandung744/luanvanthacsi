@@ -26,8 +26,8 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddAntDesign();
-builder.Services.AddSingleton <IScientistService, ScientistService>();
-builder.Services.AddSingleton <IStudentService, StudentService>();
+builder.Services.AddSingleton<IScientistService, ScientistService>();
+builder.Services.AddSingleton<IStudentService, StudentService>();
 builder.Services.AddSingleton<TableLocale>(c =>
 {
     var locale = new TableLocale()
