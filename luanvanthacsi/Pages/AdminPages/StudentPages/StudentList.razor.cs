@@ -210,8 +210,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             try
             {
                 var fileBase64 = Convert.ToBase64String(await GenerateExcelWorkbookAsync());
-                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "-PhuCap.xlsx", fileBase64);
-                //JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "-PhuCap.xlsx", fileBase64);
+                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "danhsachhocvien-.xlsx", fileBase64);
             }
             catch (Exception ex)
             {
@@ -272,7 +271,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             {
                 throw;
             }
-            //loadingExcel = false;
+            loadingExcel = false;
         }
 
     }
