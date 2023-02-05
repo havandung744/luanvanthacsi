@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using AntDesign;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace luanvanthacsi.Pages.AdminPages
+namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 {
     public partial class ScientistEdit
     {
@@ -27,6 +27,7 @@ namespace luanvanthacsi.Pages.AdminPages
             EditModel.AcademicRank = scientist.AcademicRank;
             EditModel.Degree = scientist.Degree;
             EditModel.CreateDate = scientist.CreateDate;
+            EditModel.UpdateDate = scientist.UpdateDate;
             StateHasChanged();
         }
 
@@ -41,6 +42,7 @@ namespace luanvanthacsi.Pages.AdminPages
             scientist.AcademicRank= EditModel.AcademicRank;
             scientist.Degree= EditModel.Degree;
             scientist.CreateDate = EditModel.CreateDate;
+            scientist.UpdateDate = EditModel.UpdateDate;
             ValueChange.InvokeAsync(scientist);
         }
 

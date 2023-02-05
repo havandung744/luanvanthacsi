@@ -1,0 +1,17 @@
+﻿<div style="display:flex; justify-content:space-between; align-items: center; padding:5px;">
+    <div>Tổng số bản ghi: <Text Strong>@Context.Total</Text></div>
+    <div>
+        <Pagination Size="Size"
+                    Total="Context.Total" ShowSizeChanger
+                    PageSize="Context.PageSize"
+                    Current="Context.PageIndex"
+                    Class="Context.PaginationClass"
+                    OnChange="Context.HandlePageChange"
+                    ShowTotal=showTotal />
+    </div>
+</div>
+
+@code {
+    RenderFragment<PaginationTotalContext> showTotal =
+    ctx => @<span><AntDesign.Text Strong>@($"{ctx.Range.Item1}-{ctx.Range.Item2}")</AntDesign.Text> bản ghi</span>;
+}

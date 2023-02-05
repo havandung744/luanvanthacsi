@@ -1,0 +1,41 @@
+﻿@page "/scientist"
+@using luanvanthacsi.Data.Components
+@attribute [Authorize(Roles = "Admin")]
+<PageTitle>Quản lý nhà khoa học</PageTitle>
+
+<div style="display: flex; align-items: center">
+    <Button Type="primary" @onclick="AddScientist" Style="margin-right:10px; margin-bottom: 5px">Thêm</Button>
+</div>
+<Form Model="@taskSearchScientist" Style="display:flex; width: 500px; height: 40px;"
+      OnFinish="Search">
+    <FormItem Style="width: 70%">
+        <Search @bind-Value="@context.txtSearch" Placeholder="Tìm kiếm theo tên." />
+    </FormItem>
+</Form>
+<Table DataSource="scientistDatas" PageSize="10" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale">
+    <ChildContent>
+        <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
+        <Column @bind-Field="context.Code" Sortable></Column>
+        <Column @bind-Field="context.Name" Sortable></Column>
+        <Column @bind-Field="context.Email"></Column>
+        <Column @bind-Field="context.PhoneNumber"></Column>
+        <Column @bind-Field="context.AcademicRank"></Column>
+        <Column @bind-Field="context.Degree"></Column>
+        <ActionColumn Title="Hành động">
+            <Icon Type="edit" Theme="outline" @onclick="() => Edit(context)" Width="20" Height="20" Style="margin-right: 10px" />
+            <Popconfirm Title="Xác nhận xóa?"
+                        OnConfirm="()=> DeleteScientist(context)"
+                        OkText="Có"
+                        CancelText="Không">
+                <Icon Type="delete" Theme="outline" Width="20" Height="20" />
+            </Popconfirm>
+        </ActionColumn>
+    </ChildContent>
+    <PaginationTemplate>
+       <PaginationCustom Context="context"></PaginationCustom>
+    </PaginationTemplate>
+</Table>
+
+<Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Nhà khoa học")' OnClose="OnClose">
+    <ScientistEdit @ref="scientistEdit" Cancel="() => visible = false" ValueChange="Save"></ScientistEdit>
+</Drawer>

@@ -1,0 +1,84 @@
+﻿@page "/student"
+@using luanvanthacsi.Data.Components
+@using luanvanthacsi.Data.Data;
+@attribute [Authorize(Roles = "Admin")]
+<PageTitle>Quản lý học viên</PageTitle>
+
+<Row>
+    <Space>
+        <SpaceItem>
+            <Button Type="primary" @onclick="AddStudent" Style="margin-right:10px; margin-bottom: 5px" Color="Color.Green7">Thêm</Button>
+        </SpaceItem>
+        <SpaceItem>
+            @if (selectedRows?.Any() == true)
+            {
+                <SpaceItem>
+                    <Popconfirm Placement="@Placement.LeftBottom"
+                            OnConfirm="() => DeleteAsync()"
+                            OkText="Đồng ý"
+                            CancelText="Hủy">
+                        <ChildContent>
+                            <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Bạn có chắc chắn muốn xóa
+                            @if (selectedRows.Count() == 1)
+                            {
+                                <strong> @selectedRows?.FirstOrDefault().Name</strong>
+
+                                <span>?</span>
+                            }
+                            else
+                            {
+                                <strong> @selectedRows.Count()</strong> <span>nhân viên?</span>
+                            }
+
+                        </TitleTemplate>
+                    </Popconfirm>
+                </SpaceItem>
+            }
+        </SpaceItem>
+    </Space>
+</Row>
+@*<div style="display: flex; align-items: center">
+    <Button Type="primary" @onclick="AddStudent" Style="margin-right:10px; margin-bottom: 5px" Color="Color.Green7">Thêm</Button>
+</div>*@
+
+
+<Form Model="@taskSearchStudent" Style="display:flex; width: 500px; height: 40px;"
+      OnFinish="Search">
+    <FormItem Style="width: 70%">
+        <Search @bind-Value="@context.txtSearch" Placeholder="Tìm kiếm theo tên." />
+    </FormItem>
+</Form>
+
+<Table @ref="table" DataSource="studentDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
+       TItem="StudentData"
+       OnRowClick="OnRowClick"
+       @bind-SelectedRows="selectedRows">
+    <ChildContent>
+        <Selection Key="@context.Id" Fixed="left" Width="50px"></Selection>
+        <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
+        <Column @bind-Field="context.Code" Sortable></Column>
+        <Column @bind-Field="context.Name" Sortable></Column>
+        <Column @bind-Field="context.Email"></Column>
+        <Column @bind-Field="context.PhoneNumber"></Column>
+        <Column @bind-Field="context.DateOfBirth" Format="dd/MM/yyyy" Sortable></Column>
+        <ActionColumn Title="Hành động">
+            <Icon Type="edit" Theme="outline" @onclick="() => Edit(context)" Width="20" Height="20" Style="margin-right: 10px" />
+            <Popconfirm Title="Xác nhận xóa?"
+                        OnConfirm="()=> DeleteStudent(context)"
+                        OkText="Có"
+                        CancelText="Không">
+                <Icon Type="delete" Theme="outline" Width="20" Height="20" />
+            </Popconfirm>
+        </ActionColumn>
+    </ChildContent>
+    <PaginationTemplate>
+        <PaginationCustom Context="context"></PaginationCustom>
+    </PaginationTemplate>
+</Table>
+
+<Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Học viên")' OnClose="OnClose">
+    <StudentEdit @ref="studentEdit" Cancel="() => visible = false" ValueChange="Save"></StudentEdit>
+</Drawer>

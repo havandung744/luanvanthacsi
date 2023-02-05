@@ -2,7 +2,7 @@
 
 namespace luanvanthacsi.Data.Data
 {
-    public class ScientistData
+    public class StudentData
     {
         [Display(Name = "STT")]
         public int stt;
@@ -15,14 +15,11 @@ namespace luanvanthacsi.Data.Data
         public string PhoneNumber;
         [Display(Name = "Email")]
         public string Email;
-        [Display(Name = "Học hàm")]
-        public string AcademicRank;
-        [Display(Name = "Học vị")]
-        public string Degree;
+        [Display(Name = "Ngày sinh")]
+        public DateTime DateOfBirth;
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate;
-         [Display(Name = "Ngày Cập nhật")]
+        [Display(Name = "Ngày Cập nhật")]
         public DateTime UpdateDate;
     }
-
 }

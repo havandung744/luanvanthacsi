@@ -43,10 +43,12 @@ namespace luanvanthacsi.Data.Services
                         {
                             scientist.Id = Guid.NewGuid().ToString();
                             scientist.CreateDate = DateTime.Now;
+                            scientist.UpdateDate = DateTime.Now;
                             await session.SaveAsync(scientist);
                         }
                         else
                         {
+                            scientist.UpdateDate = DateTime.Now;
                             await session.UpdateAsync(scientist);
                         }
                         await transaction.CommitAsync();
@@ -106,6 +108,28 @@ namespace luanvanthacsi.Data.Services
                 }
             }
             return result;
+        }
+
+        public async Task<List<Scientist>> GetListScientistBySearchAsync(string txtSearch)
+        {
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        List<Scientist> scientists;
+                        scientists = session.Query<Scientist>().Where(c => c.Name.Like('%' + txtSearch + '%')).ToList();
+                        //await transaction.CommitAsync();
+                        return scientists;
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw ex;
+                    }
+                }
+            }
         }
     }
 }
