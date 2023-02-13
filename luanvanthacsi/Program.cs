@@ -1,6 +1,7 @@
 ﻿using AntDesign;
 using luanvanthacsi.Areas.Identity;
 using luanvanthacsi.Data;
+using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -28,6 +29,8 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddAntDesign();
 builder.Services.AddSingleton<IScientistService, ScientistService>();
 builder.Services.AddSingleton<IStudentService, StudentService>();
+builder.Services.AddSingleton<IThesisDefenseService, ThesisDefenseService>();
+builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IFileUpload, FileUpload>();
 builder.Services.AddSingleton<TableLocale>(c =>
 {

@@ -1,13 +1,14 @@
 ﻿using luanvanthacsi.Data.Entities;
-using ISession = NHibernate.ISession;
+using MathNet.Numerics.Distributions;
 using NHibernate;
+using ISession = NHibernate.ISession;
 using NHibernate.Linq;
 
 namespace luanvanthacsi.Data.Services
 {
-    public class StudentService : IStudentService
+    public class ThesisDefenseService : IThesisDefenseService
     {
-        public async Task<bool> AddOrUpdateStudentAsync(Student student)
+        public async Task<bool> AddOrUpdateThesisDefenseAsync(ThesisDefense thesisDefense)
         {
             bool result = false;
             using (var session = FluentNHibernateHelper.OpenSession())
@@ -16,17 +17,15 @@ namespace luanvanthacsi.Data.Services
                 {
                     try
                     {
-                        if (string.IsNullOrEmpty(student.Id))
+                        if (string.IsNullOrEmpty(thesisDefense.Id))
                         {
-                            student.Id = Guid.NewGuid().ToString();
-                            student.CreateDate = DateTime.Now;
-                            student.UpdateDate = DateTime.Now;
-                            await session.SaveAsync(student);
+                            thesisDefense.Id = Guid.NewGuid().ToString();
+                            thesisDefense.CreateDate = DateTime.Now;
+                            await session.SaveAsync(thesisDefense);
                         }
                         else
                         {
-                            student.UpdateDate = DateTime.Now;
-                            await session.UpdateAsync(student);
+                            await session.UpdateAsync(thesisDefense);
                         }
                         await transaction.CommitAsync();
                         result = true;
@@ -39,10 +38,9 @@ namespace luanvanthacsi.Data.Services
                 }
                 return result;
             }
-
         }
 
-        public async Task<bool> DeleteStudentAsync(Student student)
+        public async Task<bool> DeleteThesisDefenseAsync(ThesisDefense thesisDefense)
         {
             bool result = false;
             using (var session = FluentNHibernateHelper.OpenSession())
@@ -52,7 +50,7 @@ namespace luanvanthacsi.Data.Services
                     try
                     {
 
-                        await session.DeleteAsync(student);
+                        await session.DeleteAsync(thesisDefense);
                         await transaction.CommitAsync();
                         result = true;
                     }
@@ -66,7 +64,7 @@ namespace luanvanthacsi.Data.Services
             return result;
         }
 
-        public async Task<bool> DeleteStudentListAsync(List<Student> students)
+        public async Task<bool> DeleteThesisDefenseListAsync(List<ThesisDefense> thesisDefenses)
         {
             bool result = false;
             using (var session = FluentNHibernateHelper.OpenSession())
@@ -75,7 +73,7 @@ namespace luanvanthacsi.Data.Services
                 {
                     try
                     {
-                        foreach (var item in students)
+                        foreach (var item in thesisDefenses)
                         {
                             await session.DeleteAsync(item);
                         }
@@ -92,16 +90,16 @@ namespace luanvanthacsi.Data.Services
             return result;
         }
 
-        public async Task<List<Student>> GetAllAsync()
+        public async Task<List<ThesisDefense>> GetAllAsync()
         {
             try
             {
-                List<Student> students;
+                List<ThesisDefense> thesisDefenses;
                 using (ISession session = FluentNHibernateHelper.OpenSession())
                 {
-                    students = session.Query<Student>().ToList();
+                    thesisDefenses = session.Query<ThesisDefense>().ToList();
                 }
-                return students;
+                return thesisDefenses;
             }
             catch (Exception e)
             {
@@ -109,24 +107,7 @@ namespace luanvanthacsi.Data.Services
             }
         }
 
-        public async Task<List<Student>> GetAllByIdAsync(string id)
-        {
-            try
-            {
-                List<Student> students;
-                using (ISession session = FluentNHibernateHelper.OpenSession())
-                {
-                    students = session.Query<Student>().Where(x => x.FacultyId == id).ToList();
-                }
-                return students;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        public async Task<List<Student>> GetListStudentBySearchAsync(string txtSearch)
+        public async Task<List<ThesisDefense>> GetListThesisDefenseBySearchAsync(string txtSearch)
         {
             using (var session = FluentNHibernateHelper.OpenSession())
             {
@@ -134,9 +115,9 @@ namespace luanvanthacsi.Data.Services
                 {
                     try
                     {
-                        List<Student> students;
-                        students = session.Query<Student>().Where(c => c.Name.Like('%' + txtSearch + '%')).ToList();
-                        return students;
+                        List<ThesisDefense> thesisDefenses;
+                        thesisDefenses = session.Query<ThesisDefense>().Where(c => c.Name.Like('%' + txtSearch + '%')).ToList();
+                        return thesisDefenses;
                     }
                     catch (Exception ex)
                     {
@@ -147,17 +128,17 @@ namespace luanvanthacsi.Data.Services
             }
         }
 
-        public async Task<Student> GetStudentByIdAsync(string id)
+        public async Task<ThesisDefense> GetThesisDefenseByIdAsync(string id)
         {
-            Student student;
+            ThesisDefense thesisDefense;
             using (var session = FluentNHibernateHelper.OpenSession())
             {
                 using (ITransaction transaction = session.BeginTransaction())
                 {
                     try
                     {
-                        student = await session.GetAsync<Student>(id);
-                        return student;
+                        thesisDefense = await session.GetAsync<ThesisDefense>(id);
+                        return thesisDefense;
                     }
                     catch (Exception ex)
                     {

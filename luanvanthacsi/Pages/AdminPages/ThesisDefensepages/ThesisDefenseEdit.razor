@@ -1,0 +1,22 @@
+﻿<Form @ref="form"
+      Model="EditModel" LabelColSpan="8"
+      WrapperColSpan="16"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed">
+    <Template style="height:90%">
+        <FormItem Label="Mã đợt bảo vệ">
+            <Input @bind-Value="@context.Code" />
+        </FormItem>
+        <FormItem Label="Tên đợt bảo vệ">
+            <Input @bind-Value="@context.Name" />
+        </FormItem>
+        <FormItem WrapperColOffset="8" WrapperColSpan="16">
+            <Button Type="@ButtonType.Primary" HtmlType="submit">
+                Lưu
+            </Button>
+            <Button OnClick="Reset">
+                Đặt lại
+            </Button>
+        </FormItem>
+    </Template>
+</Form>

@@ -19,15 +19,21 @@ using luanvanthacsi.Ultils;
 using Color = System.Drawing.Color;
 using BlazorInputFile;
 using OneOf.Types;
+using Microsoft.AspNetCore.Components.Authorization;
+using luanvanthacsi.Areas.Identity;
+//using LightInject;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
 {
     public partial class StudentList : ComponentBase
     {
+        [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+        [Inject] AuthenticationStateProvider GetAuthenticationStateAsync { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] IFileUpload fileUpload { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IStudentService StudentService { get; set; }
+        [Inject] IUserService UserService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         List<StudentData>? studentDatas { get; set; }
         List<Student>? students { get; set; }
@@ -42,10 +48,18 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         bool loading = false;
         bool loadingExcel = false;
         bool showExcelForm = false;
+        User CurrentUser;
         string txtValue { get; set; }
+        async Task<string> getUserId()
+        {
+            var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+            return UserId;
+        }
         protected override async Task OnInitializedAsync()
         {
-
+            string id = await getUserId();
+            CurrentUser = await UserService.GetUserByIdAsync(id);
             studentDatas = new();
             await LoadAsync();
         }
@@ -56,7 +70,10 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             loading = true;
             visible = false;
             StateHasChanged();
-            var students = await StudentService.GetAllAsync();
+            // lấy full dữ liệu
+            //var students = await StudentService.GetAllAsync();
+            // lấy dữ liệu theo khoa
+            var students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             studentDatas = GetViewModels(list);
@@ -309,6 +326,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             showExcelForm = false;
             file = null;
         }
+
+       
 
     }
 }
