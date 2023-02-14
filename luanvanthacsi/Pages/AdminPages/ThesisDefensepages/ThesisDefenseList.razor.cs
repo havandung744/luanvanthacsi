@@ -21,11 +21,15 @@ using BlazorInputFile;
 using OneOf.Types;
 using luanvanthacsi.Pages.AdminPages.StudentPages;
 using MathNet.Numerics.Distributions;
+using Microsoft.AspNetCore.Components.Authorization;
+using luanvanthacsi.Data.Migrations;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
     public partial class ThesisDefenseList : ComponentBase
     {
+        [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+        [Inject] IUserService UserService { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] IFileUpload fileUpload { get; set; }
         [Inject] NotificationService Notice { get; set; }
@@ -33,6 +37,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         [Inject] IJSRuntime JSRuntime { get; set; }
         List<ThesisDefenseData> thesisDefenseDatas { get; set; }
         ThesisDefenseEdit thesisDefenseEdit = new ThesisDefenseEdit();
+        ThesisDefenseDetail ThesisDefenseDetail = new ThesisDefenseDetail();
         List<ThesisDefense> thesisDefenses { get; set; }
         TaskSearch taskSearch = new TaskSearch();
         IEnumerable<ThesisDefenseData>? selectRows;
@@ -41,12 +46,17 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         List<string>? ListSelectedThesisDefenseIds;
         IEnumerable<ThesisDefenseData>? selectedRows;
         List<string>? ListSelectedIds;
+        User Currentuser;
         bool visible = false;
+        bool visibleForDetail = false;
         bool loading = false;
         string txtValue { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
+            // lấy thông tin User đang đăng nhập
+            string id = await getUserId();
+            Currentuser = await UserService.GetUserByIdAsync(id);
 
             thesisDefenseDatas = new();
             await LoadAsync();
@@ -57,6 +67,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             thesisDefenseDatas.Clear();
             loading = true;
             visible = false;
+            visibleForDetail = false;
             StateHasChanged();
             var thesisDefenses = await ThesisDefenseService.GetAllAsync();
             // hiển thị dữ liệu mới nhất lên đầu trang
@@ -103,15 +114,15 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             var resultAdd = await ThesisDefenseService.AddOrUpdateThesisDefenseAsync(data);
             if (resultAdd)
             {
-            await LoadAsync();
-            if (checkExistId.IsNotNullOrEmpty())
-            {
-                Notice.NotiSuccess("Cập nhật dữ liệu thành công");
-            }
-            else
-            {
-                Notice.NotiSuccess("Thêm dữ liệu thành công");
-            }
+                await LoadAsync();
+                if (checkExistId.IsNotNullOrEmpty())
+                {
+                    Notice.NotiSuccess("Cập nhật dữ liệu thành công");
+                }
+                else
+                {
+                    Notice.NotiSuccess("Thêm dữ liệu thành công");
+                }
             }
             else
             {
@@ -130,6 +141,12 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         {
             thesisDefenseEdit.Close();
             visible = false;
+        }
+
+        void OnCloseForDetail()
+        {
+            ThesisDefenseDetail.Close();
+            visibleForDetail = false;
         }
 
         async Task Edit(ThesisDefenseData thesisDefenseData)
@@ -227,6 +244,27 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         public class TaskSearch
         {
             public string? txtSearch { get; set; }
+        }
+        async Task OpenDetailAsync(ThesisDefenseData data)
+        {
+            try
+            {
+                var StudentOfthesisDefense = new List<Student>();
+                StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(Currentuser.FacultyId, data.Id).Result;
+                await ThesisDefenseDetail.loadData(StudentOfthesisDefense);
+                visibleForDetail = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        async Task<string> getUserId()
+        {
+            var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+            return UserId;
         }
 
     }

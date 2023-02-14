@@ -59,6 +59,7 @@
         <Column @bind-Field="context.Code" Sortable></Column>
         <Column @bind-Field="context.Name" Sortable></Column>
         <ActionColumn Title="Hành động">
+            <Icon Type="eye" Theme="outline" OnClick="() => OpenDetailAsync(context)" Width="20" Height="20" Style="margin-right: 10px" />
             <Icon Type="edit" Theme="outline" @onclick="() => Edit(context)" Width="20" Height="20" Style="margin-right: 10px" />
             <Popconfirm Title="Xác nhận xóa?"
                         OnConfirm="()=> DeleteStudent(context)"
@@ -75,4 +76,7 @@
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Đợt bảo vệ")' OnClose="OnClose">
     <ThesisDefenseEdit @ref="thesisDefenseEdit" Cancel="() => visible = false" ValueChange="Save"></ThesisDefenseEdit>
+</Drawer>
+<Drawer Closable="true" Width="1500" Visible="visibleForDetail" OnClose="OnCloseForDetail" Title='("Danh sách học viên bảo vệ.")'>
+        <ThesisDefenseDetail @ref="ThesisDefenseDetail"></ThesisDefenseDetail>
 </Drawer>

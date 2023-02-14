@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NHibernate.Mapping;
 using Umbraco.Core.Composing.CompositionExtensions;
 
 var builder = WebApplication.CreateBuilder(args);

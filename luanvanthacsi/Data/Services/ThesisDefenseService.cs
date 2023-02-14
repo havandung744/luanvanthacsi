@@ -107,6 +107,23 @@ namespace luanvanthacsi.Data.Services
             }
         }
 
+        public async Task<List<Student>> GetCurrentListStaff(string FacultyId, string thesisDefensesId)
+        {
+            try
+            {
+                List<Student> students;
+                using (ISession session = FluentNHibernateHelper.OpenSession())
+                {
+                    students = session.Query<Student>().Where(c=> (c.FacultyId == FacultyId) && (c.ThesisDefenseId == thesisDefensesId)).ToList();
+                }
+                return students;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public async Task<List<ThesisDefense>> GetListThesisDefenseBySearchAsync(string txtSearch)
         {
             using (var session = FluentNHibernateHelper.OpenSession())

@@ -1,0 +1,12 @@
+﻿@using luanvanthacsi.Data.Edit;
+<Row Gutter="8">
+    <AntDesign.Col Span="24">
+        <Table Context="tableContext" TItem="StudentOfThesisDefenseEditModel" DataSource="@studentOfThesisDefenseEditModels" Class="table-striped" ScrollY="300">
+            <Column @bind-Field="@tableContext.Code" Ellipsis="true"></Column>
+            <Column @bind-Field="@tableContext.Name" Ellipsis="true"></Column>
+            <Column @bind-Field="@tableContext.DateOfBirth" Ellipsis="true"></Column>
+            <Column @bind-Field="@tableContext.Email" Ellipsis="true"></Column>
+            <Column @bind-Field="@tableContext.PhoneNumber" Ellipsis="true"></Column>
+        </Table>
+    </AntDesign.Col>
+</Row>
