@@ -75,7 +75,7 @@
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Đợt bảo vệ")' OnClose="OnClose">
-    <ThesisDefenseEdit @ref="thesisDefenseEdit" Cancel="() => visible = false" ValueChange="Save"></ThesisDefenseEdit>
+    <ThesisDefenseEdit @ref="thesisDefenseEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></ThesisDefenseEdit>
 </Drawer>
 <Drawer Closable="true" Width="1500" Visible="visibleForDetail" OnClose="OnCloseForDetail" Title='("Danh sách học viên bảo vệ.")'>
         <ThesisDefenseDetail @ref="ThesisDefenseDetail"></ThesisDefenseDetail>

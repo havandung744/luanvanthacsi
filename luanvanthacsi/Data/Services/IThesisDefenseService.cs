@@ -5,6 +5,7 @@ namespace luanvanthacsi.Data.Services
     public interface IThesisDefenseService
     {
         Task<List<ThesisDefense>> GetAllAsync();
+        Task<List<ThesisDefense>> GetAllByIdAsync(string id);
         Task<bool> AddOrUpdateThesisDefenseAsync(ThesisDefense thesisDefense);
         Task<ThesisDefense> GetThesisDefenseByIdAsync(string id);
         Task<bool> DeleteThesisDefenseAsync(ThesisDefense thesisDefense);

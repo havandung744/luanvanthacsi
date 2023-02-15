@@ -13,5 +13,8 @@ namespace luanvanthacsi.Data.Data
         public string Name;
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate;
+        [Display(Name = "Id khoa")]
+        public string FacultyId;
+
     }
 }

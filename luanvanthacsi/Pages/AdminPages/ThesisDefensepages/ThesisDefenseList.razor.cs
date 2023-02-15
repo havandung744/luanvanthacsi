@@ -46,21 +46,22 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         List<string>? ListSelectedThesisDefenseIds;
         IEnumerable<ThesisDefenseData>? selectedRows;
         List<string>? ListSelectedIds;
-        User Currentuser;
         bool visible = false;
         bool visibleForDetail = false;
         bool loading = false;
         string txtValue { get; set; }
+        User CurrentUser;
+
 
         protected override async Task OnInitializedAsync()
         {
             // lấy thông tin User đang đăng nhập
             string id = await getUserId();
-            Currentuser = await UserService.GetUserByIdAsync(id);
-
+            CurrentUser = await UserService.GetUserByIdAsync(id);
             thesisDefenseDatas = new();
             await LoadAsync();
         }
+
 
         public async Task LoadAsync()
         {
@@ -69,7 +70,8 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             visible = false;
             visibleForDetail = false;
             StateHasChanged();
-            var thesisDefenses = await ThesisDefenseService.GetAllAsync();
+            var thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(CurrentUser.FacultyId);
+            //var thesisDefenses = await ThesisDefenseService.GetAllAsync();
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = thesisDefenses.OrderByDescending(x => x.CreateDate).ToList();
             thesisDefenseDatas = GetViewModels(list);
@@ -250,7 +252,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             try
             {
                 var StudentOfthesisDefense = new List<Student>();
-                StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(Currentuser.FacultyId, data.Id).Result;
+                StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(CurrentUser.FacultyId, data.Id).Result;
                 await ThesisDefenseDetail.loadData(StudentOfthesisDefense);
                 visibleForDetail = true;
             }

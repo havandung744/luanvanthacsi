@@ -9,6 +9,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
     public partial class ThesisDefenseEdit : ComponentBase
     {
+        [Parameter] public User CurrentUser { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<ThesisDefense> ValueChange { get; set; }
         ThesisDefenseEditModel EditModel { get; set; } = new ThesisDefenseEditModel();
@@ -22,19 +23,20 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             StateHasChanged();
         }
 
-        public void UpdateStudent()
+        public void UpdateThesisDefense()
         {
             ThesisDefense thesisDefense = new ThesisDefense();
             thesisDefense.Id = EditModel.Id;
             thesisDefense.Name = EditModel.Name;
             thesisDefense.Code = EditModel.Code;
             thesisDefense.CreateDate = EditModel.CreateDate;
+            thesisDefense.FacultyId = CurrentUser.FacultyId;
             ValueChange.InvokeAsync(thesisDefense);
         }
 
         private void OnFinish(EditContext editContext)
         {
-            UpdateStudent();
+            UpdateThesisDefense();
         }
 
         private void OnFinishFailed(EditContext editContext)
