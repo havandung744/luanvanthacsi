@@ -8,6 +8,7 @@ using NHibernate.Tool.hbm2ddl;
 using System.Linq;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using MathNet.Numerics.Distributions;
 
 namespace luanvanthacsi.Data.Services
 {
@@ -21,6 +22,23 @@ namespace luanvanthacsi.Data.Services
                 using (ISession session = FluentNHibernateHelper.OpenSession())
                 {
                     scientists = session.Query<Scientist>().ToList();
+                }
+                return scientists;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<List<Scientist>> GetAllByIdAsync(string id)
+        {
+            try
+            {
+                List<Scientist> scientists;
+                using (ISession session = FluentNHibernateHelper.OpenSession())
+                {
+                    scientists = session.Query<Scientist>().Where(x => x.FacultyId == id).ToList();
                 }
                 return scientists;
             }
@@ -130,6 +148,32 @@ namespace luanvanthacsi.Data.Services
                     }
                 }
             }
+        }
+
+        public async Task<bool> DeleteScientistListAsync(List<Scientist> scientists)
+        {
+            bool result = false;
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var item in scientists)
+                        {
+                            await session.DeleteAsync(item);
+                        }
+                        await transaction.CommitAsync();
+                        result = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw ex;
+                    }
+                }
+            }
+            return result;
         }
     }
 }

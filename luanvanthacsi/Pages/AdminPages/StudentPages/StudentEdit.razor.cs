@@ -15,6 +15,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
     {
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<Student> ValueChange { get; set; }
+        [Parameter] public User CurrentUser { get; set; }
         StudentEditModel EditModel { get; set; } = new StudentEditModel();
         Form<StudentEditModel> form;
         public void LoadData(Student student)
@@ -26,6 +27,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             EditModel.PhoneNumber = student.PhoneNumber;
             EditModel.UpdateDate = student.UpdateDate;
             EditModel.CreateDate = student.CreateDate;
+            //EditModel.FacultyId = student.FacultyId;
             if(student.DateOfBirth==DateTime.MinValue)
             {
                 EditModel.DateOfBirth = DateTime.Now;
@@ -49,6 +51,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             student.CreateDate = EditModel.CreateDate;
             student.UpdateDate = EditModel.UpdateDate;
             student.DateOfBirth = EditModel.DateOfBirth;
+            student.FacultyId = CurrentUser.FacultyId;
             ValueChange.InvokeAsync(student);
         }
 

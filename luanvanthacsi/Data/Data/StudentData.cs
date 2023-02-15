@@ -21,5 +21,8 @@ namespace luanvanthacsi.Data.Data
         public DateTime CreateDate;
         [Display(Name = "Ngày Cập nhật")]
         public DateTime UpdateDate;
+        [Display(Name = "Mã khoa")]
+        public string FacultyId;
+
     }
 }

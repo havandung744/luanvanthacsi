@@ -21,8 +21,11 @@ namespace luanvanthacsi.Data.Data
         public string Degree;
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate;
-         [Display(Name = "Ngày Cập nhật")]
+        [Display(Name = "Ngày Cập nhật")]
         public DateTime UpdateDate;
+         [Display(Name = "Mã khoa")]
+        public DateTime FacultyId;
+
     }
 
 }

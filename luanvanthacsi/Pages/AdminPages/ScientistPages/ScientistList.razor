@@ -1,19 +1,56 @@
 ﻿@page "/scientist"
-@using luanvanthacsi.Data.Components
-@attribute [Authorize(Roles = "Admin")]
+@using luanvanthacsi.Data.Data;
+@attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý nhà khoa học</PageTitle>
+<Row>
+    <Space>
+        <SpaceItem>
+            <Button Type="primary" @onclick="AddScientist" Style="margin-right:10px; margin-bottom: 5px">Thêm</Button>
+        </SpaceItem>
+        <SpaceItem>
+            @if (selectedRows?.Any() == true)
+            {
+                <SpaceItem>
+                    <Popconfirm Placement="@Placement.LeftBottom"
+                            OnConfirm="() => DeleteAsync()"
+                            OkText="Đồng ý"
+                            CancelText="Hủy">
+                        <ChildContent>
+                            <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Bạn có chắc chắn muốn xóa
+                            @if (selectedRows.Count() == 1)
+                            {
+                                <strong> @selectedRows?.FirstOrDefault().Name</strong>
 
-<div style="display: flex; align-items: center">
-    <Button Type="primary" @onclick="AddScientist" Style="margin-right:10px; margin-bottom: 5px">Thêm</Button>
-</div>
+                                <span>?</span>
+                            }
+                            else
+                            {
+                                <strong> @selectedRows.Count()</strong> <span>nhà khoa học?</span>
+                            }
+
+                        </TitleTemplate>
+                    </Popconfirm>
+                </SpaceItem>
+            }
+        </SpaceItem>
+    </Space>
+</Row>
 <Form Model="@taskSearchScientist" Style="display:flex; width: 500px; height: 40px;"
       OnFinish="Search">
     <FormItem Style="width: 70%">
         <Search @bind-Value="@context.txtSearch" Placeholder="Tìm kiếm theo tên." />
     </FormItem>
 </Form>
-<Table DataSource="scientistDatas" PageSize="10" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale">
+
+<Table @ref="table" DataSource="scientistDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
+       TItem="ScientistData"
+       OnRowClick="OnRowClick"
+       @bind-SelectedRows="selectedRows">
     <ChildContent>
+        <Selection Key="@context.Id" Fixed="left" Width="50px"></Selection>
         <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
         <Column @bind-Field="context.Code" Sortable></Column>
         <Column @bind-Field="context.Name" Sortable></Column>
@@ -32,10 +69,10 @@
         </ActionColumn>
     </ChildContent>
     <PaginationTemplate>
-       <PaginationCustom Context="context"></PaginationCustom>
+        <PaginationCustom Context="context"></PaginationCustom>
     </PaginationTemplate>
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Nhà khoa học")' OnClose="OnClose">
-    <ScientistEdit @ref="scientistEdit" Cancel="() => visible = false" ValueChange="Save"></ScientistEdit>
+    <ScientistEdit @ref="scientistEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></ScientistEdit>
 </Drawer>

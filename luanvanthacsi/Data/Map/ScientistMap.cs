@@ -17,6 +17,7 @@ namespace luanvanthacsi.Data.Map
             Map(x => x.Degree).Column("Degree");
             Map(x => x.CreateDate).Column("CreateDate");
             Map(x => x.UpdateDate).Column("UpdateDate");
+            Map(x => x.FacultyId).Column("FacultyId");
             Table("Scientist");
 
         }

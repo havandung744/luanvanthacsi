@@ -98,6 +98,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 model.DateOfBirth = c.DateOfBirth;
                 model.CreateDate = c.CreateDate;
                 model.UpdateDate = c.UpdateDate;
+                model.FacultyId = c.FacultyId;
                 models.Add(model);
                 stt++;
             });

@@ -17,5 +17,6 @@ namespace luanvanthacsi.Data.Edit
         public DateTime DateOfBirth { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
+        public string FacultyId { get; set; }
     }
 }

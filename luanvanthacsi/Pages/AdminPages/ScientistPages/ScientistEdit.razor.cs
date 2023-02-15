@@ -13,6 +13,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 {
     public partial class ScientistEdit
     {
+        [Parameter] public User CurrentUser { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<Scientist> ValueChange { get; set; }
         ScientistEditModel EditModel { get; set; } = new ScientistEditModel();
@@ -43,6 +44,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             scientist.Degree= EditModel.Degree;
             scientist.CreateDate = EditModel.CreateDate;
             scientist.UpdateDate = EditModel.UpdateDate;
+            scientist.FacultyId = CurrentUser.FacultyId;
             ValueChange.InvokeAsync(scientist);
         }
 

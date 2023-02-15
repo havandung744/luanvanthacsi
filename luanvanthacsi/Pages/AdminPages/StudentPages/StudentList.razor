@@ -86,7 +86,7 @@
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Học viên")' OnClose="OnClose">
-    <StudentEdit @ref="studentEdit" Cancel="() => visible = false" ValueChange="Save"></StudentEdit>
+    <StudentEdit @ref="studentEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></StudentEdit>
 </Drawer>
 
 <Modal Title="Import danh sách học viên" Visible="showExcelForm"
