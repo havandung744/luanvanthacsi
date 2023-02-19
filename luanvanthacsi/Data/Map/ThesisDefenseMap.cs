@@ -11,6 +11,7 @@ namespace luanvanthacsi.Data.Map
             Map(x => x.Code).Column("Code");
             Map(x => x.Name).Column("Name");
             Map(x => x.CreateDate).Column("CreateDate");
+            Map(x => x.YearOfProtection).Column("YearOfProtection");
             Map(x => x.FacultyId).Column("FacultyId");
             Table("ThesisDefense");
         }

@@ -20,6 +20,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             EditModel.Name = thesisDefense.Name;
             EditModel.Code = thesisDefense.Code;
             EditModel.CreateDate = thesisDefense.CreateDate;
+            EditModel.YearOfProtection = thesisDefense.YearOfProtection;
             StateHasChanged();
         }
 
@@ -30,6 +31,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             thesisDefense.Name = EditModel.Name;
             thesisDefense.Code = EditModel.Code;
             thesisDefense.CreateDate = EditModel.CreateDate;
+            thesisDefense.YearOfProtection = EditModel.YearOfProtection;
             thesisDefense.FacultyId = CurrentUser.FacultyId;
             ValueChange.InvokeAsync(thesisDefense);
         }

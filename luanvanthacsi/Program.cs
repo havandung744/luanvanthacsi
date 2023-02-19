@@ -1,6 +1,7 @@
 ﻿using AntDesign;
 using luanvanthacsi.Areas.Identity;
 using luanvanthacsi.Data;
+using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
 using Microsoft.AspNetCore.Components;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NHibernate.Mapping;
+using System.Reflection;
 using Umbraco.Core.Composing.CompositionExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -73,7 +75,7 @@ builder.Services.AddSingleton<TableLocale>(c =>
     };
     return locale;
 });
-
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

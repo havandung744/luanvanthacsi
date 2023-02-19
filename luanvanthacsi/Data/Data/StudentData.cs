@@ -23,6 +23,9 @@ namespace luanvanthacsi.Data.Data
         public DateTime UpdateDate;
         [Display(Name = "Mã khoa")]
         public string FacultyId;
+        [Display(Name = "Mã đợt bảo vệ")]
+        public string ThesisDefenseId;
+         
 
     }
 }

@@ -1,0 +1,19 @@
+﻿@using luanvanthacsi.Data.Data;
+<Modal Title="@("Danh sách học viên")"
+       Visible="ModalVisible" Width="1200"
+       OnOk="@HandleOk" Style="top: 50px; bottom: 50px"
+       OnCancel="ChangeModalVisible">
+    <Row>
+        <Table @ref="table" TItem="StudentData" DataSource="studentDatas" Locale="TableLocale"
+               OnRowClick="OnRowClick"
+               @bind-SelectedRows="selectedRows">
+            <Selection Key="@context.Id" Width="50" Fixed="true" />
+            <Column @bind-Field="@context.stt" Width="50" Fixed="true"></Column>
+            <Column @bind-Field="@context.Code" Ellipsis="true" Width="150" Fixed="true"></Column>
+            <Column @bind-Field="@context.Name" Ellipsis="true" Width="200" Fixed="true"></Column>
+            <Column @bind-Field="@context.Email" Ellipsis="true" Width="200"></Column>
+            <Column @bind-Field="@context.PhoneNumber" Ellipsis="true" Width="200"></Column>
+        </Table>
+    </Row>
+
+</Modal>

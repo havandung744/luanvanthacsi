@@ -2,6 +2,7 @@
 using ISession = NHibernate.ISession;
 using NHibernate;
 using NHibernate.Linq;
+using MathNet.Numerics.Distributions;
 
 namespace luanvanthacsi.Data.Services
 {
@@ -25,7 +26,10 @@ namespace luanvanthacsi.Data.Services
                         }
                         else
                         {
+                            Student studentDb = await GetStudentByIdAsync(student.Id);
+                            string thesisDefenseId = studentDb?.ThesisDefenseId;
                             student.UpdateDate = DateTime.Now;
+                            student.ThesisDefenseId = thesisDefenseId;
                             await session.UpdateAsync(student);
                         }
                         await transaction.CommitAsync();
@@ -167,5 +171,6 @@ namespace luanvanthacsi.Data.Services
                 }
             }
         }
+
     }
 }

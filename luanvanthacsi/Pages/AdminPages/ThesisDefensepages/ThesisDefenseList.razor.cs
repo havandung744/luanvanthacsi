@@ -44,6 +44,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         ThesisDefenseData selectData;
         Table<ThesisDefenseData>? table;
         List<string>? ListSelectedThesisDefenseIds;
+        ThesisDefenseSearchModal thesisDefenseSearchModal;
         IEnumerable<ThesisDefenseData>? selectedRows;
         List<string>? ListSelectedIds;
         bool visible = false;
@@ -69,7 +70,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             loading = true;
             visible = false;
             visibleForDetail = false;
-            StateHasChanged();
             var thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(CurrentUser.FacultyId);
             //var thesisDefenses = await ThesisDefenseService.GetAllAsync();
             // hiển thị dữ liệu mới nhất lên đầu trang
@@ -92,6 +92,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
                 model.Name = c.Name;
                 model.Code = c.Code;
                 model.CreateDate = c.CreateDate;
+                model.YearOfProtection = c.YearOfProtection;
                 models.Add(model);
                 stt++;
             });
@@ -253,7 +254,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             {
                 var StudentOfthesisDefense = new List<Student>();
                 StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(CurrentUser.FacultyId, data.Id).Result;
-                await ThesisDefenseDetail.loadData(StudentOfthesisDefense);
+                ThesisDefenseDetail.loadData(StudentOfthesisDefense, data.Id);
                 visibleForDetail = true;
             }
             catch (Exception ex)

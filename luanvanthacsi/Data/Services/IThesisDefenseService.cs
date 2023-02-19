@@ -12,6 +12,8 @@ namespace luanvanthacsi.Data.Services
         Task<bool> DeleteThesisDefenseListAsync(List<ThesisDefense> thesisDefenses);
         Task<List<ThesisDefense>> GetListThesisDefenseBySearchAsync(string txtSearch);
         Task<List<Student>> GetCurrentListStaff(string FacultyId, string thesisDefensesId);
+        Task<bool> UpdateStudentListByIds(List<Student> students);
+        Task<bool> UpdateStudentById(Student student);
 
     }
 }

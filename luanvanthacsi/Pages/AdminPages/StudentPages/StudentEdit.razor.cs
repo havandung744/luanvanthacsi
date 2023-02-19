@@ -52,6 +52,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             student.UpdateDate = EditModel.UpdateDate;
             student.DateOfBirth = EditModel.DateOfBirth;
             student.FacultyId = CurrentUser.FacultyId;
+            //student.ThesisDefenseId = EditModel
             ValueChange.InvokeAsync(student);
         }
 

@@ -6,6 +6,7 @@ using NHibernate.Linq;
 
 namespace luanvanthacsi.Data.Services
 {
+
     public class ThesisDefenseService : IThesisDefenseService
     {
         public async Task<bool> AddOrUpdateThesisDefenseAsync(ThesisDefense thesisDefense)
@@ -131,7 +132,7 @@ namespace luanvanthacsi.Data.Services
                 List<Student> students;
                 using (ISession session = FluentNHibernateHelper.OpenSession())
                 {
-                    students = session.Query<Student>().Where(c=> (c.FacultyId == FacultyId) && (c.ThesisDefenseId == thesisDefensesId)).ToList();
+                    students = session.Query<Student>().Where(c => (c.FacultyId == FacultyId) && (c.ThesisDefenseId == thesisDefensesId)).ToList();
                 }
                 return students;
             }
@@ -180,6 +181,59 @@ namespace luanvanthacsi.Data.Services
                         throw ex;
                     }
                 }
+            }
+        }
+
+        public async Task<bool> UpdateStudentById(Student student)
+        {
+            bool result = false;
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        student.UpdateDate = DateTime.Now;
+                        await session.UpdateAsync(student);
+
+                        await transaction.CommitAsync();
+                        result = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw ex;
+                    }
+                }
+                return result;
+            }
+        }
+
+        public async Task<bool> UpdateStudentListByIds(List<Student> students)
+        {
+            bool result = false;
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (var student in students)
+                        {
+                            student.UpdateDate = DateTime.Now;
+                            await session.UpdateAsync(student);
+
+                        }
+                        await transaction.CommitAsync();
+                        result = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw ex;
+                    }
+                }
+                return result;
             }
         }
     }
