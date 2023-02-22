@@ -99,6 +99,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 model.CreateDate = c.CreateDate;
                 model.UpdateDate = c.UpdateDate;
                 model.FacultyId = c.FacultyId;
+                model.TopicName = c.TopicName;
+                model.InstructorOne = c.InstructorOne;
+                model.OnstructorTwo = c.OnstructorTwo;
                 models.Add(model);
                 stt++;
             });

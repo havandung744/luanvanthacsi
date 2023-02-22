@@ -27,6 +27,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             EditModel.PhoneNumber = student.PhoneNumber;
             EditModel.UpdateDate = student.UpdateDate;
             EditModel.CreateDate = student.CreateDate;
+            EditModel.TopicName = student.TopicName;
+            EditModel.InstructorOne = student.InstructorOne;
+            EditModel.OnstructorTwo = student.OnstructorTwo;
             //EditModel.FacultyId = student.FacultyId;
             if(student.DateOfBirth==DateTime.MinValue)
             {
@@ -52,6 +55,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             student.UpdateDate = EditModel.UpdateDate;
             student.DateOfBirth = EditModel.DateOfBirth;
             student.FacultyId = CurrentUser.FacultyId;
+            student.TopicName = EditModel.TopicName;
+            student.InstructorOne = EditModel.InstructorOne;
+            student.OnstructorTwo = EditModel.OnstructorTwo;
             //student.ThesisDefenseId = EditModel
             ValueChange.InvokeAsync(student);
         }

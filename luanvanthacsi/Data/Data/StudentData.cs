@@ -25,6 +25,12 @@ namespace luanvanthacsi.Data.Data
         public string FacultyId;
         [Display(Name = "Mã đợt bảo vệ")]
         public string ThesisDefenseId;
+        [Display(Name = "Tên đề tài")]
+        public string TopicName;
+        [Display(Name = "Người hướng dẫn 1")]
+        public string InstructorOne;
+        [Display(Name = "Người hướng dẫn 2")]
+        public string OnstructorTwo;
          
 
     }

@@ -16,9 +16,20 @@
         <FormItem Label="Số điện thoại">
             <Input @bind-Value="@context.PhoneNumber" />
         </FormItem>
-         <FormItem Label="Ngày sinh">
+        <FormItem Label="Ngày sinh">
             <DatePicker @bind-Value="@context.DateOfBirth" Format="dd/MM/yyyy" Style="width: 301px"></DatePicker>
         </FormItem>
+        <FormItem Label="Tên đề tài">
+            <Input @bind-Value="@context.TopicName" />
+        </FormItem>
+        <FormItem Label="Người hướng dẫn 1">
+            <Input @bind-Value="@context.InstructorOne" />
+        </FormItem>
+        <FormItem Label="Người hướng dẫn 2">
+            <Input @bind-Value="@context.OnstructorTwo" />
+        </FormItem>
+        
+
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
             <Button Type="@ButtonType.Primary" HtmlType="submit">
                 Lưu

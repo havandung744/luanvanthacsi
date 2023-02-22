@@ -1,6 +1,7 @@
 ﻿@page "/student"
 @using luanvanthacsi.Data.Components
 @using luanvanthacsi.Data.Data;
+@using System.ComponentModel;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý học viên</PageTitle>
 
@@ -58,18 +59,21 @@
     </FormItem>
 </Form>
 
-<Table @ref="table" DataSource="studentDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
-       TItem="StudentData"
+<Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
+       TItem="StudentData" ScrollX="1350" Bordered ScrollY="569" ScrollBarWidth="5px"
        OnRowClick="OnRowClick"
        @bind-SelectedRows="selectedRows">
     <ChildContent>
-        <Selection Key="@context.Id" Fixed="left" Width="50px"></Selection>
-        <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
-        <Column @bind-Field="context.Code" Sortable></Column>
-        <Column @bind-Field="context.Name" Sortable></Column>
-        <Column @bind-Field="context.Email"></Column>
-        <Column @bind-Field="context.PhoneNumber"></Column>
+        <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+        <Column @bind-Field="context.stt" Width="50;" Sortable Fixed="left"></Column>
+        <Column @bind-Field="context.Code" Ellipsis Sortable Fixed="left"></Column>
+        <Column @bind-Field="context.Name" Ellipsis Sortable Width="150" Fixed="left"></Column>
+        <Column @bind-Field="context.Email" Ellipsis Width="200"></Column>
+        <Column @bind-Field="context.PhoneNumber" Ellipsis></Column>
         <Column @bind-Field="context.DateOfBirth" Format="dd/MM/yyyy" Sortable></Column>
+        <Column @bind-Field="context.TopicName" Width="250p" Ellipsis Sortable></Column>
+        <Column @bind-Field="context.InstructorOne" Width="150" Ellipsis Sortable></Column>
+        <Column @bind-Field="context.OnstructorTwo" Width="150" Ellipsis Sortable></Column>
         <ActionColumn Title="Hành động">
             <Icon Type="edit" Theme="outline" @onclick="() => Edit(context)" Width="20" Height="20" Style="margin-right: 10px" />
             <Popconfirm Title="Xác nhận xóa?"

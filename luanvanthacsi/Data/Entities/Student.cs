@@ -12,5 +12,8 @@
         public virtual DateTime DateOfBirth { get; set; }
         public virtual DateTime CreateDate { get; set; }
         public virtual DateTime UpdateDate { get; set; }
+        public virtual string? TopicName { get; set; }
+        public virtual string? InstructorOne { get; set; }
+        public virtual string? OnstructorTwo { get; set; }
     }
 }

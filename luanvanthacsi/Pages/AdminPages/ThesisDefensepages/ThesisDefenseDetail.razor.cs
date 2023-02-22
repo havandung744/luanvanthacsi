@@ -11,7 +11,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
     public partial class ThesisDefenseDetail : ComponentBase
     {
-        [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+        [Inject] AuthenticationStateProvider? _authenticationStateProvider { get; set; }
         [Inject] IThesisDefenseService ThesisDefenseService { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] IStudentService StudentService { get; set; }
