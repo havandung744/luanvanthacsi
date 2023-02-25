@@ -30,11 +30,26 @@
         <FormItem Label="Học vị">
             <Input @bind-Value="@context.Degree" />
         </FormItem>
-        @*<FormItem Label="CV">
+        <FormItem Label="CV">
             <Space>
                 <SpaceItem>
                     <Tooltip Title="@("Tải xuống file đính kèm")">
                         <Icon Type="download" Theme="outline" OnClick="() => GetFileAttachAsync(EditModel)" Class="pointer" />
+                    </Tooltip>
+                </SpaceItem>
+                <SpaceItem>
+                    <Tooltip Title="@("Xóa file đính kèm")">
+                        <Popconfirm Placement="@Placement.LeftBottom"
+                                    OnConfirm="() => ClearFile(context)"
+                                    OkText="Đồng ý"
+                                    CancelText="Hủy">
+                            <ChildContent>
+                                <Icon Type="delete" Theme="outline" Class="pointer" />
+                            </ChildContent>
+                            <TitleTemplate>
+                                Bạn có chắc chắn muốn xóa đính kèm này?
+                            </TitleTemplate>
+                        </Popconfirm>
                     </Tooltip>
                 </SpaceItem>
                 <SpaceItem>
@@ -46,7 +61,7 @@
         </FormItem>
         <FormItem>
             <Input @bind-Value="@context.FileName" ReadOnly />
-        </FormItem>*@
+        </FormItem>
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
             <Button Type="@ButtonType.Primary" HtmlType="submit">
                 Lưu
@@ -89,7 +104,7 @@
     </div>
 </Modal>
 
-@code{
+@code {
     class selectInUniversity
     {
         public int Value { get; set; }

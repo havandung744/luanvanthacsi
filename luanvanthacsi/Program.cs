@@ -78,7 +78,8 @@ builder.Services.AddSingleton<TableLocale>(c =>
 });
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

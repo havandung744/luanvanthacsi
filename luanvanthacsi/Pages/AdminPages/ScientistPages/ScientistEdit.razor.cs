@@ -15,11 +15,13 @@ using OfficeOpenXml.Style.XmlAccess;
 using static luanvanthacsi.Data.Components.Enum;
 using AutoMapper;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Ultils;
 
 namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 {
     public partial class ScientistEdit : ComponentBase
     {
+        [Inject] NavigationManager NavigationManager { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] IMapper _mapper { get; set; }
@@ -39,7 +41,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         string Id { get; set; }
         protected override void OnInitialized()
         {
-                oldEditmode = EditModel;
+            oldEditmode = EditModel;
             _selectInUniversity = new List<selectInUniversity>
             {
                 new selectInUniversity {Value=1, Name="Trong trường"},
@@ -78,7 +80,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         {
             // chọc vào db lấy dữ liệu
             //EditModel = ScientistService.GetScientistByIdAsync(CurrentUser.Id);
-            Scientist oldEditmodel  = await ScientistService.GetScientistByIdAsync(EditModel.Id);
+            Scientist oldEditmodel = await ScientistService.GetScientistByIdAsync(EditModel.Id);
             EditModel = _mapper.Map<ScientistEditModel>(oldEditmodel);
             StateHasChanged();
         }
@@ -143,9 +145,37 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 throw ex;
             }
         }
-        public void handleChange(locationOfScientist locationOfScientist)
+        void Upload(ScientistEditModel model)
         {
-            EditModel.InUniversity = locationOfScientist.EnumToInt();
+            try
+            {
+                ClearFile();
+                uploadVisible = true;
+                EditModel = model;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        async Task GetFileAttachAsync(ScientistEditModel model)
+        {
+            try
+            {
+                if (model.AttachFilePath.IsNullOrEmpty())
+                {
+                    return;
+                }
+
+                ////var filePathUrl = Path.Combine("luanvanthacsi", model.AttachFilePath, model.FileName);
+                //string fileUrl = "file:///C:/chuongtrinhki1nam4/khoaluan/luanvanthacsi/luanvanthacsi/wwwroot/Documents/example.pdf"''
+                //JSRuntime.DownloadFileFromUrl(fileUrl, EditModel.FileName);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }
