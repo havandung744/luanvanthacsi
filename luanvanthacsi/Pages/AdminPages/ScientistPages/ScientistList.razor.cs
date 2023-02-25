@@ -67,6 +67,14 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         void AddScientist()
         {
             var scientistData = new Scientist();
+            var lastCode = scientistDatas?.OrderByDescending(x =>x.Code).Select(x=>x.Code).FirstOrDefault();
+            int codeNumber = 0;
+            if (lastCode != null && int.TryParse(lastCode.Substring(3), out codeNumber))
+            {
+                codeNumber++;
+            }
+            string newCode = "nkh" + codeNumber.ToString("D3");
+            scientistData.Code = newCode;
             ShowScientistDetail(scientistData);
         }
 
@@ -171,6 +179,5 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 throw ex;
             }
         }
-
     }
 }

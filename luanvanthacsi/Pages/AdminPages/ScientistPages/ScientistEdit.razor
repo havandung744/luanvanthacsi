@@ -6,7 +6,7 @@
       OnFinishFailed="OnFinishFailed">
     <Template style="height:90%">
         <FormItem Label="Mã nhà khoa học">
-            <Input @bind-Value="@context.Code" />
+            <Input @bind-Value="@context.Code" ReadOnly />
         </FormItem>
         <FormItem Label="Tên nhà khoa học">
             <Input @bind-Value="@context.Name" />
@@ -63,12 +63,26 @@
             <Input @bind-Value="@context.FileName" ReadOnly />
         </FormItem>
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
-            <Button Type="@ButtonType.Primary" HtmlType="submit">
-                Lưu
-            </Button>
-            <Button OnClick="Reset">
-                Hủy
-            </Button>
+            <Space>
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" HtmlType="submit">
+                        Lưu
+                    </Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Popconfirm Placement="@Placement.LeftBottom"
+                                OnConfirm="Reset"
+                                OkText="Đồng ý"
+                                CancelText="Hủy">
+                        <ChildContent>
+                            <Button>Hủy</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Hủy sẽ xóa dữ liệu bạn đang thao tác. bạn có chắc muốn hủy không?
+                        </TitleTemplate>
+                    </Popconfirm>
+                </SpaceItem>
+            </Space>
         </FormItem>
     </Template>
 </Form>

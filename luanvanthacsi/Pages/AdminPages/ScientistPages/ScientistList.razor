@@ -39,7 +39,6 @@
         </SpaceItem>
     </Space>
 </Row>
-
 <Table @ref="table" DataSource="scientistDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
        TItem="ScientistData"
        OnRowClick="OnRowClick"
@@ -56,11 +55,11 @@
         <Column @bind-Field="context.InUniversity">
             @if (context.InUniversity == 1)
             {
-                <p>Trong trường</p>
+            <p>Trong trường</p>
             }
             else
             {
-                <p>Ngoài trường</p>
+            <p>Ngoài trường</p>
             }
         </Column>
 

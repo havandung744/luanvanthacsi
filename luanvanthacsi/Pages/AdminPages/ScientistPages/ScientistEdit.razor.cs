@@ -44,8 +44,8 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             oldEditmode = EditModel;
             _selectInUniversity = new List<selectInUniversity>
             {
-                new selectInUniversity {Value=1, Name="Trong trường"},
                 new selectInUniversity {Value=0, Name="Ngoài trường"},
+                new selectInUniversity {Value=1, Name="Trong trường"},
             };
         }
         public void LoadData(Scientist scientist)
@@ -78,10 +78,17 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         }
         private async Task Reset(MouseEventArgs args)
         {
-            // chọc vào db lấy dữ liệu
-            //EditModel = ScientistService.GetScientistByIdAsync(CurrentUser.Id);
-            Scientist oldEditmodel = await ScientistService.GetScientistByIdAsync(EditModel.Id);
-            EditModel = _mapper.Map<ScientistEditModel>(oldEditmodel);
+            if (EditModel.Id == null)
+            {
+                var newCode = EditModel.Code;
+                EditModel = new ScientistEditModel();
+                EditModel.Code = newCode;
+            }
+            else
+            {
+                Scientist oldEditmodel = await ScientistService.GetScientistByIdAsync(EditModel.Id);
+                EditModel = _mapper.Map<ScientistEditModel>(oldEditmodel);
+            }
             StateHasChanged();
         }
 
