@@ -2,7 +2,7 @@
 
 namespace luanvanthacsi.Data.Edit
 {
-    public class ScientistEditModel
+    public class ScientistEditModel : EditBaseModel
     {
         public string Id { get; set; }
         [Required(ErrorMessage = "Vui lòng nhập vào Mã nhà khoa học")]
@@ -18,5 +18,11 @@ namespace luanvanthacsi.Data.Edit
         public string Degree { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
+        [Display(Name = "Đính kèm")]
+        public string AttachFilePath { get; set; }
+        [Display(Name = "Tên file")]
+        public string FileName { get; set; }
+        public int InUniversity { get; set; }
+
     }
 }

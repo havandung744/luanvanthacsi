@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NHibernate.Mapping;
 using System.Reflection;
+using Tewr.Blazor.FileReader;
 using Umbraco.Core.Composing.CompositionExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -76,6 +77,7 @@ builder.Services.AddSingleton<TableLocale>(c =>
     return locale;
 });
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
 
 var app = builder.Build();
 

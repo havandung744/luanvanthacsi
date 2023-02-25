@@ -18,8 +18,10 @@ namespace luanvanthacsi.Data.Map
             Map(x => x.CreateDate).Column("CreateDate");
             Map(x => x.UpdateDate).Column("UpdateDate");
             Map(x => x.FacultyId).Column("FacultyId");
+            Map(x => x.AttachFilePath).Column("AttachFilePath");
+            Map(x => x.FileName).Column("FileName");
+            Map(x => x.InUniversity).Column("InUniversity");
             Table("Scientist");
-
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿<Form @ref="form"
+﻿@using static luanvanthacsi.Data.Components.Enum;
+<Form @ref="form"
       Model="EditModel" LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
@@ -16,19 +17,82 @@
         <FormItem Label="Số điện thoại">
             <Input @bind-Value="@context.PhoneNumber" />
         </FormItem>
+        <FormItem Label="Vị trí">
+            <Select TItem="selectInUniversity" TItemValue="int"
+                    @bind-Value="@context.InUniversity" DataSource="@_selectInUniversity"
+                    LabelName="@nameof(selectInUniversity.Name)"
+                    ValueName="@nameof(selectInUniversity.Value)">
+            </Select>
+        </FormItem>
         <FormItem Label="Học hàm">
             <Input @bind-Value="@context.AcademicRank" />
         </FormItem>
         <FormItem Label="Học vị">
             <Input @bind-Value="@context.Degree" />
         </FormItem>
+        @*<FormItem Label="CV">
+            <Space>
+                <SpaceItem>
+                    <Tooltip Title="@("Tải xuống file đính kèm")">
+                        <Icon Type="download" Theme="outline" OnClick="() => GetFileAttachAsync(EditModel)" Class="pointer" />
+                    </Tooltip>
+                </SpaceItem>
+                <SpaceItem>
+                    <Tooltip Title="@("Tải lên file đính kèm")">
+                        <Icon Class="upload pointer" Type="cloud-upload" Theme="outline" OnClick="() => Upload(EditModel)" Style="width:24px; height: 24px" />
+                    </Tooltip>
+                </SpaceItem>
+            </Space>
+        </FormItem>
+        <FormItem>
+            <Input @bind-Value="@context.FileName" ReadOnly />
+        </FormItem>*@
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
             <Button Type="@ButtonType.Primary" HtmlType="submit">
                 Lưu
             </Button>
             <Button OnClick="Reset">
-                Đặt lại
+                Hủy
             </Button>
         </FormItem>
     </Template>
 </Form>
+
+@*<SpaceItem>
+    <Tooltip Title="@("Tải xuống file đính kèm")">
+    <Icon Type="download" Theme="outline" OnClick="() => GetFileAttachAsync(tableContext)" Class="pointer" />
+    </Tooltip>
+    </SpaceItem>*@
+@*@if (StaffProfileViewMode == StaffProfileViewMode.Manager)
+    {
+    <SpaceItem>
+    <Tooltip Title="@("Xóa file đính kèm")">
+    <Popconfirm Placement="@Placement.LeftBottom"
+    OnConfirm="() => ClearFile(tableContext)"
+    OkText="Đồng ý"
+    CancelText="Hủy">
+    <ChildContent>
+    <Icon Type="delete" Theme="outline" Class="pointer" />
+    </ChildContent>
+    <TitleTemplate>
+    Bạn có chắc chắn muốn xóa đính kèm này?
+    </TitleTemplate>
+    </Popconfirm>
+    </Tooltip>
+    </SpaceItem>*@
+
+<Modal Title="@("Đính kèm")" Visible="@uploadVisible" OnOk="ReadFile" OnCancel="CancelModal">
+    <input id="uploadFile" disabled class="f-input" value="@AttachFileName" style="margin: 0 !important" />
+    <div class="fileUpload btn btn--browse" style="margin: 0 !important">
+        <span><Icon Type="plus" Theme="outline" />Đính kèm</span>
+        <input id="uploadBtn" type="file" class="upload" @ref=inputTypeFileElement @onchange="GetNameFile" />
+    </div>
+</Modal>
+
+@code{
+    class selectInUniversity
+    {
+        public int Value { get; set; }
+        public string Name { get; set; }
+    }
+}

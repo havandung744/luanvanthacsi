@@ -43,7 +43,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         StudentData? selectData;
         Table<StudentData>? table;
         List<string>? ListSelectedStudentIds;
-        readonly IMapper _mapper;
+        [Inject] IMapper _mapper { get; set; }
         bool visible = false;
         bool loading = false;
         bool loadingExcel = false;

@@ -23,8 +23,13 @@ namespace luanvanthacsi.Data.Data
         public DateTime CreateDate;
         [Display(Name = "Ngày Cập nhật")]
         public DateTime UpdateDate;
-         [Display(Name = "Mã khoa")]
-        public DateTime FacultyId;
+        [Display(Name = "Mã khoa")]
+        public string FacultyId;
+        public string AttachFilePath;
+        [Display(Name = "File Name")]
+        public string FileName;
+        [Display(Name = "Vị trí")]
+        public int InUniversity;
 
     }
 

@@ -11,6 +11,7 @@ using FluentNHibernate.Conventions;
 using luanvanthacsi.Data.Extentions;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components.Authorization;
+using AutoMapper;
 
 namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 {
@@ -22,16 +23,15 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         [Inject] NotificationService Notice { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         List<ScientistData>? scientistDatas { get; set; }
+        [Inject] IMapper _mapper { get; set; }
         List<Scientist>? scientists { get; set; }
         bool visible = false;
         ScientistEdit scientistEdit = new ScientistEdit();
         bool loading = false;
-        string txtValue { get; set; }
         IEnumerable<ScientistData>? selectedRows;
         ScientistData? selectData;
         Table<ScientistData>? table;
         List<string>? ListSelectedScientistIds;
-        TaskSearchScientist taskSearchScientist = new TaskSearchScientist();
         User CurrentUser;
         protected override async Task OnInitializedAsync()
         {
@@ -57,33 +57,11 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             var scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = scientists.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
-            scientistDatas = GetViewModels(list);
+            scientistDatas = _mapper.Map<List<ScientistData>>(list);
+            int stt = 1;
+            scientistDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
             StateHasChanged();
-        }
-
-        List<ScientistData> GetViewModels(List<Scientist> datas)
-        {
-            var models = new List<ScientistData>();
-            ScientistData model;
-            int stt = 1;
-            datas.ForEach(c =>
-            {
-                model = new ScientistData();
-                model.Id = c.Id;
-                model.stt = stt;
-                model.Name = c.Name;
-                model.Email = c.Email;
-                model.Code = c.Code;
-                model.PhoneNumber = c.PhoneNumber;
-                model.AcademicRank = c.AcademicRank;
-                model.Degree = c.Degree;
-                model.CreateDate = c.CreateDate;
-                model.UpdateDate = c.UpdateDate;
-                models.Add(model);
-                stt++;
-            });
-            return models;
         }
 
         void AddScientist()
@@ -139,19 +117,6 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             }
         }
 
-        async Task Search()
-        {
-            var txtSearch = taskSearchScientist.txtSearch;
-            scientistDatas?.Clear();
-            scientists = await ScientistService.GetListScientistBySearchAsync(txtSearch);
-            scientistDatas = GetViewModels(scientists);
-            StateHasChanged();
-        }
-
-        public class TaskSearchScientist
-        {
-            public string? txtSearch { get; set; }
-        }
         void OnRowClick(RowData<ScientistData> rowData)
         {
             try
