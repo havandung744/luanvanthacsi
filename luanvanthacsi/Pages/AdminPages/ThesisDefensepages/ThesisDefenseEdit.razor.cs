@@ -4,11 +4,15 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Edit;
+using luanvanthacsi.Data.Services;
+using AutoMapper;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
     public partial class ThesisDefenseEdit : ComponentBase
     {
+        [Inject] IMapper _mapper { get; set; }
+        [Inject] IThesisDefenseService ThesisDefenseService { get; set; }
         [Parameter] public User CurrentUser { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<ThesisDefense> ValueChange { get; set; }
@@ -27,11 +31,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         public void UpdateThesisDefense()
         {
             ThesisDefense thesisDefense = new ThesisDefense();
-            thesisDefense.Id = EditModel.Id;
-            thesisDefense.Name = EditModel.Name;
-            thesisDefense.Code = EditModel.Code;
-            thesisDefense.CreateDate = EditModel.CreateDate;
-            thesisDefense.YearOfProtection = EditModel.YearOfProtection;
+            thesisDefense = _mapper.Map<ThesisDefense>(EditModel);
             thesisDefense.FacultyId = CurrentUser.FacultyId;
             ValueChange.InvokeAsync(thesisDefense);
         }
@@ -51,9 +51,20 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             EditModel = new ThesisDefenseEditModel();
             StateHasChanged();
         }
-        private void Reset(MouseEventArgs args)
+        private async Task Reset(MouseEventArgs args)
         {
-            form.Reset();
+            if (EditModel.Id == null)
+            {
+                var newCode = EditModel.Code;
+                EditModel = new ThesisDefenseEditModel();
+                EditModel.Code = newCode;
+            }
+            else
+            {
+                ThesisDefense oldEditmodel = await ThesisDefenseService.GetThesisDefenseByIdAsync(EditModel.Id);
+                EditModel = _mapper.Map<ThesisDefenseEditModel>(oldEditmodel);
+            }
+            StateHasChanged();
         }
 
     }

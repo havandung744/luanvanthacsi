@@ -68,6 +68,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             var students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             studentDatas = _mapper.Map<List<StudentData>>(list);
+            int stt = 1;
+            studentDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
             StateHasChanged();
         }

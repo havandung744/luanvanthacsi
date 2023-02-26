@@ -2,11 +2,19 @@
 @using luanvanthacsi.Data.Data;
 @attribute [Authorize(Roles = "Admin")]
 <PageTitle>Mở đợt bảo vệ</PageTitle>
-
+<PageHeader Style="padding: 0;">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Đợt bảo vệ</BreadcrumbItem>
+            <BreadcrumbItem>Danh sách đợt bảo vệ</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
 <Row>
     <Space>
         <SpaceItem>
-            <Button Type="primary" @onclick="AddThesisDefense">Thêm</Button>
+            <Button Icon="plus" Type="primary" Color="Color.Green7" @onclick="AddThesisDefense">Thêm</Button>
         </SpaceItem>
         <SpaceItem>
             @if (selectedRows?.Any() == true)
@@ -17,7 +25,7 @@
                             OkText="Đồng ý"
                             CancelText="Hủy">
                         <ChildContent>
-                            <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                            <Button Type="@ButtonType.Primary" Color="Color.Red7">Xóa</Button>
                         </ChildContent>
                         <TitleTemplate>
                             Bạn có chắc chắn muốn xóa
@@ -27,7 +35,6 @@
 
                                 <span>?</span>
                             }
-
                             else
                             {
                                 <strong> @selectedRows.Count()</strong> <span>nhân viên?</span>
@@ -41,15 +48,6 @@
     </Space>
 </Row>
 <br />
-<Row>
-    <Form Model="@taskSearch" Style="display:flex; width: 500px; height: 40px;"
-          OnFinish="Search">
-        <FormItem Style="width: 70%">
-            <Search @bind-Value="@context.txtSearch" Placeholder="Tìm kiếm theo tên." />
-        </FormItem>
-    </Form>
-</Row>
-
 <Table @ref="table" DataSource="thesisDefenseDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
        TItem="ThesisDefenseData"
        OnRowClick="OnRowClick"

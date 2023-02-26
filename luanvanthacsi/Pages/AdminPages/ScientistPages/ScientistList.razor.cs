@@ -73,7 +73,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             {
                 codeNumber++;
             }
-            string newCode = "nkh" + codeNumber.ToString("D3");
+            string newCode = "NKH" + codeNumber.ToString("D3");
             scientistData.Code = newCode;
             ShowScientistDetail(scientistData);
         }

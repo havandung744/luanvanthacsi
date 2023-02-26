@@ -28,6 +28,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
     public partial class ThesisDefenseList : ComponentBase
     {
+        [Inject] IMapper _mapper { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
@@ -39,7 +40,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         ThesisDefenseEdit thesisDefenseEdit = new ThesisDefenseEdit();
         ThesisDefenseDetail ThesisDefenseDetail = new ThesisDefenseDetail();
         List<ThesisDefense> thesisDefenses { get; set; }
-        TaskSearch taskSearch = new TaskSearch();
         IEnumerable<ThesisDefenseData>? selectRows;
         ThesisDefenseData selectData;
         Table<ThesisDefenseData>? table;
@@ -50,7 +50,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         bool visible = false;
         bool visibleForDetail = false;
         bool loading = false;
-        string txtValue { get; set; }
         User CurrentUser;
 
 
@@ -71,37 +70,25 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             visible = false;
             visibleForDetail = false;
             var thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(CurrentUser.FacultyId);
-            //var thesisDefenses = await ThesisDefenseService.GetAllAsync();
-            // hiển thị dữ liệu mới nhất lên đầu trang
             var list = thesisDefenses.OrderByDescending(x => x.CreateDate).ToList();
-            thesisDefenseDatas = GetViewModels(list);
+            thesisDefenseDatas = _mapper.Map<List<ThesisDefenseData>>(list);
+            int stt = 1;
+            thesisDefenseDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
             StateHasChanged();
-        }
-
-        List<ThesisDefenseData> GetViewModels(List<ThesisDefense> datas)
-        {
-            var models = new List<ThesisDefenseData>();
-            ThesisDefenseData model;
-            int stt = 1;
-            datas.ForEach(c =>
-            {
-                model = new ThesisDefenseData();
-                model.Id = c.Id;
-                model.stt = stt;
-                model.Name = c.Name;
-                model.Code = c.Code;
-                model.CreateDate = c.CreateDate;
-                model.YearOfProtection = c.YearOfProtection;
-                models.Add(model);
-                stt++;
-            });
-            return models;
         }
 
         void AddThesisDefense()
         {
             var thesisDefenseData = new ThesisDefense();
+            var lastCode = thesisDefenseDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
+            int codeNumber = 0;
+            if (lastCode != null && int.TryParse(lastCode.Substring(3), out codeNumber))
+            {
+                codeNumber++;
+            }
+            string newCode = "DBV" + codeNumber.ToString("D3");
+            thesisDefenseData.Code = newCode;
             ShowStudentDetail(thesisDefenseData);
         }
 
@@ -175,15 +162,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             StateHasChanged();
         }
 
-        async Task Search()
-        {
-            var txtSearch = taskSearch.txtSearch;
-            thesisDefenseDatas?.Clear();
-            thesisDefenses = await ThesisDefenseService.GetListThesisDefenseBySearchAsync(txtSearch);
-            thesisDefenseDatas = GetViewModels(thesisDefenses);
-            StateHasChanged();
-        }
-
         void OnRowClick(RowData<ThesisDefenseData> rowData)
         {
             try
@@ -237,16 +215,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             {
                 throw ex;
             }
-        }
-
-        //void OnChangeIsShow(bool isShow)
-        //{
-        //    showExcelForm = isShow;
-        //}
-
-        public class TaskSearch
-        {
-            public string? txtSearch { get; set; }
         }
         async Task OpenDetailAsync(ThesisDefenseData data)
         {

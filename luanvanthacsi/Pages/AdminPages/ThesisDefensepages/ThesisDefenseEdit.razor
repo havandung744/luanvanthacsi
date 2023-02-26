@@ -5,7 +5,7 @@
       OnFinishFailed="OnFinishFailed">
     <Template style="height:90%">
         <FormItem Label="Mã đợt bảo vệ">
-            <Input @bind-Value="@context.Code" />
+            <Input @bind-Value="@context.Code" ReadOnly/>
         </FormItem>
         <FormItem Label="Tên đợt bảo vệ">
             <Input @bind-Value="@context.Name" />
@@ -13,14 +13,21 @@
         <FormItem Label="Năm bảo vệ">
             <DatePicker @bind-Value="@context.YearOfProtection" Picker="@DatePickerType.Year" />
         </FormItem>
-
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
             <Button Type="@ButtonType.Primary" HtmlType="submit">
                 Lưu
             </Button>
-            <Button OnClick="Reset">
-                Đặt lại
-            </Button>
+            <Popconfirm Placement="@Placement.LeftBottom"
+                        OnConfirm="Reset"
+                        OkText="Đồng ý"
+                        CancelText="Hủy">
+                <ChildContent>
+                    <Button Type="@ButtonType.Primary" Danger>Hủy</Button>
+                </ChildContent>
+                <TitleTemplate>
+                    Hủy sẽ xóa dữ liệu bạn đang thao tác. bạn có chắc muốn hủy không?
+                </TitleTemplate>
+            </Popconfirm>
         </FormItem>
     </Template>
 </Form>
