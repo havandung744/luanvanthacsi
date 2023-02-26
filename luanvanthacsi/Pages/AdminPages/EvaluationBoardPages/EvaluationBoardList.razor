@@ -1,0 +1,68 @@
+﻿@page "/hoi-dong-danh-gia"
+@using luanvanthacsi.Data.Components
+@using luanvanthacsi.Data.Data;
+@attribute [Authorize(Roles = "Admin,Bcnkhoa")]
+<PageTitle>Quản lý nhà khoa học</PageTitle>
+<Row>
+    <Space>
+        <SpaceItem>
+            <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddEvaluationBoard">Lập hội đồng</Button>
+        </SpaceItem>
+        <SpaceItem>
+            @if (selectedRows?.Any() == true)
+            {
+                <SpaceItem>
+                    <Popconfirm Placement="@Placement.LeftBottom"
+                            OnConfirm="() => DeleteAsync()"
+                            OkText="Đồng ý"
+                            CancelText="Hủy">
+                        <ChildContent>
+                            <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
+                        </ChildContent>
+                        <TitleTemplate>
+                            Bạn có chắc chắn muốn xóa
+                            @if (selectedRows.Count() == 1)
+                            {
+                                <strong> @selectedRows?.FirstOrDefault().Name</strong>
+
+                                <span>?</span>
+                            }
+                            else
+                            {
+                                <strong> @selectedRows.Count()</strong> <span>nhà khoa học?</span>
+                            }
+
+                        </TitleTemplate>
+                    </Popconfirm>
+                </SpaceItem>
+            }
+        </SpaceItem>
+    </Space>
+</Row>
+<Table @ref="table" DataSource="evaluationBoardDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
+       TItem="EvaluationBoardData"
+       OnRowClick="OnRowClick"
+       @bind-SelectedRows="selectedRows">
+    <ChildContent>
+        <Selection Key="@context.Id" Fixed="left" Width="50px"></Selection>
+        <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
+        <Column @bind-Field="context.Code" Filterable Sortable></Column>
+        <Column @bind-Field="context.Name" Filterable Sortable></Column>
+        <ActionColumn Title="Hành động">
+            <Icon Type="edit" Theme="outline" @onclick="() => Edit(context)" Width="20" Height="20" Style="margin-right: 10px" />
+            <Popconfirm Title="Xác nhận xóa?"
+                        OnConfirm="()=> DeleteEvaluationBoard(context)"
+                        OkText="Có"
+                        CancelText="Không">
+                <Icon Type="delete" Theme="outline" Width="20" Height="20" />
+            </Popconfirm>
+        </ActionColumn>
+    </ChildContent>
+    <PaginationTemplate>
+        <PaginationCustom Context="context"></PaginationCustom>
+    </PaginationTemplate>
+</Table>
+
+<Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Nhà khoa học")' OnClose="OnClose">
+    <EvaluationBoardEdit @ref="evaluationBoardEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></EvaluationBoardEdit>
+</Drawer>

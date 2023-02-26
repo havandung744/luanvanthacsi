@@ -36,6 +36,7 @@ builder.Services.AddSingleton<IStudentService, StudentService>();
 builder.Services.AddSingleton<IThesisDefenseService, ThesisDefenseService>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IFileUpload, FileUpload>();
+builder.Services.AddSingleton<IEvaluationBoardService, EvaluationBoardService>();
 builder.Services.AddSingleton<TableLocale>(c =>
 {
     var locale = new TableLocale()

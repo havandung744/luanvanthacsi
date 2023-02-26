@@ -14,7 +14,8 @@ namespace luanvanthacsi.Data.Components
             CreateMap<ScientistData, Scientist>().ReverseMap()
                 .ForMember(src => src.CreateDate, dest => dest.Ignore());
             CreateMap<ScientistEditModel, Scientist>().ReverseMap();
-
+            CreateMap<EvaluationBoardData, EvaluationBoard>().ReverseMap();
+            CreateMap<EvaluationBoardEditModel, EvaluationBoard>().ReverseMap();
         }
     }
 }
