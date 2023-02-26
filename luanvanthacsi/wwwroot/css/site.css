@@ -123,6 +123,6 @@ a, .btn-link {
         filter: alpha(opacity=0);
     }
 
-thead[class*="ant-table-thead"] th {
-    font-weight: bold;
+.ant-breadcrumb-link .anticon svg {
+    transform: translateY(-3px);
 }

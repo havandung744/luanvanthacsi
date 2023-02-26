@@ -28,7 +28,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
     public partial class StudentList : ComponentBase
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
-        [Inject] AuthenticationStateProvider GetAuthenticationStateAsync { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] IFileUpload fileUpload { get; set; }
         [Inject] NotificationService Notice { get; set; }
@@ -36,9 +35,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         [Inject] IUserService UserService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         List<StudentData>? studentDatas { get; set; }
-        List<Student>? students { get; set; }
         StudentEdit studentEdit = new StudentEdit();
-        TaskSearchStudent taskSearchStudent = new TaskSearchStudent();
         IEnumerable<StudentData>? selectedRows;
         StudentData? selectData;
         Table<StudentData>? table;
@@ -49,7 +46,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         bool loadingExcel = false;
         bool showExcelForm = false;
         User CurrentUser;
-        string txtValue { get; set; }
         async Task<string> getUserId()
         {
             var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -69,48 +65,23 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             studentDatas.Clear();
             loading = true;
             visible = false;
-            StateHasChanged();
-            // lấy full dữ liệu
-            //var students = await StudentService.GetAllAsync();
-            // lấy dữ liệu theo khoa
             var students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
-            // hiển thị dữ liệu mới nhất lên đầu trang
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
-            studentDatas = GetViewModels(list);
+            studentDatas = _mapper.Map<List<StudentData>>(list);
             loading = false;
             StateHasChanged();
         }
-
-        List<StudentData> GetViewModels(List<Student> datas)
-        {
-            var models = new List<StudentData>();
-            StudentData model;
-            int stt = 1;
-            datas.ForEach(c =>
-            {
-                model = new StudentData();
-                model.Id = c.Id;
-                model.stt = stt;
-                model.Name = c.Name;
-                model.Email = c.Email;
-                model.Code = c.Code;
-                model.PhoneNumber = c.PhoneNumber;
-                model.DateOfBirth = c.DateOfBirth;
-                model.CreateDate = c.CreateDate;
-                model.UpdateDate = c.UpdateDate;
-                model.FacultyId = c.FacultyId;
-                model.TopicName = c.TopicName;
-                model.InstructorOne = c.InstructorOne;
-                model.OnstructorTwo = c.OnstructorTwo;
-                models.Add(model);
-                stt++;
-            });
-            return models;
-        }
-
         void AddStudent()
         {
             var studentData = new Student();
+            var lastCode = studentDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
+            int codeNumber = 0;
+            if (lastCode != null && int.TryParse(lastCode.Substring(2), out codeNumber))
+            {
+                codeNumber++;
+            }
+            string newCode = "HV" + codeNumber.ToString("D3");
+            studentData.Code = newCode;
             ShowStudentDetail(studentData);
         }
 
@@ -159,20 +130,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             {
                 Notice.NotiError("Xóa dữ liệu thất bại");
             }
-        }
-
-        async Task Search()
-        {
-            var txtSearch = taskSearchStudent.txtSearch;
-            studentDatas?.Clear();
-            students = await StudentService.GetListStudentBySearchAsync(txtSearch);
-            studentDatas = GetViewModels(students);
-            StateHasChanged();
-        }
-
-        public class TaskSearchStudent
-        {
-            public string? txtSearch { get; set; }
         }
 
         void OnRowClick(RowData<StudentData> rowData)

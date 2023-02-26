@@ -8,11 +8,15 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Components.Forms;
 using AntDesign;
 using Microsoft.AspNetCore.Components.Web;
+using AutoMapper;
+using luanvanthacsi.Data.Services;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
 {
     public partial class StudentEdit
     {
+        [Inject] IMapper _mapper { get; set; }
+        [Inject] IStudentService StudentService { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<Student> ValueChange { get; set; }
         [Parameter] public User CurrentUser { get; set; }
@@ -20,18 +24,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         Form<StudentEditModel> form;
         public void LoadData(Student student)
         {
-            EditModel.Id = student.Id;
-            EditModel.Name = student.Name;
-            EditModel.Code = student.Code;
-            EditModel.Email = student.Email;
-            EditModel.PhoneNumber = student.PhoneNumber;
-            EditModel.UpdateDate = student.UpdateDate;
-            EditModel.CreateDate = student.CreateDate;
-            EditModel.TopicName = student.TopicName;
-            EditModel.InstructorOne = student.InstructorOne;
-            EditModel.OnstructorTwo = student.OnstructorTwo;
-            //EditModel.FacultyId = student.FacultyId;
-            if(student.DateOfBirth==DateTime.MinValue)
+            EditModel = _mapper.Map<StudentEditModel>(student);
+            if (student.DateOfBirth == DateTime.MinValue)
             {
                 EditModel.DateOfBirth = DateTime.Now;
             }
@@ -46,19 +40,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         public void UpdateStudent()
         {
             Student student = new Student();
-            student.Id = EditModel.Id;
-            student.Name = EditModel.Name;
-            student.Code = EditModel.Code;
-            student.Email = EditModel.Email;
-            student.PhoneNumber = EditModel.PhoneNumber;
-            student.CreateDate = EditModel.CreateDate;
-            student.UpdateDate = EditModel.UpdateDate;
-            student.DateOfBirth = EditModel.DateOfBirth;
+            student = _mapper.Map<Student>(EditModel);
             student.FacultyId = CurrentUser.FacultyId;
-            student.TopicName = EditModel.TopicName;
-            student.InstructorOne = EditModel.InstructorOne;
-            student.OnstructorTwo = EditModel.OnstructorTwo;
-            //student.ThesisDefenseId = EditModel
             ValueChange.InvokeAsync(student);
         }
 
@@ -77,9 +60,20 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             EditModel = new StudentEditModel();
             StateHasChanged();
         }
-        private void Reset(MouseEventArgs args)
+        private async Task Reset(MouseEventArgs args)
         {
-            form.Reset();
+            if (EditModel.Id == null)
+            {
+                var newCode = EditModel.Code;
+                EditModel = new StudentEditModel();
+                EditModel.Code = newCode;
+            }
+            else
+            {
+                Student oldEditmodel = await StudentService.GetStudentByIdAsync(EditModel.Id);
+                EditModel = _mapper.Map<StudentEditModel>(oldEditmodel);
+            }
+            StateHasChanged();
         }
 
 

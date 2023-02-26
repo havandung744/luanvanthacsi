@@ -12,7 +12,6 @@ namespace luanvanthacsi.Data.Edit
         [Required(ErrorMessage = "Vui lòng nhập vào email")]
         [RegularExpression(@"^[\w-\._\+%]+@(?:[\w-]+\.)+[\w]{2,6}$", ErrorMessage = "Email không hợp lệ")]
         public string? Email { get; set; }
-        [RegularExpression(@"^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$", ErrorMessage = "Số điện thoại không hợp lệ")]
         public string PhoneNumber { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime CreateDate { get; set; }

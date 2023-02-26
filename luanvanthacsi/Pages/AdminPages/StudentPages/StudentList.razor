@@ -4,39 +4,45 @@
 @using System.ComponentModel;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý học viên</PageTitle>
-
+<PageHeader Style="padding: 0;">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Học viên</BreadcrumbItem>
+            <BreadcrumbItem>Danh sách học viên</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
 <Row>
     <Space>
         <SpaceItem>
-            <Button Type="primary" @onclick="AddStudent" Style="margin-right:10px; margin-bottom: 5px" Color="Color.Green7">Thêm</Button>
+            <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddStudent">Thêm</Button>
         </SpaceItem>
         <SpaceItem>
             @if (selectedRows?.Any() == true)
             {
-                <SpaceItem>
-                    <Popconfirm Placement="@Placement.LeftBottom"
-                            OnConfirm="() => DeleteAsync()"
-                            OkText="Đồng ý"
-                            CancelText="Hủy">
-                        <ChildContent>
-                            <Button Type="@ButtonType.Primary" Danger>Xóa</Button>
-                        </ChildContent>
-                        <TitleTemplate>
-                            Bạn có chắc chắn muốn xóa
-                            @if (selectedRows.Count() == 1)
-                            {
-                                <strong> @selectedRows?.FirstOrDefault().Name</strong>
+                <Popconfirm Placement="@Placement.LeftBottom"
+                        OnConfirm="() => DeleteAsync()"
+                        OkText="Đồng ý"
+                        CancelText="Hủy">
+                    <ChildContent>
+                        <Button Type="@ButtonType.Primary" Color="Color.Red7">Xóa</Button>
+                    </ChildContent>
+                    <TitleTemplate>
+                        Bạn có chắc chắn muốn xóa
+                        @if (selectedRows.Count() == 1)
+                        {
+                            <strong> @selectedRows?.FirstOrDefault().Name</strong>
 
-                                <span>?</span>
-                            }
-                            else
-                            {
-                                <strong> @selectedRows.Count()</strong> <span>nhân viên?</span>
-                            }
+                            <span>?</span>
+                        }
+                        else
+                        {
+                            <strong> @selectedRows.Count()</strong> <span>nhân viên?</span>
+                        }
 
-                        </TitleTemplate>
-                    </Popconfirm>
-                </SpaceItem>
+                    </TitleTemplate>
+                </Popconfirm>
             }
         </SpaceItem>
         <SpaceItem>
@@ -51,29 +57,22 @@
         </SpaceItem>
     </Space>
 </Row>
-
-<Form Model="@taskSearchStudent" Style="display:flex; width: 500px; height: 40px;"
-      OnFinish="Search">
-    <FormItem Style="width: 70%">
-        <Search @bind-Value="@context.txtSearch" Placeholder="Tìm kiếm theo tên." />
-    </FormItem>
-</Form>
-
+<br />
 <Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
-       TItem="StudentData" ScrollX="1350" Bordered ScrollY="569" ScrollBarWidth="5px"
+       TItem="StudentData" ScrollX="1350"
        OnRowClick="OnRowClick"
        @bind-SelectedRows="selectedRows">
     <ChildContent>
         <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
         <Column @bind-Field="context.stt" Width="50;" Sortable Fixed="left"></Column>
-        <Column @bind-Field="context.Code" Ellipsis Sortable Fixed="left"></Column>
-        <Column @bind-Field="context.Name" Ellipsis Sortable Width="150" Fixed="left"></Column>
+        <Column @bind-Field="context.Code" Ellipsis Sortable Fixed="left" Filterable></Column>
+        <Column @bind-Field="context.Name" Ellipsis Sortable Width="150" Fixed="left" Filterable></Column>
         <Column @bind-Field="context.Email" Ellipsis Width="200"></Column>
-        <Column @bind-Field="context.PhoneNumber" Ellipsis></Column>
+        <Column @bind-Field="context.PhoneNumber" Ellipsis Filterable></Column>
         <Column @bind-Field="context.DateOfBirth" Format="dd/MM/yyyy" Sortable></Column>
-        <Column @bind-Field="context.TopicName" Width="250p" Ellipsis Sortable></Column>
-        <Column @bind-Field="context.InstructorOne" Width="150" Ellipsis Sortable></Column>
-        <Column @bind-Field="context.OnstructorTwo" Width="150" Ellipsis Sortable></Column>
+        <Column @bind-Field="context.TopicName" Width="250p" Ellipsis Sortable Filterable></Column>
+        <Column @bind-Field="context.InstructorOne" Width="150" Ellipsis Sortable Filterable></Column>
+        <Column @bind-Field="context.OnstructorTwo" Width="150" Ellipsis Sortable Filterable></Column>
         <ActionColumn Title="Hành động">
             <Icon Type="edit" Theme="outline" @onclick="() => Edit(context)" Width="20" Height="20" Style="margin-right: 10px" />
             <Popconfirm Title="Xác nhận xóa?"

@@ -10,12 +10,22 @@ namespace luanvanthacsi.Data.Components
     {
         public MappingProfile()
         {
+            // Map học viên
             CreateMap<StudentData, Student>().ReverseMap();
-            CreateMap<ScientistData, Scientist>().ReverseMap()
-                .ForMember(src => src.CreateDate, dest => dest.Ignore());
+            CreateMap<StudentEditModel, Student>().ReverseMap();
+
+            // map nhà khoa học
+            CreateMap<ScientistData, Scientist>().ReverseMap();
             CreateMap<ScientistEditModel, Scientist>().ReverseMap();
+
+            // map hội đồng đánh giá
             CreateMap<EvaluationBoardData, EvaluationBoard>().ReverseMap();
             CreateMap<EvaluationBoardEditModel, EvaluationBoard>().ReverseMap();
+
+            // map đợt bảo vệ
+            CreateMap<ThesisDefenseData, ThesisDefense>().ReverseMap();
+            CreateMap<ThesisDefenseEditModel, ThesisDefense>().ReverseMap();
+
         }
     }
 }
