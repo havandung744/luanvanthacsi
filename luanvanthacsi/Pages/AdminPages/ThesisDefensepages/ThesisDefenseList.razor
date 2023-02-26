@@ -63,6 +63,11 @@
                 <Row Justify="center">
                     <Space>
                         <SpaceItem>
+                            <Tooltip Placement="@Placement.Top" Title="@("Danh sách học viên bảo vệ")">
+                                <Icon Type="eye" Theme="fill" Class="btn-icon-edit" OnClick="() => OpenDetailAsync(context)" />
+                            </Tooltip>
+                        </SpaceItem>
+                        <SpaceItem>
                             <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
                                 <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" />
                             </Tooltip>

@@ -35,7 +35,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         string currentThesisDefenseId;
         Table<StudentData>? table;
         StudentData? selectData;
-        List<string> ListSelectedIds;
+        List<string> ListSelectedIds = new();
         IEnumerable<StudentData>? selectedRows;
         List<StudentData> studentOfThesisDefenseEditModels { get; set; }
         protected override async Task OnInitializedAsync()
