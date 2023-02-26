@@ -145,7 +145,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             ShowStudentDetail(thesisDefense);
         }
 
-        async Task DeleteStudent(ThesisDefenseData thesisDefenseData)
+        async Task DeleteThesisDefense(ThesisDefenseData thesisDefenseData)
         {
             ThesisDefense thesisDefense = await ThesisDefenseService.GetThesisDefenseByIdAsync(thesisDefenseData.Id.ToString());
             var result = await ThesisDefenseService.DeleteThesisDefenseAsync(thesisDefense);

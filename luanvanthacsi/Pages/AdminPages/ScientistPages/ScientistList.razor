@@ -71,15 +71,28 @@
                 <p>Ngoài trường</p>
             }
         </Column>
-
-        <ActionColumn Title="Hành động">
-            <Icon Type="edit" Theme="outline" @onclick="() => Edit(context)" Width="20" Height="20" Style="margin-right: 10px" />
-            <Popconfirm Title="Xác nhận xóa?"
-                        OnConfirm="()=> DeleteScientist(context)"
-                        OkText="Có"
-                        CancelText="Không">
-                <Icon Type="delete" Theme="outline" Width="20" Height="20" />
-            </Popconfirm>
+        <ActionColumn Title="Thao tác">
+            <ChildContent>
+                <Row Justify="center">
+                    <Space>
+                        <SpaceItem>
+                            <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
+                                <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" />
+                            </Tooltip>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Tooltip Placement="@Placement.Top" Title="@("Xóa")">
+                                <Popconfirm Title="Xác nhận xóa?"
+                                            OnConfirm="()=> DeleteScientist(context)"
+                                            OkText="Có"
+                                            CancelText="Không">
+                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" />
+                                </Popconfirm>
+                            </Tooltip>
+                        </SpaceItem>
+                    </Space>
+                </Row>
+            </ChildContent>
         </ActionColumn>
     </ChildContent>
     <PaginationTemplate>

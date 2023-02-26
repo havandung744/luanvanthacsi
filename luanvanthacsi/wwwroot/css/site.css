@@ -126,3 +126,19 @@ a, .btn-link {
 .ant-breadcrumb-link .anticon svg {
     transform: translateY(-3px);
 }
+
+.btn-icon-delete {
+    border: 2px solid #ff4d4f;
+    background-color: #ff4d4f;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.btn-icon-edit {
+    border: 2px solid #1890ff;
+    background-color: #1890ff;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 20px;
+}
