@@ -21,6 +21,7 @@ namespace luanvanthacsi.Data.Components
             // map hội đồng đánh giá
             CreateMap<EvaluationBoardData, EvaluationBoard>().ReverseMap();
             CreateMap<EvaluationBoardEditModel, EvaluationBoard>().ReverseMap();
+            CreateMap<EvaluationBoardEditModel, EvaluationBoardData>().ReverseMap();
 
             // map đợt bảo vệ
             CreateMap<ThesisDefenseData, ThesisDefense>().ReverseMap();
