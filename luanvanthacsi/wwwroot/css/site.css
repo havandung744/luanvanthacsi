@@ -142,3 +142,13 @@ a, .btn-link {
     cursor: pointer;
     font-size: 20px;
 }
+
+.ant-table-thead .ant-table-cell {
+    font-weight: 600;
+    color: rgba(0,0,0,0.85);
+}
+
+.ant-drawer-title {
+    font-weight: 600 !important;
+    color: rgba(0,0,0,0.85) !important;
+}

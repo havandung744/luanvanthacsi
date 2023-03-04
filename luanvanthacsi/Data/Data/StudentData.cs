@@ -27,9 +27,9 @@ namespace luanvanthacsi.Data.Data
         public string ThesisDefenseId;
         [Display(Name = "Tên đề tài")]
         public string TopicName;
-        [Display(Name = "Người hướng dẫn 1")]
+        [Display(Name = "Hướng dẫn 1")]
         public string InstructorOne;
-        [Display(Name = "Người hướng dẫn 2")]
+        [Display(Name = "Hướng dẫn 2")]
         public string OnstructorTwo;
          
 

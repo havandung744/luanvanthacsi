@@ -51,6 +51,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         bool visibleForDetail = false;
         bool loading = false;
         User CurrentUser;
+        string titleOfThesisDefenseDetail;
 
 
         protected override async Task OnInitializedAsync()
@@ -220,6 +221,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         {
             try
             {
+                titleOfThesisDefenseDetail = data.Name;
                 var StudentOfthesisDefense = new List<Student>();
                 StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(CurrentUser.FacultyId, data.Id).Result;
                 ThesisDefenseDetail.loadData(StudentOfthesisDefense, data.Id);
