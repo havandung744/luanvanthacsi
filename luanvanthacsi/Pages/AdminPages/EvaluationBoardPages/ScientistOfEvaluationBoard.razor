@@ -1,0 +1,43 @@
+﻿@using luanvanthacsi.Data.Components
+@using luanvanthacsi.Data.Data;
+@using System.ComponentModel;
+@attribute [Authorize(Roles = "Admin,Bcnkhoa")]
+<PageTitle>Quản lý nhà khoa học</PageTitle>
+<PageHeader Style="padding: 0;">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Nhà khoa học</BreadcrumbItem>
+            <BreadcrumbItem>Danh sách nhà khoa học</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+<br />
+
+<Table @ref="table" DataSource="scientistDatas" Loading="loading" Locale="TableLocale"
+       TItem="ScientistData" ScrollX="1350"
+       @bind-SelectedRows="selectedRows">
+    <ChildContent>
+        <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+        <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
+        <Column @bind-Field="context.Code" Filterable Sortable></Column>
+        <Column @bind-Field="context.Name" Filterable Sortable></Column>
+        <Column @bind-Field="context.Email" Filterable></Column>
+        <Column @bind-Field="context.PhoneNumber"></Column>
+        <Column @bind-Field="context.AcademicRank" Filterable></Column>
+        <Column @bind-Field="context.Degree" Filterable></Column>
+        <Column @bind-Field="context.InUniversity">
+            @if (context.InUniversity == 1)
+            {
+                    <p>Trong trường</p>
+            }
+            else
+            {
+                    <p>Ngoài trường</p>
+            }
+        </Column>
+    </ChildContent>
+    <PaginationTemplate>
+        <PaginationCustom Context="context"></PaginationCustom>
+    </PaginationTemplate>
+</Table>

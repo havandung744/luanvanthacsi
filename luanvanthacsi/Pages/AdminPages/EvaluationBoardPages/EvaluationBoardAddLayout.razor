@@ -1,0 +1,64 @@
+﻿
+<luanvanthacsi.Data.Components.Lazy>
+    <Tabs OnChange="OnTabChange">
+        <TabBarExtraContent>
+            <Space>
+                <SpaceItem>
+                    <Button OnClick="SaveAsync" type="@ButtonType.Primary">Lưu</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Tooltip Placement="@Placement.Top" Title="@("Hủy")">
+                        <Popconfirm Title="Xác nhận Hủy?"
+                                    OnConfirm="CancelAsync"
+                                    OkText="Có"
+                                    CancelText="Không">
+                            <Button Danger>Hủy</Button>
+                        </Popconfirm>
+                    </Tooltip>
+                </SpaceItem>
+            </Space>
+        </TabBarExtraContent>
+        <ChildContent>
+            <TabPane Key="1">
+                <TabTemplate>
+                    <span><Icon Type="user" />Học viên  >></span>
+                </TabTemplate>
+                <ChildContent>
+                    <StudentOfEvaluationBoard @ref="StudentOfEvaluationBoardRef"></StudentOfEvaluationBoard>
+                </ChildContent>
+            </TabPane>
+            <TabPane Key="2">
+                <TabTemplate>
+                    <span><Icon Type="user" />Chủ tịch  >></span>
+                </TabTemplate>
+                <ChildContent>
+                    <President @ref="PresidentRef"></President>
+                </ChildContent>
+            </TabPane>
+            <TabPane Key="3">
+                <TabTemplate>
+                    <span><Icon Type="user" />Phản biện  >></span>
+                </TabTemplate>
+                <ChildContent>
+                    <Counterattacker @ref="CounterattackerRef"></Counterattacker>
+                </ChildContent>
+            </TabPane>
+            <TabPane Key="4">
+                <TabTemplate>
+                    <span><Icon Type="user" />Nhà khoa học  >></span>
+                </TabTemplate>
+                <ChildContent>
+                    <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef"></ScientistOfEvaluationBoard>
+                </ChildContent>
+            </TabPane>
+            <TabPane Key="5">
+                <TabTemplate>
+                    <span><Icon Type="user" />Thư ký</span>
+                </TabTemplate>
+                <ChildContent>
+                    <SecretaryOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef"></SecretaryOfEvaluationBoard>
+                </ChildContent>
+            </TabPane>
+        </ChildContent>
+    </Tabs>
+</luanvanthacsi.Data.Components.Lazy>

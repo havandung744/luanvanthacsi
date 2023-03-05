@@ -1,0 +1,34 @@
+﻿@using luanvanthacsi.Data.Components
+@using luanvanthacsi.Data.Data;
+@using System.ComponentModel;
+@attribute [Authorize(Roles = "Admin,Bcnkhoa")]
+<PageTitle>Quản lý học viên</PageTitle>
+<PageHeader Style="padding: 0;">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Học viên</BreadcrumbItem>
+            <BreadcrumbItem>Danh sách học viên</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+<br />
+<Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
+       TItem="StudentData" ScrollX="1350"
+       @bind-SelectedRows="selectedRows">
+    <ChildContent>
+        <Selection Key="@context.Id" Type="radio" Fixed="left" Width="50"></Selection>
+        <Column @bind-Field="context.stt" Width="100" Sortable Fixed="left"></Column>
+        <Column @bind-Field="context.Code" Ellipsis Sortable Fixed="left" Filterable></Column>
+        <Column @bind-Field="context.Name" Ellipsis Sortable Width="150" Fixed="left" Filterable></Column>
+        <Column @bind-Field="context.Email" Ellipsis Width="200"></Column>
+        <Column @bind-Field="context.PhoneNumber" Ellipsis Filterable></Column>
+        <Column @bind-Field="context.DateOfBirth" Format="dd/MM/yyyy" Sortable></Column>
+        <Column @bind-Field="context.TopicName" Width="250p" Ellipsis Sortable Filterable></Column>
+        <Column @bind-Field="context.InstructorOne" Width="150" Ellipsis Sortable Filterable></Column>
+        <Column @bind-Field="context.OnstructorTwo" Width="150" Ellipsis Sortable Filterable></Column>
+    </ChildContent>
+    <PaginationTemplate>
+        <PaginationCustom Context="context"></PaginationCustom>
+    </PaginationTemplate>
+</Table>

@@ -27,6 +27,12 @@ namespace luanvanthacsi.Data.Components
             CreateMap<ThesisDefenseData, ThesisDefense>().ReverseMap();
             CreateMap<ThesisDefenseEditModel, ThesisDefense>().ReverseMap();
 
+            // map chủ tịch
+            CreateMap<Lecturers, LecturersData>().ReverseMap();
+            //CreateMap<ThesisDefenseEditModel, ThesisDefense>().ReverseMap();
+
+            // map thư ký
+            CreateMap<Secretary, SecretaryData>().ReverseMap();
         }
     }
 }

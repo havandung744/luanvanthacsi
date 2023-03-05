@@ -19,6 +19,19 @@ namespace luanvanthacsi.Data.Data
         public string StudentId;
         [Display(Name = "Id khoa")]
         public string FacultyId;
-
+        [Display(Name = "Id chủ tịch")]
+        public string PresidentId;
+        [Display(Name = "Id phản biện 1")]
+        public string CounterattackerIdOne;
+        [Display(Name = "Id phản biện 2")]
+        public string CounterattackerIdTwo;
+        [Display(Name = "Id phản biện 3")]
+        public string CounterattackerIdThree;
+        [Display(Name = "Id nhà khoa học 1")]
+        public string ScientistIdOne;
+        [Display(Name = "Id nhà khoa học 2")]
+        public string ScientistIdTwo;
+        [Display(Name = "Id thư ký")]
+        public string SecretaryId;
     }
 }

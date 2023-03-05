@@ -60,8 +60,7 @@
 <br />
 <Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
        TItem="StudentData" ScrollX="1350"
-       OnRowClick="OnRowClick"
-       @bind-SelectedRows="selectedRows">
+      >
     <ChildContent>
         <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
         <Column @bind-Field="context.stt" Width="50;" Sortable Fixed="left"></Column>

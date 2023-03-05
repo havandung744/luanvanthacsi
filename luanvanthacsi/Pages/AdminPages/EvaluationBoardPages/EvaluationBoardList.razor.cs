@@ -32,6 +32,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         Table<EvaluationBoardData>? table;
         List<string>? ListSelectedEvaluationBoardDataIds;
         User CurrentUser;
+        bool addVisible;
+        EvaluationBoardAddLayout EvaluationBoardAddLayoutRef { get; set; } = new();
         protected override async Task OnInitializedAsync()
         {
             string id = await getUserId();
@@ -62,28 +64,38 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             StateHasChanged();
         }
 
+        //void AddEvaluationBoard()
+        //{
+        //    var evaluationBoardData = new EvaluationBoard();
+        //    var lastCode = evaluationBoardDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
+        //    int codeNumber = 0;
+        //    if (lastCode != null && int.TryParse(lastCode.Substring(4), out codeNumber))
+        //    {
+        //        codeNumber++;
+        //    }
+        //    string newCode = "HDDG" + codeNumber.ToString("D3");
+        //    evaluationBoardData.Code = newCode;
+        //    ShowEvaluationBoardDetail(evaluationBoardData);
+        //}
         void AddEvaluationBoard()
         {
-            var evaluationBoardData = new EvaluationBoard();
-            var lastCode = evaluationBoardDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
-            int codeNumber = 0;
-            if (lastCode != null && int.TryParse(lastCode.Substring(4), out codeNumber))
-            {
-                codeNumber++;
-            }
-            string newCode = "HDDG" + codeNumber.ToString("D3");
-            evaluationBoardData.Code = newCode;
-            ShowEvaluationBoardDetail(evaluationBoardData);
+            addVisible = true;
         }
 
-        void ShowEvaluationBoardDetail(EvaluationBoard data)
+        //void ShowEvaluationBoardDetail(EvaluationBoard data)
+        //{
+        //    evaluationBoardEdit.LoadData(data);
+        //    visible = true;
+        //}
+        async Task ShowEvaluationBoardDetail(EvaluationBoard data)
         {
-            evaluationBoardEdit.LoadData(data);
-            visible = true;
+            await EvaluationBoardAddLayoutRef.LoadDetail(data);
+            addVisible = true;
         }
 
         async Task Save(EvaluationBoard data)
         {
+            addVisible = false;
             var resultAdd = await EvaluationBoardService.AddOrUpdateEvaluationBoard(data);
             await LoadAsync();
             if (data.Id.IsNotNullOrEmpty())
@@ -105,7 +117,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         async Task Edit(EvaluationBoardData EvaluationBoardData)
         {
             EvaluationBoard evaluationBoard = await EvaluationBoardService.GetEvaluationBoardByIdAsync(EvaluationBoardData.Id);
-            ShowEvaluationBoardDetail(evaluationBoard);
+            await ShowEvaluationBoardDetail(evaluationBoard);
         }
 
 

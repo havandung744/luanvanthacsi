@@ -87,6 +87,12 @@
     </PaginationTemplate>
 </Table>
 
-<Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Nhà khoa học")' OnClose="OnClose">
+@*<Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Hội đồng đánh giá")' OnClose="OnClose">
     <EvaluationBoardEdit @ref="evaluationBoardEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></EvaluationBoardEdit>
+</Drawer>*@
+<Drawer Closable="false" Visible="addVisible" Height="965" OnClose="() => addVisible=false"
+ Title='("Lập hội đồng đánh giá")' Placement="bottom">
+ <Template> 
+        <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser"></EvaluationBoardAddLayout>
+ </Template>
 </Drawer>
