@@ -6,6 +6,8 @@ using luanvanthacsi.Data.Services;
 using luanvanthacsi.Pages.AdminPages.StudentPages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Linq;
+
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
     public partial class ScientistOfEvaluationBoard : ComponentBase
@@ -13,16 +15,17 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale? TableLocale { get; set; }
         [Inject] NotificationService? Notice { get; set; }
-        [Inject] IScientistService? ScientistService { get; set; }
+        [Inject] IScientistService ScientistService { get; set; }
         [Inject] IUserService? UserService { get; set; }
         List<ScientistData>? scientistDatas { get; set; }
-        IEnumerable<ScientistData>? selectedRows;
+        IEnumerable<ScientistData> selectedRows;
         Scientist? selectData;
-        Table<ScientistData>? table;
+        Table<ScientistData> table;
         [Inject] IMapper _mapper { get; set; }
         bool visible = false;
         bool loading = false;
         User CurrentUser;
+        [Parameter] public string EvaluationBoardCode { get; set; }
         async Task<string> getUserId()
         {
             var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -49,6 +52,29 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             scientistDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
             StateHasChanged();
+        }
+        public async Task SetSelectedRows(List<string> ids)
+        {
+            try
+            {
+                List<Scientist> scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                var filteredObjects = scientists.Where(o => ids.Contains(o.Id));
+                scientists.RemoveAll(o => !filteredObjects.Contains(o));
+                List<ScientistData> scientistData = _mapper.Map<List<ScientistData>>(scientists);
+                if (selectedRows == null)
+                {
+                    selectedRows = scientistData;
+                }
+                else
+                {
+                    selectedRows = selectedRows.Concat(scientistData);
+                }
+                table.SetSelection(selectedRows.Select(x => x.Id).ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public List<string> GetScientistsId()

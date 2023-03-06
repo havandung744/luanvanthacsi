@@ -14,13 +14,13 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale? TableLocale { get; set; }
         [Inject] NotificationService? Notice { get; set; }
-        [Inject] ISecretaryService? SecretaryService { get; set; }
+        [Inject] ISecretaryService SecretaryService { get; set; } = new SecretaryService();
         [Inject] IUserService? UserService { get; set; }
         List<SecretaryData>? secretaryDatas { get; set; }
         StudentEdit studentEdit = new StudentEdit();
-        IEnumerable<SecretaryData>? selectedRows;
+        IEnumerable<SecretaryData> selectedRows;
         Lecturers? selectData;
-        Table<SecretaryData>? table;
+        Table<SecretaryData> table;
         [Inject] IMapper _mapper { get; set; }
         bool visible = false;
         bool loading = false;
@@ -51,6 +51,14 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             secretaryDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
             StateHasChanged();
+        }
+
+        public async Task SetSelectedRows(string id)
+        {
+            Secretary secretary = await SecretaryService.GetSecretaryByIdAsync(id);
+            SecretaryData secretaryData = _mapper.Map<SecretaryData>(secretary);
+            selectedRows = new[] { secretaryData };
+            table.SetSelection(selectedRows.Select(x => id).ToArray());
         }
 
         public string GetSecretaryId()

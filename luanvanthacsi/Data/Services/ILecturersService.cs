@@ -5,5 +5,6 @@ namespace luanvanthacsi.Data.Services
     public interface ILecturersService
     {
         Task<List<Lecturers>> GetAllByIdAsync(string id);
+        Task<Lecturers> GetLecturersByIdAsync(string id);
     }
 }

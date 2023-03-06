@@ -6,6 +6,7 @@ using luanvanthacsi.Data.Services;
 using luanvanthacsi.Pages.AdminPages.StudentPages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.Linq;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
@@ -38,6 +39,30 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             CurrentUser = await UserService.GetUserByIdAsync(id);
             lecturersDatas = new();
             await LoadAsync();
+        }
+
+        public async Task SetSelectedRows(List<string> ids)
+        {
+            try
+            {
+                List<Lecturers> lecturers = await LecturersService.GetAllByIdAsync(CurrentUser.FacultyId);
+                var filteredObjects = lecturers.Where(o => ids.Contains(o.Id));
+                lecturers.RemoveAll(o => !filteredObjects.Contains(o));
+                List<LecturersData> lecturersData = _mapper.Map<List<LecturersData>>(lecturers);
+                if (selectedRows == null)
+                {
+                    selectedRows = lecturersData;
+                }
+                else
+                {
+                    selectedRows = selectedRows.Concat(lecturersData);
+                }
+                table.SetSelection(selectedRows.Select(x => x.Id).ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task LoadAsync()

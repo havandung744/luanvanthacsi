@@ -13,6 +13,16 @@
     </PageHeaderExtra>
 </PageHeader>
 <br />
+<AntDesign.Col Span="6">
+<Form Model="evaluationBoardEditModel">
+    <FormItem Label="Mã hội đồng đánh giá">
+        <Input @bind-Value="@context.Code" Disabled></Input>
+    </FormItem>
+    <FormItem Label="Tên hội đồng đánh giá">
+        <Input @bind-Value="@context.Name"></Input>
+    </FormItem>
+</Form>
+</AntDesign.Col>
 <Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
        TItem="StudentData" ScrollX="1350"
        @bind-SelectedRows="selectedRows">
@@ -32,3 +42,4 @@
         <PaginationCustom Context="context"></PaginationCustom>
     </PaginationTemplate>
 </Table>
+
