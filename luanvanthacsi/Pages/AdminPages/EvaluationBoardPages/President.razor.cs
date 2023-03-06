@@ -1,5 +1,6 @@
 ﻿using AntDesign;
 using AutoMapper;
+using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
@@ -11,6 +12,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
     public partial class President : ComponentBase
     {
+        [Parameter] public string PresidentSelect { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale? TableLocale { get; set; }
         [Inject] NotificationService? Notice { get; set; }
@@ -18,9 +20,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IUserService UserService { get; set; }
         List<LecturersData>? lecturersDatas { get; set; } = new();
         StudentEdit studentEdit = new StudentEdit();
-        IEnumerable<LecturersData>? selectedRows; 
+        IEnumerable<LecturersData> selectedRows; 
         Lecturers? selectData;
-        Table<LecturersData>? table;
+        Table<LecturersData> table;
         List<string>? ListSelectedStudentIds;
         [Inject] IMapper _mapper { get; set; }
         bool visible = false;
@@ -39,9 +41,21 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             await LoadAsync();
         }
 
+        public async Task SetSelectedRows(string id)
+        {
+            Lecturers lecturers = await LecturersService.GetLecturersByIdAsync(id);
+            //LecturersData lecturersData = _mapper.Map<LecturersData>(lecturers);
+            LecturersData lecturersData = new LecturersData();
+            lecturersData.Id = id;
+            selectedRows = new[] { lecturersData };
+            table.SetSelection(selectedRows.Select(x => id).ToArray());
+        }
+
+
         public async Task LoadAsync()
         {
             lecturersDatas?.Clear();
+            //await SetSelectedRows(PresidentSelect);
             loading = true;
             visible = false;
             var lecturers = await LecturersService.GetAllByIdAsync(CurrentUser.FacultyId);

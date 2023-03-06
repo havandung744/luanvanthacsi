@@ -24,5 +24,26 @@ namespace luanvanthacsi.Data.Services
                 throw e;
             }
         }
+
+        public async Task<Lecturers> GetLecturersByIdAsync(string id)
+        {
+            Lecturers lecturers;
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        lecturers = await session.GetAsync<Lecturers>(id);
+                        return lecturers;
+                    }
+                    catch (Exception ex)
+                    {
+                        //await transaction.RollbackAsync();
+                        throw ex;
+                    }
+                }
+            }
+        }
     }
 }

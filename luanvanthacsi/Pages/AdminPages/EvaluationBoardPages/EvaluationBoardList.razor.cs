@@ -191,5 +191,10 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 throw ex;
             }
         }
+
+        void CancelDetail()
+        {
+            addVisible = false;
+        }
     }
 }

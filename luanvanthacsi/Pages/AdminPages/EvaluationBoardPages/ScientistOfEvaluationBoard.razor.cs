@@ -13,12 +13,12 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale? TableLocale { get; set; }
         [Inject] NotificationService? Notice { get; set; }
-        [Inject] IScientistService? ScientistService { get; set; }
+        [Inject] IScientistService ScientistService { get; set; }
         [Inject] IUserService? UserService { get; set; }
         List<ScientistData>? scientistDatas { get; set; }
-        IEnumerable<ScientistData>? selectedRows;
+        IEnumerable<ScientistData> selectedRows;
         Scientist? selectData;
-        Table<ScientistData>? table;
+        Table<ScientistData> table;
         [Inject] IMapper _mapper { get; set; }
         bool visible = false;
         bool loading = false;
@@ -49,6 +49,16 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             scientistDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
             StateHasChanged();
+        }
+        public async Task SetSelectedRows(List<string> ids)
+        {
+            //Scientist scientist = await ScientistService.GetScientistByIdAsync(id);
+            //ScientistData scientistData = _mapper.Map<ScientistData>(scientist);
+            //selectedRows = new[] { scientistData };
+            //foreach (var id in ids)
+            //{
+            //    table.SetSelection(selectedRows.Select(x => id).ToArray());
+            //}
         }
 
         public List<string> GetScientistsId()

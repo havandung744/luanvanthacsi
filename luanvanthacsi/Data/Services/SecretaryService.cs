@@ -24,5 +24,26 @@ namespace luanvanthacsi.Data.Services
                 throw e;
             }
         }
+
+        public async Task<Secretary> GetSecretaryByIdAsync(string id)
+        {
+            Secretary secretary;
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        secretary = await session.GetAsync<Secretary>(id);
+                        return secretary;
+                    }
+                    catch (Exception ex)
+                    {
+                        //await transaction.RollbackAsync();
+                        throw ex;
+                    }
+                }
+            }
+        }
     }
 }

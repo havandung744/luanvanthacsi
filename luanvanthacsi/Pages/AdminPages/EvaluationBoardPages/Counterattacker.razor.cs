@@ -40,6 +40,17 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             await LoadAsync();
         }
 
+        public async Task SetSelectedRows(List<string> ids)
+        {
+            //Lecturers lecturers = await LecturersService.GetAllByIdAsync();
+            //LecturersData lecturersData = _mapper.Map<LecturersData>(lecturers);
+            //selectedRows = new[] { lecturersData };
+            //foreach (var id in ids)
+            //{
+            //    table.SetSelection(selectedRows.Select(x => id).ToArray());
+            //}
+        }
+
         public async Task LoadAsync()
         {
             lecturersDatas?.Clear();

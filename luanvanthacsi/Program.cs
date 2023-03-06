@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NHibernate.Mapping;
+using System.Globalization;
 using System.Reflection;
 using Tewr.Blazor.FileReader;
 using Umbraco.Core.Composing.CompositionExtensions;
@@ -84,6 +86,20 @@ builder.Services.AddFileReaderService(options => options.InitializeOnFirstCall =
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 var app = builder.Build();
+
+LocaleProvider.SetLocale("vi-VN");
+var supportedCultures = new[]
+{   
+    new CultureInfo("vi-VN"),
+};
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("vi-VN"),
+    // Formatting numbers, dates, etc.
+    SupportedCultures = supportedCultures,
+    // UI strings that we have localized.
+    SupportedUICultures = supportedCultures
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

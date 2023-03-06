@@ -27,9 +27,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IUserService UserService { get; set; }
         List<StudentData>? studentDatas { get; set; }
         StudentEdit studentEdit = new StudentEdit();
-        IEnumerable<StudentData>? selectedRows;
+        IEnumerable<StudentData> selectedRows;
         StudentData? selectData;
-        Table<StudentData>? table;
+        Table<StudentData> table;
         List<string>? ListSelectedStudentIds;
         [Inject] IMapper _mapper { get; set; }
         bool visible = false;
@@ -53,8 +53,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             Student student = await StudentService.GetStudentByIdAsync(id);
             StudentData studentData = _mapper.Map<StudentData>(student);
-            selectedRows = new[] {studentData};
-            StateHasChanged();
+            selectedRows = new[] { studentData };
+            table.SetSelection(selectedRows.Select(x => id).ToArray());
         }
 
         public async Task LoadAsync()
