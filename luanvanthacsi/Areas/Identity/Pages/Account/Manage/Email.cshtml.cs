@@ -132,7 +132,7 @@ namespace luanvanthacsi.Areas.Identity.Pages.Account.Manage
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "Địa chỉ email của bạn đã thay đổi.";
             return RedirectToPage();
         }
 
