@@ -25,7 +25,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             await base.OnInitializedAsync();
         }
 
-        void OnTabChange(string key)
+        async Task OnTabChange(string key)
         {
             activeTab = key;
         }
