@@ -64,15 +64,15 @@ namespace luanvanthacsi.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required (ErrorMessage ="Trường email bắt buộc nhập.")]
+            [EmailAddress (ErrorMessage ="Địa chỉ Email không hợp lệ.")]
             public string Email { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required (ErrorMessage ="Trường mật khẩu bắt buộc nhập.")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -80,7 +80,7 @@ namespace luanvanthacsi.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Ghi nhớ?")]
             public bool RememberMe { get; set; }
         }
 
