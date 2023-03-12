@@ -28,12 +28,14 @@ using NPOI.SS.UserModel;
 using System.Data;
 using MathNet.Numerics.Providers.SparseSolver;
 using Umbraco.Core.Services.Implement;
+using luanvanthacsi.Data;
 //using LightInject;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
 {
     public partial class StudentList : ComponentBase
     {
+        [Inject] ExcelExporter ExcelExporter { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] AntDesign.NotificationService Notice { get; set; }
@@ -53,6 +55,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         User CurrentUser;
         bool importVisible = false;
         bool existModalVisible = false;
+        bool excelExporting;
 
         List<Student> ExcelStudentDatas { get; set; }
 
@@ -142,7 +145,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 throw ex;
                 return new DataTable();
             }
-
         }
 
         public async Task LoadAsync()
@@ -286,74 +288,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 throw ex;
             }
         }
-
-        async Task ExportExcelAllowance()
-        {
-            try
-            {
-                var fileBase64 = Convert.ToBase64String(await GenerateExcelWorkbookAsync());
-                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "danhsachhocvien-.xlsx", fileBase64);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        async Task<byte[]> GenerateExcelWorkbookAsync()
-        {
-            try
-            {
-                await LoadAsync();
-                var stream = new MemoryStream();
-                using var package = new ExcelPackage(stream);
-                var workSheet = package.Workbook.Worksheets.Add("Student");
-
-                workSheet.Row(3).Height = 22;
-                workSheet.Row(1).Height = 25;
-                workSheet.Row(3).Style.Font.Bold = true;
-                workSheet.Row(3).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-
-
-                workSheet.Cells[1, 1, 1, 6].Merge = true;
-                workSheet.Cells[1, 1, 1, 6].AutoFitColumns();
-                int row = 4;
-                int stt = 1;
-                workSheet.Cells[1, 1, 1, 6].Value = "DANH SÁCH HỌC VIÊN BẢO VỆ LUẬN VĂN THẠC SĨ";
-                workSheet.Cells[1, 1, 1, 6].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                workSheet.Cells[1, 1, 1, 6].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                workSheet.Cells[1, 1, 1, 6].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                workSheet.Cells[1, 1, 1, 6].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(120, 139, 0));
-
-                workSheet.Cells[3, 1].Value = "STT";
-                workSheet.Cells[3, 2].Value = "Mã nhân viên";
-                workSheet.Cells[3, 3].Value = "Tên nhân viên";
-                workSheet.Cells[3, 4].Value = "Chức danh";
-                workSheet.Cells[3, 5].Value = "Bộ phận";
-                workSheet.Cells[3, 6].Value = "Ngày sinh";
-
-
-                foreach (var item in studentDatas)
-                {
-                    workSheet.Cells[row, 1].Value = stt;
-                    workSheet.Cells[row, 2].Value = item.Code;
-                    workSheet.Cells[row, 3].Value = item.Name;
-                    workSheet.Cells[row, 4].Value = item.PhoneNumber;
-                    workSheet.Cells[row, 5].Value = item.Email;
-                    workSheet.Cells[row, 6].Value = item.DateOfBirth.ToString();
-                    stt++;
-                    row++;
-                }
-                ExcelRange range = workSheet.Cells[3, 1, workSheet.Dimension.End.Row, workSheet.Dimension.End.Column];
-                ExcelTable table = workSheet.Tables.Add(range, "Table1");
-                workSheet.Cells[workSheet.Dimension.Address].AutoFitColumns();
-                return package.GetAsByteArray();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public string GetFileMauUrl()
         {
             return "/template/DanhMucChucDanh.xlsx";
@@ -469,6 +403,49 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 DataTable dataStudent = dataSet.Tables[0];
                 ExcelStudentDatas = ConvertStudent(dataStudent);
                 await SaveListImportAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        async Task ExportExcelAsync()
+        {
+            try
+            {
+                excelExporting = true;
+                string pathFile = Path.Combine("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\Excel\\Template", "DanhSachHocVien.xlsx");
+                using (var stream = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
+                {
+                    var package = new ExcelPackage(stream);
+                    try
+                    {
+                        ExcelWorksheet wSheet;
+                        try
+                        {
+                            wSheet = package.Workbook.Worksheets[Sheets.First().Name];
+                        }
+                        catch (Exception)
+                        {
+                            wSheet = package.Workbook.Worksheets[Sheets.First().Name];
+                        }
+                        var data = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+                        if (data.Any() == true)
+                        {
+                            var studentExcels = data.OrderBy(x => x.Code).ToList();
+                            ExcelExporter.WriteToSheet(studentExcels, wSheet, Sheets.First());
+
+                        }
+                        //package.Workbook.CalcMode = ExcelCalcMode.Automatic;
+                        var fileBase64 = Convert.ToBase64String(package.GetAsByteArray());
+                        JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy-HHmmss") + "-DanhSachHocVien.xlsx", fileBase64);
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                }
             }
             catch (Exception)
             {

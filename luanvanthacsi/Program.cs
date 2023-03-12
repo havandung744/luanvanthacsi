@@ -4,6 +4,7 @@ using luanvanthacsi.Data;
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Excel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -40,6 +41,7 @@ builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IEvaluationBoardService, EvaluationBoardService>();
 builder.Services.AddSingleton<ILecturersService, LecturersService>();
 builder.Services.AddSingleton<ISecretaryService, SecretaryService>();
+builder.Services.AddSingleton<ExcelExporter>();
 builder.Services.AddSingleton<TableLocale>(c =>
 {
     var locale = new TableLocale()

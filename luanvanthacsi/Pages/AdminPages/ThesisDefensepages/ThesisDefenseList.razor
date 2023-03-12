@@ -64,12 +64,12 @@
                     <Space>
                         <SpaceItem>
                             <Tooltip Placement="@Placement.Top" Title="@("Danh sách học viên bảo vệ")">
-                                <Icon Type="eye" Theme="fill" Class="btn-icon-edit" OnClick="() => OpenDetailAsync(context)" />
+                                <Icon Type="edit" Theme="fill" Class="btn-icon-edit" OnClick="() => OpenDetailAsync(context)" StopPropagation />
                             </Tooltip>
                         </SpaceItem>
                         <SpaceItem>
                             <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
-                                <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" />
+                                <Icon Type="eye" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation/>
                             </Tooltip>
                         </SpaceItem>
                         <SpaceItem>
@@ -78,7 +78,7 @@
                                             OnConfirm="()=> DeleteThesisDefense(context)"
                                             OkText="Có"
                                             CancelText="Không">
-                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" />
+                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" StopPropagation />
                                 </Popconfirm>
                             </Tooltip>
                         </SpaceItem>

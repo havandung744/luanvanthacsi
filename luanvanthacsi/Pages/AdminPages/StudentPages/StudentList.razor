@@ -19,19 +19,14 @@
         <SpaceItem>
             <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddStudent">Thêm</Button>
         </SpaceItem>
-        @*  <SpaceItem>
-        <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => OpenExcelForm()">
-        Nhập Excel
-        </Button>
-        </SpaceItem>*@
         <SpaceItem>
             <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ShowImport">
                 Nhập Excel
             </Button>
         </SpaceItem>
         <SpaceItem>
-            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => ExportExcelAllowance()">
-                Xuất Excel
+            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ExportExcelAsync">
+                Xuất Excel 
             </Button>
         </SpaceItem>
         <SpaceItem>
@@ -84,7 +79,7 @@
                     <Space>
                         <SpaceItem>
                             <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
-                                <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" />
+                                <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation/>
                             </Tooltip>
                         </SpaceItem>
                         <SpaceItem>
@@ -93,7 +88,7 @@
                                             OnConfirm="()=> DeleteStudent(context)"
                                             OkText="Có"
                                             CancelText="Không">
-                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" />
+                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" StopPropagation />
                                 </Popconfirm>
                             </Tooltip>
                         </SpaceItem>

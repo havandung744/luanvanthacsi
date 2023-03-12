@@ -64,7 +64,7 @@
                     <Space>
                         <SpaceItem>
                             <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
-                                <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" />
+                                <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation />
                             </Tooltip>
                         </SpaceItem>
                         <SpaceItem>
@@ -73,7 +73,7 @@
                                             OnConfirm="()=> DeleteEvaluationBoard(context)"
                                             OkText="Có"
                                             CancelText="Không">
-                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" />
+                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" StopPropagation />
                                 </Popconfirm>
                             </Tooltip>
                         </SpaceItem>
@@ -91,8 +91,8 @@
     <EvaluationBoardEdit @ref="evaluationBoardEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></EvaluationBoardEdit>
 </Drawer>*@
 <Drawer Closable="false" Visible="addVisible" Height="965" OnClose="() => addVisible=false"
- Title='("Lập hội đồng đánh giá")' Placement="bottom">
- <Template> 
+        Title='("Lập hội đồng đánh giá")' Placement="bottom">
+    <Template>
         <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser" CancelDetail="CancelDetail"></EvaluationBoardAddLayout>
- </Template>
+    </Template>
 </Drawer>
