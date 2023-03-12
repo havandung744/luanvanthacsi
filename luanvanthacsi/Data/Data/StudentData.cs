@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 
 namespace luanvanthacsi.Data.Data
 {
+
     public class StudentData
     {
         [Display(Name = "STT")]
@@ -16,7 +18,7 @@ namespace luanvanthacsi.Data.Data
         [Display(Name = "Email")]
         public string Email;
         [Display(Name = "Ngày sinh")]
-        public DateTime DateOfBirth;
+        public DateTime? DateOfBirth;
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate;
         [Display(Name = "Ngày Cập nhật")]

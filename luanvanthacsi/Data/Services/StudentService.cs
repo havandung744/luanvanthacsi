@@ -3,11 +3,48 @@ using ISession = NHibernate.ISession;
 using NHibernate;
 using NHibernate.Linq;
 using MathNet.Numerics.Distributions;
+using NHibernate.Mapping;
+using LightInject;
+using AutoMapper;
+using MathNet.Numerics.Optimization;
 
 namespace luanvanthacsi.Data.Services
 {
     public class StudentService : IStudentService
     {
+        readonly IMapper _mapper;
+        public StudentService(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+        public async Task<bool> AddListStudentAsync(List<Student> students)
+        {
+            bool result = false;
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        foreach (Student student in students)
+                        {
+                            student.CreateDate = DateTime.Now;
+                            student.UpdateDate = DateTime.Now;
+                            await session.SaveAsync(student);
+                        }
+                        await transaction.CommitAsync();
+                        result = true;
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+                return result;
+            }
+        }
+
         public async Task<bool> AddOrUpdateStudentAsync(Student student)
         {
             bool result = false;
@@ -35,15 +72,68 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
+                        throw;
                     }
                 }
                 return result;
             }
 
+        }
+
+        public async Task<bool> AddOrUpdateStudentListAsync(List<Student> students, string facultyId)
+        {
+            bool result = false;
+            using (var session = FluentNHibernateHelper.OpenSession())
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+                {
+                    try
+                    {
+                        IQueryable<Student> Query = session.Query<Student>().Where(x => x.FacultyId == facultyId);
+                        foreach (Student student in students)
+                        {
+                            var exist = Query.FirstOrDefault(c => c.Code == student.Code);
+                            if (exist != null)
+                            {
+                                if (student.DateOfBirth == DateTime.MinValue)
+                                {
+                                    student.DateOfBirth = null;
+                                }
+                                exist.Code = student.Code;
+                                exist.Name = student.Name;
+                                exist.DateOfBirth = student.DateOfBirth;
+                                exist.Email = student.Email;
+                                exist.PhoneNumber = student.PhoneNumber;
+                                exist.TopicName = student.TopicName;
+                                exist.InstructorOne = student.InstructorOne;
+                                exist.OnstructorTwo = student.OnstructorTwo;
+                                await session.MergeAsync(exist);
+                            }
+                            else
+                            {
+                                student.CreateDate = DateTime.Now;
+                                student.UpdateDate = DateTime.Now;
+                                if (student.DateOfBirth == DateTime.MinValue)
+                                {
+                                    student.DateOfBirth = null;
+                                }
+                                await session.SaveAsync(student);
+                            }
+                        }
+                        await transaction.CommitAsync();
+                        result = true;
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+                return result;
+            }
         }
 
         public async Task<bool> DeleteStudentAsync(Student student)
@@ -60,11 +150,7 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
-                    {
-                        await transaction.RollbackAsync();
-                        throw ex;
-                    }
+                    catch (Exception) { await transaction.RollbackAsync(); throw; }
                 }
             }
             return result;
@@ -86,11 +172,7 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
-                    {
-                        await transaction.RollbackAsync();
-                        throw ex;
-                    }
+                    catch (Exception) { await transaction.RollbackAsync(); throw; }
                 }
             }
             return result;
@@ -107,9 +189,9 @@ namespace luanvanthacsi.Data.Services
                 }
                 return students;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -124,9 +206,9 @@ namespace luanvanthacsi.Data.Services
                 }
                 return students;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -142,10 +224,10 @@ namespace luanvanthacsi.Data.Services
                         students = session.Query<Student>().Where(c => c.Name.Like('%' + txtSearch + '%')).ToList();
                         return students;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
+                        throw;
                     }
                 }
             }
@@ -163,10 +245,10 @@ namespace luanvanthacsi.Data.Services
                         student = await session.GetAsync<Student>(id);
                         return student;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //await transaction.RollbackAsync();
-                        throw ex;
+                        throw;
                     }
                 }
             }

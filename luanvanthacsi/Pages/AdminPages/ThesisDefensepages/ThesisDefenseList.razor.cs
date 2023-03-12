@@ -32,7 +32,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
-        [Inject] IFileUpload fileUpload { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IThesisDefenseService ThesisDefenseService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }

@@ -2,6 +2,7 @@
 @using luanvanthacsi.Data.Components
 @using luanvanthacsi.Data.Data;
 @using System.ComponentModel;
+@using luanvanthacsi.Excel;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý học viên</PageTitle>
 <PageHeader Style="padding: 0;">
@@ -17,6 +18,21 @@
     <Space>
         <SpaceItem>
             <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddStudent">Thêm</Button>
+        </SpaceItem>
+        @*  <SpaceItem>
+        <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => OpenExcelForm()">
+        Nhập Excel
+        </Button>
+        </SpaceItem>*@
+        <SpaceItem>
+            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ShowImport">
+                Nhập Excel
+            </Button>
+        </SpaceItem>
+        <SpaceItem>
+            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => ExportExcelAllowance()">
+                Xuất Excel
+            </Button>
         </SpaceItem>
         <SpaceItem>
             @if (selectedRows?.Any() == true)
@@ -45,22 +61,12 @@
                 </Popconfirm>
             }
         </SpaceItem>
-        <SpaceItem>
-            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => OpenExcelForm()" Loading="loadingExcel">
-                Nhập Excel
-            </Button>
-        </SpaceItem>
-        <SpaceItem>
-            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => ExportExcelAllowance()" Loading="loadingExcel">
-                Xuất Excel
-            </Button>
-        </SpaceItem>
     </Space>
 </Row>
 <br />
 <Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
-       TItem="StudentData" ScrollX="1350"
-      >
+       TItem="StudentData" ScrollX="1350" OnRowClick="OnRowClick"
+       @bind-SelectedRows="selectedRows">
     <ChildContent>
         <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
         <Column @bind-Field="context.stt" Width="50;" Sortable Fixed="left"></Column>
@@ -105,14 +111,10 @@
     <StudentEdit @ref="studentEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></StudentEdit>
 </Drawer>
 
-<Modal Title="Import danh sách học viên" Visible="showExcelForm"
-       OnOk="InputFile" OnCancel="CancelImportExcelForm">
-    <BlazorInputFile.InputFile OnChange="LoadFile"></BlazorInputFile.InputFile>
-    @if (file != null)
-    {
-        <p>Name: @file.Name</p>
-        <p>Size in bytes: @file.Size</p>
-        <p>Last modified date: @file.LastModified.ToShortDateString()</p>
-        <p>Content type (not always supplied by the browser): @file.Type</p>
-    }
+<ImportExcelForm @ref="importExcelFormRef" Visible="importVisible" CancelChange="ImportExcelCancel"
+                 ImportSuccessStaff="(e => ImportFromFileAsync(e.Item1, e.Item2))"
+                 IsCustomTemplateFile="true" CustomTemplateFileChange="GetTemplateFileAsync" />
+
+<Modal Title="@("Thông báo")" Visible="existModalVisible" OnOk="SaveAndUpdateAsync" OnCancel="CancelImport">
+    <p>Danh sách gồm những mã nhân viên đã tồn tại trên hệ thống? Bạn có muốn cập nhật không?</p>
 </Modal>

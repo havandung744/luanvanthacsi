@@ -1,0 +1,46 @@
+﻿@using luanvanthacsi.Data.Extentions;
+@{
+    RenderFragment footer = @<Template>
+        <Button OnClick="@ReadFile" @key="@( "submit" )"
+            Type="@ButtonType.Primary">
+            Tải dữ liệu
+        </Button>
+        <Button OnClick="@Cancel" @key="@( "back" )">Đóng</Button>
+    </Template>;
+}
+<Modal Title="@Title" Visible="@Visible" OnOk="ReadFile" OnCancel="Cancel" Footer="footer">
+    <input id="uploadFile" disabled class="f-input" value="@NameFile" style="margin: 0 !important" />
+    <div class="fileUpload btn btn--browse" style="margin: 0 !important">
+        <span><Icon Type="plus" Theme="outline" />Chọn</span>
+        <input id="uploadBtn" type="file" class="upload" @ref=sourceElement Accept=".xls, .xlsx" @onchange="getNameFile" />
+
+    </div>
+
+    @if (FileMauUrl.IsNotNullOrEmpty())
+    {
+        <div style="margin-top: 15px;">
+            <a class="a-pointer" @onclick="TaiFileMau" style="color: #0366d6 !important">
+                <i class="fa fa-download" aria-hidden="true"></i>
+                Tải File mẫu
+            </a>
+        </div>
+    }
+
+    @if (MessageError != null)
+    {
+        <div style="color: red">@Message</div>
+        <Button Type="@ButtonType.Primary" @onclick="ShowDetail">Chi tiết &nbsp;<Icon Type="eye" Theme="outline" /></Button>
+    }
+    else
+    {
+        <div style="color: red">@Message</div>
+    }
+    @if (IsShowDetail == true && MessageError != null)
+    {
+        <div style="height: 150px; overflow: auto;">
+            Danh sách các ô bị lỗi:
+            <p>@((MarkupString)MessageError)</p>
+        </div>
+    }
+
+</Modal>

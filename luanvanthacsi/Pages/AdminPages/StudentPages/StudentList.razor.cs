@@ -21,6 +21,13 @@ using BlazorInputFile;
 using OneOf.Types;
 using Microsoft.AspNetCore.Components.Authorization;
 using luanvanthacsi.Areas.Identity;
+using ICSharpCode.SharpZipLib.Core;
+using Tewr.Blazor.FileReader;
+using luanvanthacsi.Excel;
+using NPOI.SS.UserModel;
+using System.Data;
+using MathNet.Numerics.Providers.SparseSolver;
+using Umbraco.Core.Services.Implement;
 //using LightInject;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
@@ -29,8 +36,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
-        [Inject] IFileUpload fileUpload { get; set; }
-        [Inject] NotificationService Notice { get; set; }
+        [Inject] AntDesign.NotificationService Notice { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
@@ -43,9 +49,60 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         [Inject] IMapper _mapper { get; set; }
         bool visible = false;
         bool loading = false;
-        bool loadingExcel = false;
         bool showExcelForm = false;
         User CurrentUser;
+        bool importVisible = false;
+        bool existModalVisible = false;
+
+        List<Student> ExcelStudentDatas { get; set; }
+
+        ImportExcelForm importExcelFormRef;
+        List<ExcelSheetObject> Sheets { get; set; }
+
+        void ImportExcelCancel(bool val)
+        {
+            importVisible = val;
+        }
+
+        void CancelImport()
+        {
+            existModalVisible = false;
+        }
+
+
+        void GetTemplateFileAsync()
+        {
+            try
+            {
+                var fileBase64 = Convert.ToBase64String(GenerateTemplateExcel());
+                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "-DanhMucChucDanh.xlsx", fileBase64);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        byte[] GenerateTemplateExcel()
+        {
+            try
+            {
+                string fileName = "DanhSachHocVien.xlsx";
+                string pathFile = Path.Combine("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\Excel\\Template", fileName);
+
+                using (var stream = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
+                {
+                    var package = new ExcelPackage(stream);
+                    return package.GetAsByteArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                return null;
+            }
+        }
+
         async Task<string> getUserId()
         {
             var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -54,10 +111,38 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         }
         protected override async Task OnInitializedAsync()
         {
-            string id = await getUserId();
-            CurrentUser = await UserService.GetUserByIdAsync(id);
-            studentDatas = new();
-            await LoadAsync();
+            try
+            {
+                string id = await getUserId();
+                CurrentUser = await UserService.GetUserByIdAsync(id);
+                studentDatas = new();
+                await LoadAsync();
+                Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HocVien", "KEY_STAFFIMPORT", 6, null, GetTable().GetDataColumns(), 5) };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public DataTable GetTable()
+        {
+            try
+            {
+                var table = new DataTable();
+                var properties = typeof(Student).GetProperties();
+                foreach (var p in properties)
+                {
+                    table.Columns.Add(p.Name, Nullable.GetUnderlyingType(p.PropertyType) ?? p.PropertyType);
+                }
+                return table;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                return new DataTable();
+            }
+
         }
 
         public async Task LoadAsync()
@@ -73,6 +158,19 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             loading = false;
             StateHasChanged();
         }
+
+        string GetNewCode()
+        {
+            var lastCode = studentDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
+            int codeNumber = 1;
+            if (lastCode != null && int.TryParse(lastCode.Substring(2), out codeNumber))
+            {
+                codeNumber++;
+            }
+            string newCode = "HV" + codeNumber.ToString("D3");
+            return newCode;
+        }
+
         void AddStudent()
         {
             var studentData = new Student();
@@ -205,7 +303,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         {
             try
             {
-                loadingExcel = true;
                 await LoadAsync();
                 var stream = new MemoryStream();
                 using var package = new ExcelPackage(stream);
@@ -251,46 +348,135 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 workSheet.Cells[workSheet.Dimension.Address].AutoFitColumns();
                 return package.GetAsByteArray();
             }
-            catch (Exception e)
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public string GetFileMauUrl()
+        {
+            return "/template/DanhMucChucDanh.xlsx";
+        }
+
+        async Task ShowImport()
+        {
+            try
+            {
+                await importExcelFormRef.InitAsync();
+                importExcelFormRef.LoaiExcelImport = Data.Components.Enum.LoaiExcelImport.StaffProfile;
+                importExcelFormRef.Sheets = Sheets;
+                importExcelFormRef.FileMauUrl = GetFileMauUrl();
+                importVisible = true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<Student> ConvertStudent(DataTable result)
+        {
+            List<Student> students = new List<Student>();
+
+            if (result.Rows.Count > 0)
+            {
+                for (int i = 0; i < result.Rows.Count; i++)
+                {
+                    Student student = new Student()
+                    {
+                        Id = ObjectExtentions.GenerateGuid(),
+                        FacultyId = CurrentUser.FacultyId,
+                    };
+                    #region convert data
+
+                    student.Code = result.Rows[i][nameof(Student.Code)].IsNotNullOrEmpty() ? result.Rows[i][nameof(Student.Code)].ToString() : GetNewCode();
+                    student.Name = result.Rows[i][nameof(Student.Name)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.Name)].ToString() : student.Name;
+                    student.Email = result.Rows[i][nameof(Student.Email)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.Email)].ToString() : student.Email;
+                    student.PhoneNumber = result.Rows[i][nameof(Student.PhoneNumber)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.PhoneNumber)].ToString() : student.PhoneNumber;
+                    student.TopicName = result.Rows[i][nameof(Student.TopicName)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.TopicName)].ToString() : student.TopicName;
+                    student.InstructorOne = result.Rows[i][nameof(Student.InstructorOne)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorOne)].ToString() : student.InstructorOne;
+                    student.OnstructorTwo = result.Rows[i][nameof(Student.OnstructorTwo)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.OnstructorTwo)].ToString() : student.OnstructorTwo;
+                    student.DateOfBirth = result.Rows[i][nameof(Student.DateOfBirth)].IsNotNullOrEmpty() ? Convert.ToDateTime(result.Rows[i][nameof(Student.DateOfBirth)]) : student.DateOfBirth;
+                    #endregion
+                    students.Add(student);
+                }
+            }
+
+            return students;
+        }
+
+        async Task SaveAndUpdateAsync()
+        {
+            try
+            {
+                bool save = await StudentService.AddOrUpdateStudentListAsync(ExcelStudentDatas, CurrentUser.FacultyId);
+                if (save == true)
+                {
+                    Notice.NotiSuccess("Thêm mới và cập nhật danh sách học viên từ Excel thành công.");
+                    await LoadAsync();
+                }
+                else
+                {
+                    Notice.NotiWarning("Thêm mới và cập nhật danh sách học viên từ Excel thất bại.");
+                }
+                existModalVisible = false;
+            }
+            catch (Exception)
             {
                 throw;
             }
-            loadingExcel = false;
         }
 
-        void OpenExcelForm()
+        async Task SaveListImportAsync()
         {
-            showExcelForm = true;
-        }
-
-        void OnChangeIsShow(bool isShow)
-        {
-            showExcelForm = isShow;
-        }
-
-        IFileListEntry file;
-        public async Task LoadFile(IFileListEntry[] files)
-        {
-            file = files.FirstOrDefault();
-            if (file != null)
+            try
             {
-                await fileUpload.UploadAsync(file);
+                if (ExcelStudentDatas?.Any() == true)
+                {
+                    var listCodeExcel = ExcelStudentDatas.Select(x => x.Code).ToList();
+                    bool checkValidate = studentDatas.Any(x => listCodeExcel.Contains(x.Code));
+                    if (!checkValidate)
+                    {
+                        var save = await StudentService.AddListStudentAsync(ExcelStudentDatas);
+                        if (save == true)
+                        {
+                            Notice.NotiSuccess("Import Excel thành công.");
+                            await LoadAsync();
+                        }
+                        else
+                        {
+                            Notice.NotiWarning("Import Excel thất bại.");
+                        }
+                    }
+                    else
+                    {
+                        existModalVisible = true;
+                    }
+                    importVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
-        public async Task InputFile()
+
+        public async Task ImportFromFileAsync(DataSet dataSet, string maPB)
         {
-            await fileUpload.InputFile();
-            file = null;
-            await LoadAsync();
+            try
+            {
+                DataTable dataStudent = dataSet.Tables[0];
+                ExcelStudentDatas = ConvertStudent(dataStudent);
+                await SaveListImportAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public void CancelImportExcelForm()
-        {
-            showExcelForm = false;
-            file = null;
-        }
 
-       
 
     }
 }

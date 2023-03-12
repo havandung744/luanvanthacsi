@@ -10,7 +10,10 @@ namespace luanvanthacsi.Data.Components
             inUniInUniversity = 1,
             [Display(Name = "Ngoài trường")]
             notInUniInUniversity = 0,
-
+        }
+        public enum LoaiExcelImport
+        {
+            StaffProfile
         }
     }
 }

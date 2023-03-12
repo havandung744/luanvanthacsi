@@ -3,8 +3,9 @@
 
 <Row Gutter="8">
     <AntDesign.Col Span="24">
-        <Button Icon="plus" OnClick="AddListThesisDefenseAsync">Chọn nhân viên</Button>
+        <Button Icon="plus" OnClick="AddListThesisDefenseAsync" Style="" Color="Color.Green7">Chọn học viên viên</Button>
     </AntDesign.Col> 
+    <br />
     <AntDesign.Col Span="24">
         <Table Context="tableContext" TItem="StudentData" DataSource="@studentDatas" Class="table-striped" ScrollY="300">
             <Column @bind-Field="@tableContext.Code" Ellipsis="true"></Column>
