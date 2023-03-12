@@ -16,6 +16,7 @@ using static luanvanthacsi.Data.Components.Enum;
 using AutoMapper;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Ultils;
+using NPOI.Util;
 
 namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 {
@@ -174,14 +175,15 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 {
                     return;
                 }
-
-                ////var filePathUrl = Path.Combine("luanvanthacsi", model.AttachFilePath, model.FileName);
-                //string fileUrl = "file:///C:/chuongtrinhki1nam4/khoaluan/luanvanthacsi/luanvanthacsi/wwwroot/Documents/example.pdf"''
-                //JSRuntime.DownloadFileFromUrl(fileUrl, EditModel.FileName);
+                //var filePathUrl = Path.Combine("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\scientist\\fd45f218-c5ad-4fcb-8032-add0046b02ba\\690c5ca20fbc467584eb2c62871b7b2a.xlsx");
+                //JSRuntime.DownloadFileFromUrl(filePathUrl, "taifile.xlsx");
+                //JSRuntime.DownloadFileFromUrl("Upload\\CV\\cvhavandung.txt", "mau.txt");
+                var filePathUrl = "Upload\\CV\\cvhavandung.txt";
+                await JSRuntime.InvokeVoidAsync("downloadFile", filePathUrl, filePathUrl, model.FileName, "GET");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 

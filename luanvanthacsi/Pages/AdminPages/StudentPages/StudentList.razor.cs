@@ -55,7 +55,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         User CurrentUser;
         bool importVisible = false;
         bool existModalVisible = false;
-        bool excelExporting;
 
         List<Student> ExcelStudentDatas { get; set; }
 
@@ -414,7 +413,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         {
             try
             {
-                excelExporting = true;
                 string pathFile = Path.Combine("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\Excel\\Template", "DanhSachHocVien.xlsx");
                 using (var stream = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
                 {
@@ -435,7 +433,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                         {
                             var studentExcels = data.OrderBy(x => x.Code).ToList();
                             ExcelExporter.WriteToSheet(studentExcels, wSheet, Sheets.First());
-
                         }
                         //package.Workbook.CalcMode = ExcelCalcMode.Automatic;
                         var fileBase64 = Convert.ToBase64String(package.GetAsByteArray());

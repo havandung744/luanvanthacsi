@@ -47,4 +47,10 @@
     <Folder Include="Upload\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="scientist\fd45f218-c5ad-4fcb-8032-add0046b02ba\690c5ca20fbc467584eb2c62871b7b2a.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
