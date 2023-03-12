@@ -83,7 +83,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         {
             var thesisDefenseData = new ThesisDefense();
             var lastCode = thesisDefenseDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
-            int codeNumber = 0;
+            int codeNumber = 1;
             if (lastCode != null && int.TryParse(lastCode.Substring(3), out codeNumber))
             {
                 codeNumber++;

@@ -6,6 +6,7 @@ using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Services;
 using AutoMapper;
+using MathNet.Numerics.Distributions;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
@@ -24,7 +25,14 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             EditModel.Name = thesisDefense.Name;
             EditModel.Code = thesisDefense.Code;
             EditModel.CreateDate = thesisDefense.CreateDate;
-            EditModel.YearOfProtection = thesisDefense.YearOfProtection;
+            if (thesisDefense.YearOfProtection == DateTime.MinValue)
+            {
+                EditModel.YearOfProtection = DateTime.Now;
+            }
+            else
+            {
+                EditModel.YearOfProtection = thesisDefense.YearOfProtection;
+            }
             StateHasChanged();
         }
 

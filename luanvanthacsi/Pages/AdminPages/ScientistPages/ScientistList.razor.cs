@@ -68,7 +68,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         {
             var scientistData = new Scientist();
             var lastCode = scientistDatas?.OrderByDescending(x =>x.Code).Select(x=>x.Code).FirstOrDefault();
-            int codeNumber = 0;
+            int codeNumber = 1;
             if (lastCode != null && int.TryParse(lastCode.Substring(3), out codeNumber))
             {
                 codeNumber++;

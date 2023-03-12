@@ -77,7 +77,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         {
             var studentData = new Student();
             var lastCode = studentDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
-            int codeNumber = 0;
+            int codeNumber = 1;
             if (lastCode != null && int.TryParse(lastCode.Substring(2), out codeNumber))
             {
                 codeNumber++;

@@ -17,7 +17,7 @@
             <Input @bind-Value="@context.PhoneNumber" />
         </FormItem>
         <FormItem Label="Ngày sinh">
-            <DatePicker @bind-Value="@context.DateOfBirth" Format="dd/MM/yyyy" Style="width: 301px"></DatePicker>
+            <DatePicker @bind-Value="@context.DateOfBirth" Format="dd/MM/yyyy" Style="width: 301px" DisabledDate="@DisabledDate"></DatePicker>
         </FormItem>
         <FormItem Label="Tên đề tài">
             <Input @bind-Value="@context.TopicName" />

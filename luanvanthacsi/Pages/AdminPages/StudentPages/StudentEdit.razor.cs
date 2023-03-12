@@ -36,6 +36,10 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             EditModel.UpdateDate = student.UpdateDate;
             StateHasChanged();
         }
+        private bool DisabledDate(DateTime current)
+        {
+            return current > DateTime.Now;
+        }
 
         public void UpdateStudent()
         {
