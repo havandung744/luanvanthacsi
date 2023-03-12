@@ -19,19 +19,14 @@
         <SpaceItem>
             <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddStudent">Thêm</Button>
         </SpaceItem>
-        @*  <SpaceItem>
-        <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => OpenExcelForm()">
-        Nhập Excel
-        </Button>
-        </SpaceItem>*@
         <SpaceItem>
             <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ShowImport">
                 Nhập Excel
             </Button>
         </SpaceItem>
         <SpaceItem>
-            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="() => ExportExcelAllowance()">
-                Xuất Excel
+            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ExportExcelAsync">
+                Xuất Excel 
             </Button>
         </SpaceItem>
         <SpaceItem>
