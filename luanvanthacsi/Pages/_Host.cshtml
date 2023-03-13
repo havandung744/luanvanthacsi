@@ -2,6 +2,8 @@
 @using Microsoft.AspNetCore.Components.Web
 @namespace luanvanthacsi.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, NWebsec.AspNetCore.Mvc.TagHelpers
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,37 +14,15 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="luanvanthacsi.styles.css" rel="stylesheet" />
-    <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="icon" type="image/png" href="favicon.png" />
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet" />
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-    <script src="~/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="~/_content/BlazorInputFile/inputfile.js"></script>
-    <script src="~/download.js"></script>
     <script src="~/main.js"></script>
 
-    <script type="text/javascript">
-        function saveAsFile(filename, bytesBase64) {
-
-            if (navigator.msSaveBlob) {
-                //Download document in Edge browser
-                var data = window.atob(bytesBase64);
-                var bytes = new Uint8Array(data.length);
-                for (var i = 0; i < data.length; i++) {
-                    bytes[i] = data.charCodeAt(i);
-                }
-                var blob = new Blob([bytes.buffer], { type: "application/octet-stream" });
-                navigator.msSaveBlob(blob, filename);
-            }
-            else {
-                var link = document.createElement('a');
-                link.download = filename;
-                link.href = "data:application/octet-stream;base64," + bytesBase64;
-                document.body.appendChild(link); // Needed for Firefox
-                link.click();
-                document.body.removeChild(link);
-            }
-        }
-    </script>
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
@@ -50,16 +30,61 @@
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
-            An error has occurred. This application may no longer respond until reloaded.
+            Đã xảy ra lỗi. Ứng dụng sẽ không hoạt động cho đến khi được tải lại.
         </environment>
         <environment include="Development">
-            An unhandled exception has occurred. See browser dev tools for details.
+            Đã xảy ra lỗi. Xem chi tiết ở debug của trình duyệt.
         </environment>
-        <a href="" class="reload">Reload</a>
+        <a href="" class="reload">Tải lại</a>
         <a class="dismiss">🗙</a>
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+
+    <script nws-csp-add-nonce="true">
+        $.ajaxTransport("+binary", function (options, originalOptions, jqXHR) {
+            // check for conditions and support for blob / arraybuffer response type
+            if (window.FormData && ((options.dataType && (options.dataType == 'binary')) || (options.data && ((window.ArrayBuffer && options.data instanceof ArrayBuffer) || (window.Blob && options.data instanceof Blob))))) {
+                return {
+                    // create new XMLHttpRequest
+                    send: function (headers, callback) {
+                        // setup all variables
+                        var xhr = new XMLHttpRequest(),
+                            url = options.url,
+                            type = options.type,
+                            async = options.async || true,
+                            // blob or arraybuffer. Default is blob
+                            dataType = options.responseType || "blob",
+                            data = options.data || null,
+                            username = options.username || null,
+                            password = options.password || null;
+
+                        xhr.addEventListener('load', function () {
+                            var data = {};
+                            data[options.dataType] = xhr.response;
+                            // make callback and send data
+                            callback(xhr.status, xhr.statusText, data, xhr.getAllResponseHeaders());
+                        });
+
+                        xhr.open(type, url, async, username, password);
+
+                        // setup custom headers
+                        for (var i in headers) {
+                            xhr.setRequestHeader(i, headers[i]);
+                        }
+
+                        xhr.responseType = dataType;
+                        xhr.send(data);
+                    },
+                    abort: function () {
+                        jqXHR.abort();
+                    }
+                };
+            }
+        });
+
+    </script>
+
 </body>
 </html>
 
