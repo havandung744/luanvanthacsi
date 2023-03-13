@@ -1,12 +1,4 @@
-﻿(function ($) {
-
-    "use strict";
-
-
-
-})(jQuery);
-
-function downloadFile(url, duongDan, nameFile, method) {
+﻿function downloadFile(url, duongDan, nameFile, method) {
     if (method == undefined) {
         method = "POST";
     }
@@ -14,7 +6,7 @@ function downloadFile(url, duongDan, nameFile, method) {
         url: url,
         method: method,
         data: {
-            '__RequestVerificationToken': document.getElementsByName("__RequestVerificationToken")[0].value,
+            //'__RequestVerificationToken': document.getElementsByName("__RequestVerificationToken")[0].value,
             duongDan: duongDan
         },
         dataType: 'binary',
@@ -38,14 +30,3 @@ function downloadFile(url, duongDan, nameFile, method) {
         }
     });
 }
-//$(".toggle-password").click(function () {
-
-//    $(this).toggleClass("fa-eye fa-eye-slash");
-//    var input = $($(this).attr("toggle"));
-//    if (input.attr("type") == "password") {
-//        input.attr("type", "text");
-//    } else {
-//        input.attr("type", "password");
-//    }
-//});
-

@@ -175,11 +175,8 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 {
                     return;
                 }
-                //var filePathUrl = Path.Combine("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\scientist\\fd45f218-c5ad-4fcb-8032-add0046b02ba\\690c5ca20fbc467584eb2c62871b7b2a.xlsx");
-                //JSRuntime.DownloadFileFromUrl(filePathUrl, "taifile.xlsx");
-                //JSRuntime.DownloadFileFromUrl("Upload\\CV\\cvhavandung.txt", "mau.txt");
-                var filePathUrl = "Upload\\CV\\cvhavandung.txt";
-                await JSRuntime.InvokeVoidAsync("downloadFile", filePathUrl, filePathUrl, model.FileName, "GET");
+                //JSRuntime.DownloadFileFromUrl("Upload\\CV\\CV_havandung.pdf", "mau.pdf");
+                JSRuntime.DownloadFileFromUrl(model.AttachFilePath, model.FileName);
             }
             catch (Exception)
             {

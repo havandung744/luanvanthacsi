@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using NHibernate.Mapping;
 using System.Globalization;
 using System.Reflection;
@@ -90,7 +91,7 @@ var app = builder.Build();
 
 LocaleProvider.SetLocale("vi-VN");
 var supportedCultures = new[]
-{   
+{
     new CultureInfo("vi-VN"),
 };
 app.UseRequestLocalization(new RequestLocalizationOptions
@@ -117,6 +118,13 @@ else
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    //FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\bin\\Debug\\net7.0\\Upload"),
+    FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\scientist"),
+    //RequestPath = "/Upload"
+    RequestPath = "/scientist"
+});
 
 app.UseRouting();
 
