@@ -1,4 +1,97 @@
 ﻿@page "/"
-<PageTitle>Trang chủ</PageTitle>
+@page "/overview"
+<PageHeader Class="site-page-header" Title="Tổng quan">
+    <PageHeaderExtra>
+        <Breadcrumb>
+            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
+            <BreadcrumbItem>Trang chủ</BreadcrumbItem>
+        </Breadcrumb>
+    </PageHeaderExtra>
+</PageHeader>
+<Row Gutter="24">
+    <AntDesign.Col Span="16">
+        <Row Gutter="10">
+            <GridCol Style="width:25%;">
+                <div @onclick="OpenScientists">
+                    <Card Style="background-color: #ff5370" Class="image-button">
+                        <CardGrid Class="card-grid" Hoverable="true">
+                            <div style="margin-top: -12px;">
+                                <Icon Type="clock-circle" Theme="outline" Width="32px" Height="32px" /><br />
+                                <b>Quản lý nhà khoa học</b>
+                            </div>
+                        </CardGrid>
+                    </Card>
+                </div>
+            </GridCol>
+            <GridCol Style="width:25%;">
+                <div @onclick="OpenStudentList">
+                    <Card Style="background-color: #4099ff" Class="image-button">
+                        <CardGrid Class="card-grid" Hoverable="true">
+                            <div style="margin-top: -12px;">
+                                <Icon Type="calendar" Theme="outline" Width="32px" Height="32px" /><br />
+                                <b>Quản lý học viên</b>
+                            </div>
+                        </CardGrid>
+                    </Card>
+                </div>
+            </GridCol>
+            <GridCol Style="width:25%;">
+                <div @onclick="onpenThesisDefenses">
+                    <Card Style="background-color: #2ed8b6" Class="image-button">
+                        <CardGrid Class="card-grid" Hoverable="true">
+                            <div style="margin-top: -12px;">
+                                <Icon Type="swap" Theme="outline" Width="32px" Height="32px" /><br />
+                                <b>Mở đợt bảo vệ</b>
+                            </div>
+                        </CardGrid>
+                    </Card>
+                </div>
+            </GridCol>
+            <GridCol Style="width:25%;">
+                <div @onclick="OpenEvaluationBoards">
+                    <Card Style="background-color: #ffb64d" Class="image-button">
+                        <CardGrid Class="card-grid" Hoverable="true">
+                            <div style="margin-top: -12px;">
+                                <Icon Type="database" Theme="outline" Width="32px" Height="32px" /><br />
+                                <b>Hội đồng đánh giá</b>
+                            </div>
+                        </CardGrid>
+                    </Card>
+                </div>
+            </GridCol>
+        </Row>
+    </AntDesign.Col>
+</Row>
+<Row Style="margin-top: 16px">
+    <AntDesign.Col Span="12" Style="padding-right: 5px">
+        <div class="shadow_css background-white ">
+            <Row Justify="space-between">
+                <Title Level="4" Class="text-chart">Học viên tham gia bảo vệ</Title>
+            </Row>
+            <div style="margin-left: 15px">
+                <span>Khoa công nghệ thông tin</span>
+            </div>
+            <AntDesign.Charts.Column Data="data1" Config="config2" />
+        </div>
+    </AntDesign.Col>
+    <AntDesign.Col Span="12" Style="padding-right: 5px">
+        <div class="shadow_css background-white ">
+            <Row Justify="space-between">
+                <Title Level="4" Class="text-chart">Thông tin giảng viên</Title>
+            </Row>
+            <div style="margin-left: 15px">
+                <span>Khoa công nghệ thông tin</span>
+            </div>
+            <AntDesign.Charts.Column Data="data1" Config="config2" />
+        </div>
+    </AntDesign.Col>
+</Row>
+@*<Tabs>
+    <TabPane Key="1">
+        <TabTemplate>Biểu đồ</TabTemplate>
+        <ChildContent>
+            <AntDesign.Charts.Column Data="data1" Config="config2" />
+        </ChildContent>
+    </TabPane>
+</Tabs>*@
 
-<h3>Chào mừng đến với hệ thống bảo vệ luận văn Thạc sĩ</h3>

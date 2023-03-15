@@ -21,6 +21,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         [Inject] IThesisDefenseService ThesisDefenseService { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IStudentService StudentService { get; set; }
+        [Inject] IMapper _mapper { get; set; }
         [Parameter] public bool ModalVisible { get; set; }
         [Parameter] public EventCallback<bool> ChanageModalVisible { get; set; }
         [Parameter] public EventCallback ReloadStudentList { get; set; }
@@ -73,21 +74,10 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         List<Student> GetViewModels(List<StudentData> datas)
         {
             var models = new List<Student>();
-            Student model;
-            datas.ForEach(c =>
+            models = _mapper.Map<List<Student>>(datas);
+            models.ForEach(c =>
             {
-                model = new Student();
-                model.Id = c.Id;
-                model.Name = c.Name;
-                model.Email = c.Email;
-                model.Code = c.Code;
-                model.PhoneNumber = c.PhoneNumber;
-                model.DateOfBirth = c.DateOfBirth;
-                model.CreateDate = c.CreateDate;
-                model.UpdateDate = c.UpdateDate;
-                model.FacultyId = c.FacultyId;
-                model.ThesisDefenseId = currentThesisDefenseId;
-                models.Add(model);
+               c.ThesisDefenseId = currentThesisDefenseId;
             });
             return models;
         }
@@ -101,42 +91,13 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         {
             currentThesisDefenseId = id;
             studentDatas.Clear();
-            //loading = true;
-            //visible = false;
-            StateHasChanged();
             // lấy full dữ liệu
             //var students = await StudentService.GetAllAsync();
             // lấy dữ liệu học viên chưa đăng ký đợt bảo vệ
             var students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = students.Where(x => x.ThesisDefenseId == null).OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
-            studentDatas = GetViewModels(list);
-            //loading = false;
-            StateHasChanged();
-        }
-
-        List<StudentData> GetViewModels(List<Student> datas)
-        {
-            var models = new List<StudentData>();
-            StudentData model;
-            int stt = 1;
-            datas.ForEach(c =>
-            {
-                model = new StudentData();
-                model.Id = c.Id;
-                model.stt = stt;
-                model.Name = c.Name;
-                model.Email = c.Email;
-                model.Code = c.Code;
-                model.PhoneNumber = c.PhoneNumber;
-                model.DateOfBirth = c.DateOfBirth;
-                model.CreateDate = c.CreateDate;
-                model.UpdateDate = c.UpdateDate;
-                model.FacultyId = c.FacultyId;
-                models.Add(model);
-                stt++;
-            });
-            return models;
+            studentDatas = _mapper.Map<List<StudentData>>(list);
         }
 
         void ChangeModalVisible()
