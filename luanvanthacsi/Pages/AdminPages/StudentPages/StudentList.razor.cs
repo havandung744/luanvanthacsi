@@ -389,9 +389,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     importVisible = false;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
