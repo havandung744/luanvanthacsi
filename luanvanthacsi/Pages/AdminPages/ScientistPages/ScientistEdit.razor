@@ -1,15 +1,23 @@
-﻿@using static luanvanthacsi.Data.Components.Enum;
+﻿@using luanvanthacsi.Data.Entities;
+@using static luanvanthacsi.Data.Components.Enum;
 <Form @ref="form"
       Model="EditModel" LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     <Template style="height:90%">
-        <FormItem Label="Mã nhà khoa học">
+        <FormItem Label="Mã">
             <Input @bind-Value="@context.Code" ReadOnly />
         </FormItem>
-        <FormItem Label="Tên nhà khoa học">
+        <FormItem Label="Họ và tên">
             <Input @bind-Value="@context.Name" />
+        </FormItem>
+        <FormItem Label="Chuyên ngành">
+            <Select TItem="Specialized" TItemValue="string" DataSource="specializedList"
+                    EnableSearch Placeholder="Chọn chuyên ngành"
+                    @bind-Value="@context.SpecializedId"
+                    ValueName="@nameof(Specialized.Id)"
+                    LabelName="@nameof(Specialized.Name)"></Select>
         </FormItem>
         <FormItem Label="Email">
             <Input @bind-Value="@context.Email" />
@@ -25,10 +33,14 @@
             </Select>
         </FormItem>
         <FormItem Label="Học hàm">
-            <Input @bind-Value="@context.AcademicRank" />
+            <Select TItem="selectAcademicRank" TItemValue="int"
+                    @bind-Value="@context.AcademicRank" DataSource="@_selectAcademicRanks"
+                    LabelName="@nameof(selectAcademicRank.Name)"
+                    ValueName="@nameof(selectAcademicRank.Value)">
+            </Select>
         </FormItem>
         <FormItem Label="Học vị">
-            <Input @bind-Value="@context.Degree" />
+            <Input @bind-Value="@context.Degree" ReadOnly />
         </FormItem>
         <FormItem Label="CV">
             <Space>
@@ -87,29 +99,6 @@
     </Template>
 </Form>
 
-@*<SpaceItem>
-    <Tooltip Title="@("Tải xuống file đính kèm")">
-    <Icon Type="download" Theme="outline" OnClick="() => GetFileAttachAsync(tableContext)" Class="pointer" />
-    </Tooltip>
-    </SpaceItem>*@
-@*@if (StaffProfileViewMode == StaffProfileViewMode.Manager)
-    {
-    <SpaceItem>
-    <Tooltip Title="@("Xóa file đính kèm")">
-    <Popconfirm Placement="@Placement.LeftBottom"
-    OnConfirm="() => ClearFile(tableContext)"
-    OkText="Đồng ý"
-    CancelText="Hủy">
-    <ChildContent>
-    <Icon Type="delete" Theme="outline" Class="pointer" />
-    </ChildContent>
-    <TitleTemplate>
-    Bạn có chắc chắn muốn xóa đính kèm này?
-    </TitleTemplate>
-    </Popconfirm>
-    </Tooltip>
-    </SpaceItem>*@
-
 <Modal Title="@("Đính kèm")" Visible="@uploadVisible" OnOk="ReadFile" OnCancel="CancelModal">
     <input id="uploadFile" disabled class="f-input" value="@AttachFileName" style="margin: 0 !important" />
     <div class="fileUpload btn btn--browse" style="margin: 0 !important">
@@ -120,6 +109,11 @@
 
 @code {
     class selectInUniversity
+    {
+        public int Value { get; set; }
+        public string Name { get; set; }
+    }
+    class selectAcademicRank
     {
         public int Value { get; set; }
         public string Name { get; set; }

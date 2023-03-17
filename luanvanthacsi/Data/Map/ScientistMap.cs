@@ -21,6 +21,8 @@ namespace luanvanthacsi.Data.Map
             Map(x => x.AttachFilePath).Column("AttachFilePath");
             Map(x => x.FileName).Column("FileName");
             Map(x => x.InUniversity).Column("InUniversity");
+            Map(x => x.SpecializedId).Column("SpecializedId");
+            Map(x => x.SpecializedName).Column("SpecializedName");
             Table("Scientist");
         }
     }

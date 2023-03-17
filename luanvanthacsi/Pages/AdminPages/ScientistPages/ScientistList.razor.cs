@@ -19,6 +19,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] IUserService UserService { get; set; }
+        [Inject] ISpecializedService SpecializedService { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
@@ -57,6 +58,11 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             var scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = scientists.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
+            var specializedList = await SpecializedService.GetAllAsync();
+            foreach(var item in list)
+            {
+                item.SpecializedName = specializedList.Where(x => x.Id == item.SpecializedId).Select(x => x.Name).FirstOrDefault();
+            }
             scientistDatas = _mapper.Map<List<ScientistData>>(list);
             int stt = 1;
             scientistDatas.ForEach(x => { x.stt = stt++; });
@@ -67,7 +73,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         void AddScientist()
         {
             var scientistData = new Scientist();
-            var lastCode = scientistDatas?.OrderByDescending(x =>x.Code).Select(x=>x.Code).FirstOrDefault();
+            var lastCode = scientistDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
             int codeNumber = 1;
             if (lastCode != null && int.TryParse(lastCode.Substring(3), out codeNumber))
             {
@@ -148,7 +154,6 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 throw ex;
             }
         }
-
         async Task DeleteAsync(ScientistData model = null)
         {
             try

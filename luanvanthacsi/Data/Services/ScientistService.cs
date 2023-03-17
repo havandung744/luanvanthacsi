@@ -36,15 +36,16 @@ namespace luanvanthacsi.Data.Services
             try
             {
                 List<Scientist> scientists;
+                Specialized specialized;
                 using (ISession session = FluentNHibernateHelper.OpenSession())
                 {
                     scientists = session.Query<Scientist>().Where(x => x.FacultyId == id).ToList();
                 }
                 return scientists;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 

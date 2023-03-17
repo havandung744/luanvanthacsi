@@ -42,6 +42,7 @@ builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IEvaluationBoardService, EvaluationBoardService>();
 builder.Services.AddSingleton<ILecturersService, LecturersService>();
 builder.Services.AddSingleton<ISecretaryService, SecretaryService>();
+builder.Services.AddSingleton<ISpecializedService, SpecializedService>();
 builder.Services.AddSingleton<ExcelExporter>();
 builder.Services.AddSingleton<TableLocale>(c =>
 {

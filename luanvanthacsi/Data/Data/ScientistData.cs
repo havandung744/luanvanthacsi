@@ -16,7 +16,7 @@ namespace luanvanthacsi.Data.Data
         [Display(Name = "Email")]
         public string Email;
         [Display(Name = "Học hàm")]
-        public string AcademicRank;
+        public int AcademicRank;
         [Display(Name = "Học vị")]
         public string Degree;
         [Display(Name = "Ngày tạo")]
@@ -30,7 +30,9 @@ namespace luanvanthacsi.Data.Data
         public string FileName;
         [Display(Name = "Vị trí")]
         public int InUniversity;
-
+        public string SpecializedId;
+        [Display(Name = "chuyên nghành")]
+        public string SpecializedName;
     }
 
 }

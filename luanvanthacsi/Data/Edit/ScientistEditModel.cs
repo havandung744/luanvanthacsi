@@ -6,14 +6,15 @@ namespace luanvanthacsi.Data.Edit
     {
         public string Id { get; set; }
         public string Code { get; set; }
-        [Required(ErrorMessage = "Vui lòng nhập vào Tên nhà khoa học")]
+        [Required(ErrorMessage = "Vui lòng nhập vào Tên.")]
         public string Name { get; set; }
         [Required(ErrorMessage ="Vui lòng nhập vào email")]
         [RegularExpression(@"^[\w-\._\+%]+@(?:[\w-]+\.)+[\w]{2,6}$", ErrorMessage = "Email không hợp lệ")]
         public string? Email { get; set; }
+        [Required(ErrorMessage = "Vui lòng nhập vào số điện thoại")]
         public string PhoneNumber { get; set; }
-        public string AcademicRank { get; set; }
-        public string Degree { get; set; }
+        public int AcademicRank { get; set; }
+        public string Degree { get => "Tiến sĩ"; set { } }
         public DateTime CreateDate { get; set; }
         public DateTime UpdateDate { get; set; }
         [Display(Name = "Đính kèm")]
@@ -21,6 +22,8 @@ namespace luanvanthacsi.Data.Edit
         [Display(Name = "Tên file")]
         public string FileName { get; set; }
         public int InUniversity { get; set; }
+        [Required(ErrorMessage = "Vui lòng chọn chuyên ngành.")]
+        public string SpecializedId { get; set; }
 
     }
 }

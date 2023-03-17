@@ -25,7 +25,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         [Inject] NavigationManager NavigationManager { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
+        [Inject] ISpecializedService SpecializedService { get; set; }
         [Inject] IMapper _mapper { get; set; }
+
         [Inject] IFileReaderService FileReaderService { get; set; }
         [Parameter] public User CurrentUser { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
@@ -39,8 +41,10 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         string PathFolder => Path.Combine("scientist");
         bool uploadVisible;
         List<selectInUniversity> _selectInUniversity;
+        List<selectAcademicRank> _selectAcademicRanks;
         string Id { get; set; }
-        protected override void OnInitialized()
+        List<Specialized> specializedList { get; set; }
+        protected override async void OnInitialized()
         {
             oldEditmode = EditModel;
             _selectInUniversity = new List<selectInUniversity>
@@ -48,6 +52,12 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 new selectInUniversity {Value=0, Name="Ngoài trường"},
                 new selectInUniversity {Value=1, Name="Trong trường"},
             };
+            _selectAcademicRanks = new List<selectAcademicRank>
+            {
+                new selectAcademicRank {Value = 0, Name="Phó giáo sư"},
+                new selectAcademicRank {Value = 1, Name="Giáo sư"},
+            };
+            specializedList = await SpecializedService.GetAllAsync();
         }
         public void LoadData(Scientist scientist)
         {
@@ -55,7 +65,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             StateHasChanged();
         }
 
-        public void UpdateScientist()
+        public async void UpdateScientist()
         {
             Scientist scientist = _mapper.Map<Scientist>(EditModel);
             scientist.FacultyId = CurrentUser.FacultyId;
@@ -103,7 +113,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 {
                     var fileUploadInfo = await fileUpload.ReadFileInfoAsync();
                     await using Stream stream = await fileUpload.OpenReadAsync();
-                    string pathFolder = Path.Combine(PathFolder, EditModel.Id);
+                    string pathFolder = Path.Combine(PathFolder);
                     if (!Directory.Exists(pathFolder))
                     {
                         Directory.CreateDirectory(pathFolder);
@@ -116,9 +126,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                     EditModel.Change(nameof(EditModel.AttachFilePath), attachFilePath);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
             CancelModal();
         }
@@ -161,9 +171,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 uploadVisible = true;
                 EditModel = model;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -175,7 +185,6 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 {
                     return;
                 }
-                //JSRuntime.DownloadFileFromUrl("Upload\\CV\\CV_havandung.pdf", "mau.pdf");
                 JSRuntime.DownloadFileFromUrl(model.AttachFilePath, model.FileName);
             }
             catch (Exception)
