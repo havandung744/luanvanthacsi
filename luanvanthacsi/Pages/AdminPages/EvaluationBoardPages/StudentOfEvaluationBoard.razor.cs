@@ -105,7 +105,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         public string GetStudentId()
         {
-            return selectedRows.FirstOrDefault()?.Id;
+            return selectedRows?.FirstOrDefault()?.Id;
         }
     }
 }
