@@ -16,14 +16,12 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale? TableLocale { get; set; }
         [Inject] NotificationService? Notice { get; set; }
-        [Inject] ILecturersService LecturersService { get; set; }
+        [Inject] IScientistService ScientistService { get; set; }
         [Inject] IUserService UserService { get; set; }
-        List<LecturersData>? lecturersDatas { get; set; } = new();
+        List<ScientistData> scientistDatas { get; set; } = new();
         StudentEdit studentEdit = new StudentEdit();
-        IEnumerable<LecturersData> selectedRows; 
-        Lecturers? selectData;
-        Table<LecturersData> table;
-        List<string>? ListSelectedStudentIds;
+        IEnumerable<ScientistData> selectedRows; 
+        Table<ScientistData> table;
         [Inject] IMapper _mapper { get; set; }
         bool visible = false;
         bool loading = false;
@@ -43,26 +41,24 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         public async Task SetSelectedRows(string id)
         {
-            Lecturers lecturers = await LecturersService.GetLecturersByIdAsync(id);
-            //LecturersData lecturersData = _mapper.Map<LecturersData>(lecturers);
-            LecturersData lecturersData = new LecturersData();
-            lecturersData.Id = id;
-            selectedRows = new[] { lecturersData };
+            Scientist scientist = await ScientistService.GetScientistByIdAsync(id);
+            ScientistData scientistData = new ScientistData();
+            scientistData.Id = id;
+            selectedRows = new[] { scientistData };
             table.SetSelection(selectedRows.Select(x => id).ToArray());
         }
 
 
         public async Task LoadAsync()
         {
-            lecturersDatas?.Clear();
-            //await SetSelectedRows(PresidentSelect);
+            scientistDatas.Clear();
             loading = true;
             visible = false;
-            var lecturers = await LecturersService.GetAllByIdAsync(CurrentUser.FacultyId);
+            var lecturers = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
             var list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
-            lecturersDatas = _mapper.Map<List<LecturersData>>(list);
+            scientistDatas = _mapper.Map<List<ScientistData>>(list);
             int stt = 1;
-            lecturersDatas.ForEach(x => { x.stt = stt++; });
+            scientistDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
             StateHasChanged();
         }

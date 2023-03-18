@@ -66,7 +66,7 @@
             {
                 <span>Giáo sư</span>
             }
-            else
+            else if(context.AcademicRank == 0)
             {
                 <span>Phó giáo sư</span>
             }
@@ -97,7 +97,7 @@
                                             OnConfirm="()=> DeleteScientist(context)"
                                             OkText="Có"
                                             CancelText="Không">
-                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" StopPropagation />
+                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete"/>
                                 </Popconfirm>
                             </Tooltip>
                         </SpaceItem>

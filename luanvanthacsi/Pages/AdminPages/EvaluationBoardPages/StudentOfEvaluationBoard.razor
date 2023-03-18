@@ -15,10 +15,10 @@
 <br />
 <AntDesign.Col Span="6">
 <Form Model="evaluationBoardEditModel">
-    <FormItem Label="Mã hội đồng đánh giá">
-        <Input @bind-Value="@context.Code" Disabled></Input>
+    <FormItem Label="Mã hội đồng">
+        <Input @bind-Value="@context.Code" ReadOnly></Input>
     </FormItem>
-    <FormItem Label="Tên hội đồng đánh giá">
+    <FormItem Label="Tên hội đồng">
         <Input @bind-Value="@context.Name"></Input>
     </FormItem>
 </Form>

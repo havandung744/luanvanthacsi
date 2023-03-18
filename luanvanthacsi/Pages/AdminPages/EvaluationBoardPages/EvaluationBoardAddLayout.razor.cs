@@ -105,9 +105,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 evaluationBoard.FacultyId = CurrentUser.FacultyId;
                 await SaveChange.InvokeAsync(evaluationBoard);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
 
         }

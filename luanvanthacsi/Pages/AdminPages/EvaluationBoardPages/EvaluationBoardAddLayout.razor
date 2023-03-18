@@ -29,26 +29,18 @@
             </TabPane>
             <TabPane Key="2" ForceRender>
                 <TabTemplate>
-                    <span><Icon Type="user" />Chủ tịch  >></span>
+                    <span><Icon Type="user" />Chủ tịch</span>
                 </TabTemplate>
                 <ChildContent>
-                    <President @ref="PresidentRef" PresidentSelect="2a03ae33-0921-4f58-9db9-a73bdcbc1baa"></President>
+                    <President @ref="PresidentRef"></President>
                 </ChildContent>
             </TabPane>
             <TabPane Key="3" ForceRender>
                 <TabTemplate>
-                    <span><Icon Type="user" />Phản biện  >></span>
+                    <span><Icon Type="user" />Phản biện</span>
                 </TabTemplate>
                 <ChildContent>
                     <Counterattacker @ref="CounterattackerRef"></Counterattacker>
-                </ChildContent>
-            </TabPane>
-            <TabPane Key="4" ForceRender>
-                <TabTemplate>
-                    <span><Icon Type="user" />Nhà khoa học  >></span>
-                </TabTemplate>
-                <ChildContent>
-                    <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef"></ScientistOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
             <TabPane Key="5" ForceRender>
@@ -59,6 +51,15 @@
                     <SecretaryOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef"></SecretaryOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
+            <TabPane Key="4" ForceRender>
+                <TabTemplate>
+                    <span><Icon Type="user" />Ủy viên</span>
+                </TabTemplate>
+                <ChildContent>
+                    <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef"></ScientistOfEvaluationBoard>
+                </ChildContent>
+            </TabPane>
+           
         </ChildContent>
     </Tabs>
 </luanvanthacsi.Data.Components.Lazy>

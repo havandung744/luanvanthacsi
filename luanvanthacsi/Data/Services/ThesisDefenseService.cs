@@ -50,15 +50,13 @@ namespace luanvanthacsi.Data.Services
                 {
                     try
                     {
-
                         await session.DeleteAsync(thesisDefense);
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
             }

@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <Folder Include="Excel\Template\" />
+    <Folder Include="scientist\" />
     <Folder Include="Upload\" />
   </ItemGroup>
 

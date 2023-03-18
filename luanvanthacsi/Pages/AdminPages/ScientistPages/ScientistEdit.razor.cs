@@ -56,6 +56,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             {
                 new selectAcademicRank {Value = 0, Name="Phó giáo sư"},
                 new selectAcademicRank {Value = 1, Name="Giáo sư"},
+                new selectAcademicRank {Value = -1, Name="Không"},
             };
             specializedList = await SpecializedService.GetAllAsync();
         }
