@@ -50,7 +50,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 
         public async Task LoadAsync()
         {
-            scientistDatas.Clear();
+            scientistDatas?.Clear();
             loading = true;
             visible = false;
             StateHasChanged();
@@ -158,7 +158,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         {
             try
             {
-                var deleteModel = scientistDatas.Where(c => selectedRows.Select(r => r.Id).Contains(c.Id)).ToList();
+                var deleteModel = scientistDatas?.Where(c => selectedRows.Select(r => r.Id).Contains(c.Id)).ToList();
                 List<Scientist> scientists = new List<Scientist>();
                 // maping từ studentData thành student
                 foreach (var scientistData in deleteModel)
@@ -179,9 +179,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
     }

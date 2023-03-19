@@ -82,7 +82,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 var scientistIds = ScientistOfEvaluationBoardRef.GetId();
                 if (scientistIds.Count != 2)
                 {
-                    Notice.NotiError("Vui lòng chọn hai nhà khoa học!");
+                    Notice.NotiError("Vui lòng chọn hai ủy viên!");
                     return;
                 }
                 else
@@ -103,6 +103,12 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
                 // Thực hiện lưu
                 activeTab = "1";
+                await StudentOfEvaluationBoardRef.LoadAsync();
+                await PresidentRef.LoadAsync();
+                await CounterattackerRef.LoadAsync();
+                await ScientistOfEvaluationBoardRef.LoadAsync();
+                await SecretaryOfEvaluationBoardRef.LoadAsync();
+                await CancelDetail.InvokeAsync();
                 evaluationBoard.FacultyId = CurrentUser.FacultyId;
                 evaluationBoard.Id = idUpdate;
                 await SaveChange.InvokeAsync(evaluationBoard);
