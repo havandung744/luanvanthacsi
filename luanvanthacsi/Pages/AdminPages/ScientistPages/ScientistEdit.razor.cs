@@ -17,19 +17,22 @@ using AutoMapper;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Ultils;
 using NPOI.Util;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 {
     public partial class ScientistEdit : ComponentBase
     {
         [Inject] NavigationManager NavigationManager { get; set; }
+        [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+        [Inject] IUserService UserService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] ISpecializedService SpecializedService { get; set; }
         [Inject] IMapper _mapper { get; set; }
 
         [Inject] IFileReaderService FileReaderService { get; set; }
-        [Parameter] public User CurrentUser { get; set; }
+        User CurrentUser;
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<Scientist> ValueChange { get; set; }
         ScientistEditModel EditModel { get; set; } = new ScientistEditModel();
@@ -46,6 +49,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         List<Specialized> specializedList { get; set; }
         protected override async void OnInitialized()
         {
+            string id = await getUserId();
+            CurrentUser = await UserService.GetUserByIdAsync(id);
+
             oldEditmode = EditModel;
             _selectInUniversity = new List<selectInUniversity>
             {
@@ -58,9 +64,15 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 new selectAcademicRank {Value = 1, Name="Giáo sư"},
                 new selectAcademicRank {Value = -1, Name="Không"},
             };
-            specializedList = await SpecializedService.GetAllAsync();
+            specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
         }
-        public void LoadData(Scientist scientist)
+        async Task<string> getUserId()
+        {
+            var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+            return UserId;
+        }
+        public async Task LoadData(Scientist scientist)
         {
             EditModel = _mapper.Map<ScientistEditModel>(scientist);
             StateHasChanged();
@@ -159,9 +171,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 }
                 AttachFileName = null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
         void Upload(ScientistEditModel model)

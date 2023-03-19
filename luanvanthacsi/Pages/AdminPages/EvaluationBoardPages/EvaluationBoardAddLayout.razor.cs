@@ -13,13 +13,14 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Parameter] public User CurrentUser { get; set; }
         [Inject] NotificationService Notice { get; set; }
         public StudentOfEvaluationBoard StudentOfEvaluationBoardRef { get; set; } = new();
-        public President PresidentRef { get; set; } = new();
-        Counterattacker CounterattackerRef { get; set; } = new();
+        public ScientistOfEvaluationBoard PresidentRef { get; set; } = new();
+        ScientistOfEvaluationBoard CounterattackerRef { get; set; } = new();
         ScientistOfEvaluationBoard ScientistOfEvaluationBoardRef { get; set; } = new();
-        SecretaryOfEvaluationBoard SecretaryOfEvaluationBoardRef { get; set; } = new();
+        ScientistOfEvaluationBoard SecretaryOfEvaluationBoardRef { get; set; } = new();
         [Parameter] public EventCallback<EvaluationBoard> SaveChange { get; set; }
         [Parameter] public EventCallback CancelDetail { get; set; }
         private string activeTab = "1";
+        string idUpdate = "";
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -54,18 +55,18 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     evaluationBoard.StudentId = userId;
                 }
                 // lấy id của chủ tịch hội đồng bảo vệ
-                var presidentId = PresidentRef.GetLecturersId();
-                if (presidentId == null)
+                var presidentId = PresidentRef.GetId();
+                if (presidentId.Count() == 0)
                 {
                     Notice.NotiError("Vui lòng chọn chủ tịch hội đồng!");
                     return;
                 }
                 else
                 {
-                    evaluationBoard.PresidentId = presidentId;
+                    evaluationBoard.PresidentId = presidentId.First();
                 }
                 // lấy danh sách id của giảng viên phản biện
-                var counterattackerIds = CounterattackerRef.GetCounterattackerId();
+                var counterattackerIds = CounterattackerRef.GetId();
                 if (counterattackerIds.Count != 3)
                 {
                     Notice.NotiError("Vui lòng chọn ba phản biện!");
@@ -78,7 +79,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     evaluationBoard.CounterattackerIdThree = counterattackerIds[2];
                 }
                 // lấy id của 2 nhà khoa học
-                var scientistIds = ScientistOfEvaluationBoardRef.GetScientistsId();
+                var scientistIds = ScientistOfEvaluationBoardRef.GetId();
                 if (scientistIds.Count != 2)
                 {
                     Notice.NotiError("Vui lòng chọn hai nhà khoa học!");
@@ -90,19 +91,20 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     evaluationBoard.ScientistIdTwo = scientistIds[1];
                 }
                 // lấy id của thư ký
-                var secretaryId = SecretaryOfEvaluationBoardRef.GetSecretaryId();
-                if (secretaryId == null)
+                var secretaryId = SecretaryOfEvaluationBoardRef.GetId();
+                if (secretaryId.Count() == 0)
                 {
                     Notice.NotiError("Vui lòng chọn thư ký!");
                     return;
                 }
                 else
                 {
-                    evaluationBoard.SecretaryId = secretaryId;
+                    evaluationBoard.SecretaryId = secretaryId.First();
                 }
                 // Thực hiện lưu
                 activeTab = "1";
                 evaluationBoard.FacultyId = CurrentUser.FacultyId;
+                evaluationBoard.Id = idUpdate;
                 await SaveChange.InvokeAsync(evaluationBoard);
             }
             catch (Exception)
@@ -116,6 +118,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             try
             {
+                idUpdate = data.Id;
                 // lấy danh sách id phản biện
                 List<string> CounterattackerIds = new List<string>();
                 CounterattackerIds.Add(data.CounterattackerIdOne);
@@ -127,15 +130,23 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 ScientistIds.Add(data.ScientistIdOne);
                 ScientistIds.Add(data.ScientistIdTwo);
 
+                // lấy id chủ tịch hội đồng
+                List<string> PrersidentId = new List<string>();
+                PrersidentId.Add(data.PresidentId);
+                // lấy id thư ký hội đồng
+                List<string> SecretaryId = new List<string>();
+                SecretaryId.Add(data.SecretaryId);
+
+
                 await StudentOfEvaluationBoardRef.SetSelectedRows(data.StudentId, data.Id);
-                await PresidentRef.SetSelectedRows(data.PresidentId);
+                await PresidentRef.SetSelectedRows(PrersidentId);
                 await CounterattackerRef.SetSelectedRows(CounterattackerIds);
                 await ScientistOfEvaluationBoardRef.SetSelectedRows(ScientistIds);
-                await SecretaryOfEvaluationBoardRef.SetSelectedRows(data.SecretaryId);
+                await SecretaryOfEvaluationBoardRef.SetSelectedRows(SecretaryId);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 

@@ -17,6 +17,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] NotificationService? Notice { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] IUserService? UserService { get; set; }
+        [Inject] ISpecializedService SpecializedService { get; set; }
+        [Parameter] public int tab { get; set; }
+
         List<ScientistData>? scientistDatas { get; set; }
         IEnumerable<ScientistData> selectedRows;
         Scientist? selectData;
@@ -46,7 +49,12 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             loading = true;
             visible = false;
             var lecturers = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
-            var list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
+            var list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == CurrentUser.FacultyId).ToList();
+            var specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
+            foreach (var item in list)
+            {
+                item.SpecializedName = specializedList.Where(x => x.Id == item.SpecializedId).Select(x => x.Name).FirstOrDefault();
+            }
             scientistDatas = _mapper.Map<List<ScientistData>>(list);
             int stt = 1;
             scientistDatas.ForEach(x => { x.stt = stt++; });
@@ -71,13 +79,13 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
                 table.SetSelection(selectedRows.Select(x => x.Id).ToArray());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
-        public List<string> GetScientistsId()
+        public List<string> GetId()
         {
             List<string> ids = new();
             if (selectedRows != null)

@@ -12,16 +12,27 @@ using luanvanthacsi.Data.Extentions;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components.Authorization;
 using AutoMapper;
+using luanvanthacsi.Excel.ClassExcel;
+using luanvanthacsi.Excel;
+using Microsoft.JSInterop;
+using NPOI.SS.UserModel;
+using OfficeOpenXml;
+using luanvanthacsi.Ultils;
+using System.Data;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
     public partial class EvaluationBoardList : ComponentBase
     {
+        [Inject] IJSRuntime JSRuntime { get; set; }
+        [Inject] ExcelExporter ExcelExporter { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IEvaluationBoardService EvaluationBoardService { get; set; }
+        [Inject] IStudentService StudentService { get; set; }
+        [Inject] IScientistService ScientistService { get; set; }
         [Inject] IMapper _mapper { get; set; }
         List<EvaluationBoardData>? evaluationBoardDatas { get; set; }
         bool visible = false;
@@ -33,6 +44,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         List<string>? ListSelectedEvaluationBoardDataIds;
         User CurrentUser;
         bool addVisible;
+        List<ExcelSheetObject> Sheets { get; set; }
         EvaluationBoardAddLayout EvaluationBoardAddLayoutRef { get; set; } = new();
         protected override async Task OnInitializedAsync()
         {
@@ -40,7 +52,27 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             CurrentUser = await UserService.GetUserByIdAsync(id);
             evaluationBoardDatas = new();
             await LoadAsync();
+            Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HoiDong", "KEY_STAFFIMPORT", 4, null, GetTable().GetDataColumns(), 3) };
         }
+
+        public DataTable GetTable()
+        {
+            try
+            {
+                var table = new DataTable();
+                var properties = typeof(EvaluationBoardExcel).GetProperties();
+                foreach (var p in properties)
+                {
+                    table.Columns.Add(p.Name, Nullable.GetUnderlyingType(p.PropertyType) ?? p.PropertyType);
+                }
+                return table;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         async Task<string> getUserId()
         {
             var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -50,7 +82,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         public async Task LoadAsync()
         {
-            evaluationBoardDatas.Clear();
+            evaluationBoardDatas?.Clear();
             loading = true;
             visible = false;
             StateHasChanged();
@@ -58,35 +90,45 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = evaluationBoards.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             evaluationBoardDatas = _mapper.Map<List<EvaluationBoardData>>(list);
+            #region join bảng lấy dữ liệu
+            List<Scientist> scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+            foreach (var item in evaluationBoardDatas)
+            {
+                // lấy thông tin student
+                Student student = await StudentService.GetStudentByIdAsync(item.StudentId);
+                item.StudentName = student?.Name;
+                item.InstructorOne = student?.InstructorOne;
+                item.OnstructorTwo = student?.OnstructorTwo;
+                item.TopicName = student?.TopicName;
+                item.Branch = scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
+                // lấy thông tin chủ tịch
+                item.PresidentName = scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
+                // lấy thông tin phản biện 1
+                item.CounterattackerOne = scientists.Where(x => x.Id == item.CounterattackerIdOne).Select(x => x.Name).First();
+                // lấy thông tin phản biện 2
+                item.CounterattackerTwo = scientists.Where(x => x.Id == item.CounterattackerIdTwo).Select(x => x.Name).First();
+                // lấy thông tin phản biện 3
+                item.CounterattackerThree = scientists.Where(x => x.Id == item.CounterattackerIdThree).Select(x => x.Name).First();
+                // lấy thông tin phản biện thư kí
+                item.SecretaryName = scientists.Where(x => x.Id == item.SecretaryId).Select(x => x.Name).First();
+                // lấy thông tin ủy viên 1
+                item.ScientistOne = scientists.Where(x => x.Id == item.ScientistIdOne).Select(x => x.Name).First();
+                // lấy thông tin ủy viên 2
+                item.ScientistTwo = scientists.Where(x => x.Id == item.ScientistIdTwo).Select(x => x.Name).First();
+            }
+            #endregion
+
             int stt = 1;
             evaluationBoardDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
             StateHasChanged();
         }
 
-        //void AddEvaluationBoard()
-        //{
-        //    var evaluationBoardData = new EvaluationBoard();
-        //    var lastCode = evaluationBoardDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
-        //    int codeNumber = 0;
-        //    if (lastCode != null && int.TryParse(lastCode.Substring(4), out codeNumber))
-        //    {
-        //        codeNumber++;
-        //    }
-        //    string newCode = "HDDG" + codeNumber.ToString("D3");
-        //    evaluationBoardData.Code = newCode;
-        //    ShowEvaluationBoardDetail(evaluationBoardData);
-        //}
         void AddEvaluationBoard()
         {
             addVisible = true;
         }
 
-        //void ShowEvaluationBoardDetail(EvaluationBoard data)
-        //{
-        //    evaluationBoardEdit.LoadData(data);
-        //    visible = true;
-        //}
         async Task ShowEvaluationBoardDetail(EvaluationBoard data)
         {
             await EvaluationBoardAddLayoutRef.LoadDetail(data);
@@ -97,15 +139,30 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             addVisible = false;
             var resultAdd = await EvaluationBoardService.AddOrUpdateEvaluationBoard(data);
-            await LoadAsync();
-            if (data.Id.IsNotNullOrEmpty())
+            if (resultAdd == true)
             {
-                Notice.NotiSuccess("Cập nhật dữ liệu thành công");
+                if (data.Id.IsNotNullOrEmpty())
+                {
+                    Notice.NotiSuccess("Cập nhật dữ liệu thành công");
+                }
+                else
+                {
+                    Notice.NotiSuccess("Thêm dữ liệu thành công");
+                }
+                await LoadAsync();
             }
             else
             {
-                Notice.NotiSuccess("Thêm dữ liệu thành công");
+                if (data.Id.IsNotNullOrEmpty())
+                {
+                    Notice.NotiError("Cập nhật dữ liệu thất bại");
+                }
+                else
+                {
+                    Notice.NotiError("Thêm dữ liệu thất bại");
+                }
             }
+
         }
 
         void OnClose()
@@ -155,9 +212,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 table?.SetSelection(ids.ToArray());
                 ListSelectedEvaluationBoardDataIds = ids;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -186,9 +243,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -196,5 +253,51 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             addVisible = false;
         }
+
+        async Task ExportExcelAsync()
+        {
+            try
+            {
+                string pathFile = Path.Combine("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\Excel\\Template", "HoiDongBaoVe.xlsx");
+                using (var stream = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
+                {
+                    var package = new ExcelPackage(stream);
+                    try
+                    {
+                        ExcelWorksheet wSheet;
+                        try
+                        {
+                            wSheet = package.Workbook.Worksheets[Sheets.First().Name];
+                        }
+                        catch (Exception)
+                        {
+                            wSheet = package.Workbook.Worksheets[Sheets.First().Name];
+                        }
+                        var data = _mapper.Map<List<EvaluationBoardExcel>>(evaluationBoardDatas);
+                        if (data.Any() == true)
+                        {
+                            ExcelExporter.WriteToSheet(data, wSheet, Sheets.First());
+                        }
+                        else
+                        {
+                            Notice.NotiError("Không có dữ liệu!");
+                            return;
+                        }
+                        //package.Workbook.CalcMode = ExcelCalcMode.Automatic;
+                        var fileBase64 = Convert.ToBase64String(package.GetAsByteArray());
+                        JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy-HHmmss") + "-HoiDongBaoVe.xlsx", fileBase64);
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

@@ -29,6 +29,7 @@ using System.Data;
 using MathNet.Numerics.Providers.SparseSolver;
 using Umbraco.Core.Services.Implement;
 using luanvanthacsi.Data;
+using luanvanthacsi.Excel.ClassExcel;
 //using LightInject;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
@@ -79,9 +80,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 var fileBase64 = Convert.ToBase64String(GenerateTemplateExcel());
                 JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "-DanhMucChucDanh.xlsx", fileBase64);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -139,10 +140,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 }
                 return table;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
-                return new DataTable();
+                throw;
             }
         }
 
@@ -431,8 +431,21 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                         var data = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
                         if (data.Any() == true)
                         {
-                            var studentExcels = data.OrderBy(x => x.Code).ToList();
-                            ExcelExporter.WriteToSheet(studentExcels, wSheet, Sheets.First());
+                            List<StudentExportExcel> studentExportExcels= new List<StudentExportExcel>();
+                            studentExportExcels = _mapper.Map<List<StudentExportExcel>>(data);
+                            int stt = 1;
+                            foreach(var item in studentExportExcels)
+                            {
+                                item.stt = stt;
+                                stt++;
+                            }
+                            
+                            ExcelExporter.WriteToSheet(studentExportExcels, wSheet, Sheets.First());
+                        }
+                        else
+                        {
+                            Notice.NotiError("Không có dữ liệu!");
+                            return;
                         }
                         //package.Workbook.CalcMode = ExcelCalcMode.Automatic;
                         var fileBase64 = Convert.ToBase64String(package.GetAsByteArray());

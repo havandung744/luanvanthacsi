@@ -25,9 +25,9 @@ namespace luanvanthacsi.Data.Services
                 }
                 return scientists;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -73,10 +73,9 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
                 return result;
@@ -96,10 +95,10 @@ namespace luanvanthacsi.Data.Services
                         scientist = await session.GetAsync<Scientist>(id);
                         return scientist;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //await transaction.RollbackAsync();
-                        throw ex;
+                        throw;
                     }
                 }
             }
@@ -122,7 +121,6 @@ namespace luanvanthacsi.Data.Services
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
             }
@@ -142,10 +140,10 @@ namespace luanvanthacsi.Data.Services
                         //await transaction.CommitAsync();
                         return scientists;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
+                        throw;
                     }
                 }
             }
@@ -167,10 +165,9 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
             }

@@ -38,7 +38,6 @@ namespace luanvanthacsi.Data.Services
                     catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw;
                     }
                 }
                 return result;
@@ -75,7 +74,6 @@ namespace luanvanthacsi.Data.Services
                     catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw;
                     }
                 }
                 return result;
@@ -129,7 +127,6 @@ namespace luanvanthacsi.Data.Services
                     catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw;
                     }
                 }
                 return result;
@@ -150,7 +147,10 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception) { await transaction.RollbackAsync(); throw; }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                    }
                 }
             }
             return result;
@@ -172,7 +172,10 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception) { await transaction.RollbackAsync(); throw; }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                    }
                 }
             }
             return result;

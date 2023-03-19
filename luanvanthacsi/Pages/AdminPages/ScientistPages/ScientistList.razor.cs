@@ -58,7 +58,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             var scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = scientists.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
-            var specializedList = await SpecializedService.GetAllAsync();
+             var specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
             foreach(var item in list)
             {
                 item.SpecializedName = specializedList.Where(x => x.Id == item.SpecializedId).Select(x => x.Name).FirstOrDefault();

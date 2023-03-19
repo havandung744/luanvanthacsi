@@ -31,10 +31,9 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
                 return result;
@@ -79,10 +78,9 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
             }
@@ -100,9 +98,9 @@ namespace luanvanthacsi.Data.Services
                 }
                 return thesisDefenses;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -117,9 +115,9 @@ namespace luanvanthacsi.Data.Services
                 }
                 return thesisDefense;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -134,9 +132,9 @@ namespace luanvanthacsi.Data.Services
                 }
                 return students;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -152,10 +150,10 @@ namespace luanvanthacsi.Data.Services
                         thesisDefenses = session.Query<ThesisDefense>().Where(c => c.Name.Like('%' + txtSearch + '%')).ToList();
                         return thesisDefenses;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
+                        throw;
                     }
                 }
             }
@@ -173,10 +171,10 @@ namespace luanvanthacsi.Data.Services
                         thesisDefense = await session.GetAsync<ThesisDefense>(id);
                         return thesisDefense;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //await transaction.RollbackAsync();
-                        throw ex;
+                        throw;
                     }
                 }
             }
@@ -197,10 +195,9 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
                 return result;
@@ -225,10 +222,9 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
                 return result;

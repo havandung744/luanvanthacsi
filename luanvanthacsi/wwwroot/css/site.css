@@ -248,3 +248,18 @@ a, .btn-link {
     padding-left: 10px !important;
 }
 
+.site-content {
+    min-height: calc(100vh - 150px) !important;
+    width: 1500px !important;
+    margin-bottom: 20px;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table-hover tbody tr:hover {
+    color: #212529;
+    background-color: rgba(0, 0, 0, 0.075);
+}
+

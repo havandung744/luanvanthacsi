@@ -1,6 +1,7 @@
 ﻿@page "/evaluationBoards"
 @using luanvanthacsi.Data.Components
 @using luanvanthacsi.Data.Data;
+@using System.ComponentModel;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý hội đồng đánh giá</PageTitle>
 <PageHeader Style="padding: 0;">
@@ -12,84 +13,101 @@
         </Breadcrumb>
     </PageHeaderExtra>
 </PageHeader>
-<Row>
-    <Space>
-        <SpaceItem>
-            <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddEvaluationBoard">Lập hội đồng</Button>
-        </SpaceItem>
-        <SpaceItem>
-            @if (selectedRows?.Any() == true)
-            {
-                <SpaceItem>
-                    <Popconfirm Placement="@Placement.LeftBottom"
-                            OnConfirm="() => DeleteAsync()"
-                            OkText="Đồng ý"
-                            CancelText="Hủy">
-                        <ChildContent>
-                            <Button Type="@ButtonType.Primary" Color="Color.Red7">Xóa</Button>
-                        </ChildContent>
-                        <TitleTemplate>
-                            Bạn có chắc chắn muốn xóa
-                            @if (selectedRows.Count() == 1)
-                            {
-                                <strong> @selectedRows?.FirstOrDefault().Name</strong>
+<div class="site-content">
+    <Row Gutter="8">
+        <AntDesign.Col Span="24">
+            <Row>
+                <Space>
+                    <SpaceItem>
+                        <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddEvaluationBoard">Lập hội đồng</Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ExportExcelAsync">
+                            Xuất Excel
+                        </Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        @if (selectedRows?.Any() == true)
+                        {
+                            <SpaceItem>
+                                <Popconfirm Placement="@Placement.LeftBottom"
+                                        OnConfirm="() => DeleteAsync()"
+                                        OkText="Đồng ý"
+                                        CancelText="Hủy">
+                                    <ChildContent>
+                                        <Button Type="@ButtonType.Primary" Color="Color.Red7">Xóa</Button>
+                                    </ChildContent>
+                                    <TitleTemplate>
+                                        Bạn có chắc chắn muốn xóa
+                                        @if (selectedRows.Count() == 1)
+                                        {
+                                            <strong> @selectedRows?.FirstOrDefault()?.StudentName</strong>
 
-                                <span>?</span>
-                            }
-                            else
-                            {
-                                <strong> @selectedRows.Count()</strong> <span>nhà khoa học?</span>
-                            }
+                                            <span>?</span>
+                                        }
+                                        else
+                                        {
+                                            <strong> @selectedRows.Count()</strong> <span>nhà khoa học?</span>
+                                        }
 
-                        </TitleTemplate>
-                    </Popconfirm>
-                </SpaceItem>
-            }
-        </SpaceItem>
-    </Space>
-</Row>
-<br />
-<Table @ref="table" DataSource="evaluationBoardDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
-       TItem="EvaluationBoardData"
-       OnRowClick="OnRowClick"
-       @bind-SelectedRows="selectedRows">
-    <ChildContent>
-        <Selection Key="@context.Id" Fixed="left" Width="50px"></Selection>
-        <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
-        <Column @bind-Field="context.Code" Filterable Sortable></Column>
-        <Column @bind-Field="context.Name" Filterable Sortable></Column>
-        <ActionColumn Title="Thao tác">
-            <ChildContent>
-                <Row Justify="center">
-                    <Space>
-                        <SpaceItem>
-                            <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
-                                <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation />
-                            </Tooltip>
-                        </SpaceItem>
-                        <SpaceItem>
-                            <Tooltip Placement="@Placement.Top" Title="@("Xóa")">
-                                <Popconfirm Title="Xác nhận xóa?"
-                                            OnConfirm="()=> DeleteEvaluationBoard(context)"
-                                            OkText="Có"
-                                            CancelText="Không">
-                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" />
+                                    </TitleTemplate>
                                 </Popconfirm>
-                            </Tooltip>
-                        </SpaceItem>
-                    </Space>
-                </Row>
-            </ChildContent>
-        </ActionColumn>
-    </ChildContent>
-    <PaginationTemplate>
-        <PaginationCustom Context="context"></PaginationCustom>
-    </PaginationTemplate>
-</Table>
+                            </SpaceItem>
+                        }
+                    </SpaceItem>
+                </Space>
+            </Row>
+            <br />
+            <Row>
+                <Table @ref="table" DataSource="evaluationBoardDatas" Loading="loading" ScrollX="1000" ScrollY="600" Locale="TableLocale" ScrollBarWidth="8px"
+                       Size=@TableSize.Small
+                       TItem="EvaluationBoardData"
+                       OnRowClick="OnRowClick"
+                       @bind-SelectedRows="selectedRows">
+                    <ChildContent>
+                        <Selection Key="@context.Id" Width="50" Fixed="left"></Selection>
+                        <Column @bind-Field="context.stt" Sortable Width="80" Fixed="left"></Column>
+                        <Column @bind-Field="context.StudentName" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.TopicName" Width="300" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.InstructorOne" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.OnstructorTwo" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.PresidentName" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.CounterattackerOne" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.CounterattackerTwo" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.CounterattackerThree" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.SecretaryName" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.ScientistOne" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.ScientistTwo" Width="200" Sortable Ellipsis></Column>
+                        <ActionColumn Title="Thao tác" Width="80" Fixed="right">
+                            <Space>
+                                <SpaceItem>
+                                    <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
+                                        <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation />
+                                    </Tooltip>
+                                </SpaceItem>
+                                <SpaceItem>
+                                    <Tooltip Placement="@Placement.Top" Title="@("Xóa")">
+                                        <Popconfirm Title="Xác nhận xóa?"
+                                                    OnConfirm="()=> DeleteEvaluationBoard(context)"
+                                                    OkText="Có"
+                                                    CancelText="Không">
+                                            <Icon Type="delete" Theme="fill" Class="btn-icon-delete" />
+                                        </Popconfirm>
+                                    </Tooltip>
+                                </SpaceItem>
+                            </Space>
+                        </ActionColumn>
+                    </ChildContent>
+                    <PaginationTemplate>
+                        <PaginationCustom Context="context"></PaginationCustom>
+                    </PaginationTemplate>
+                </Table>
+            </Row>
+        </AntDesign.Col>
+    </Row>
+</div>
 
-@*<Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Hội đồng đánh giá")' OnClose="OnClose">
-    <EvaluationBoardEdit @ref="evaluationBoardEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></EvaluationBoardEdit>
-</Drawer>*@
+
 <Drawer Closable="false" Visible="addVisible" Height="965" OnClose="() => addVisible=false"
         Title='("Lập hội đồng đánh giá")' Placement="bottom">
     <Template>

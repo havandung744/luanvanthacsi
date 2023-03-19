@@ -4,7 +4,7 @@
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý học viên</PageTitle>
 <br />
-<AntDesign.Col Span="6">
+@*<AntDesign.Col Span="6">
 <Form Model="evaluationBoardEditModel">
     <FormItem Label="Mã hội đồng">
         <Input @bind-Value="@context.Code" ReadOnly></Input>
@@ -13,7 +13,7 @@
         <Input @bind-Value="@context.Name"></Input>
     </FormItem>
 </Form>
-</AntDesign.Col>
+</AntDesign.Col>*@
 <Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
        TItem="StudentData" ScrollX="1350"
        @bind-SelectedRows="selectedRows">

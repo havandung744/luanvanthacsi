@@ -49,16 +49,16 @@
 </Row>
 <br />
 <Table @ref="table" DataSource="scientistDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
-       TItem="ScientistData"
+       TItem="ScientistData" Size=@TableSize.Small 
        OnRowClick="OnRowClick"
        @bind-SelectedRows="selectedRows">
     <ChildContent>
         <Selection Key="@context.Id" Fixed="left" Width="50px"></Selection>
         <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
-        <Column @bind-Field="context.Code" Filterable Sortable></Column>
-        <Column @bind-Field="context.Name" Filterable Sortable></Column>
+        <Column @bind-Field="context.Code" Filterable Ellipsis Sortable></Column>
+        <Column @bind-Field="context.Name" Filterable Ellipsis Sortable></Column>
         <Column @bind-Field="context.Email" Ellipsis Filterable></Column>
-        <Column @bind-Field="context.PhoneNumber"></Column>
+        <Column @bind-Field="context.PhoneNumber" Ellipsis></Column>
         <Column @bind-Field="context.SpecializedName" Ellipsis>
         </Column>
         <Column @bind-Field="context.AcademicRank">
@@ -112,5 +112,5 @@
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Nhà khoa học")' OnClose="OnClose">
-    <ScientistEdit @ref="scientistEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></ScientistEdit>
+    <ScientistEdit @ref="scientistEdit" Cancel="() => visible = false" ValueChange="Save"></ScientistEdit>
 </Drawer>

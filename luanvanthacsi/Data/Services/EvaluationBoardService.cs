@@ -29,10 +29,9 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
                 return result;
@@ -53,10 +52,9 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
             }
@@ -79,10 +77,9 @@ namespace luanvanthacsi.Data.Services
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
-                        throw ex;
                     }
                 }
             }
@@ -100,9 +97,9 @@ namespace luanvanthacsi.Data.Services
                 }
                 return evaluationBoard;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -118,10 +115,10 @@ namespace luanvanthacsi.Data.Services
                         evaluationBoard = await session.GetAsync<EvaluationBoard>(id);
                         return evaluationBoard;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         //await transaction.RollbackAsync();
-                        throw ex;
+                        throw;
                     }
                 }
             }

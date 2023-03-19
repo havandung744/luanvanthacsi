@@ -2,7 +2,9 @@
 using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
+using luanvanthacsi.Excel.ClassExcel;
 using luanvanthacsi.Pages.AdminPages.ScientistPages;
+using luanvanthacsi.Ultils;
 
 namespace luanvanthacsi.Data.Components
 {
@@ -33,6 +35,14 @@ namespace luanvanthacsi.Data.Components
 
             // map thư ký
             CreateMap<Secretary, SecretaryData>().ReverseMap();
+
+            // map excel
+            CreateMap<Student, StudentExportExcel>()
+               .ForMember(src => src.DateOfBirth, dest => dest.MapFrom(c => c.DateOfBirth.ToShortDate())).ReverseMap();
+
+            CreateMap<EvaluationBoardData, EvaluationBoardExcel>().ReverseMap();    
+
+
         }
     }
 }

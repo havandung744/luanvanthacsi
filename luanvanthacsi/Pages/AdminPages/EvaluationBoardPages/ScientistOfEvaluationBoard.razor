@@ -18,22 +18,39 @@
        TItem="ScientistData" ScrollX="1350"
        @bind-SelectedRows="selectedRows">
     <ChildContent>
-        <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+        @if (tab == 2)
+        {
+            <Selection Key="@context.Id" Fixed="left" Type="radio" Width="50"></Selection>
+        }
+        else
+        {
+            <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+        }
         <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
         <Column @bind-Field="context.Code" Filterable Sortable></Column>
         <Column @bind-Field="context.Name" Filterable Sortable></Column>
         <Column @bind-Field="context.Email" Filterable></Column>
         <Column @bind-Field="context.PhoneNumber"></Column>
-        <Column @bind-Field="context.AcademicRank" Filterable></Column>
-        <Column @bind-Field="context.Degree" Filterable></Column>
+        <Column @bind-Field="context.SpecializedName" Ellipsis></Column>
+        <Column @bind-Field="context.AcademicRank">
+            @if (context.AcademicRank == 1)
+            {
+                <span>Giáo sư</span>
+            }
+            else if (context.AcademicRank == 0)
+            {
+                <span>Phó giáo sư</span>
+            }
+        </Column>
+        <Column @bind-Field="context.Degree"></Column>
         <Column @bind-Field="context.InUniversity">
             @if (context.InUniversity == 1)
             {
-                    <p>Trong trường</p>
+                <span>Trong trường</span>
             }
             else
             {
-                    <p>Ngoài trường</p>
+                <span>Ngoài trường</span>
             }
         </Column>
     </ChildContent>

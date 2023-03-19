@@ -29,6 +29,23 @@ namespace luanvanthacsi.Data.Services
             }
         }
 
+        public async Task<List<Specialized>> GetAllByFacultyIdAsync(string id)
+        {
+            try
+            {
+                List<Specialized> specializeds;
+                using (ISession session = FluentNHibernateHelper.OpenSession())
+                {
+                    specializeds = session.Query<Specialized>().Where(x => x.FacultyId == id).ToList();
+                }
+                return specializeds;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<Specialized> GetByIdAsync(string id)
         {
             Specialized specialized;

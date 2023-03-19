@@ -49,7 +49,7 @@
 </Row>
 <br />
 <Table @ref="table" DataSource="thesisDefenseDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
-       TItem="ThesisDefenseData"
+       TItem="ThesisDefenseData" Size=@TableSize.Small
        OnRowClick="OnRowClick"
        @bind-SelectedRows="selectedRows">
     <ChildContent>

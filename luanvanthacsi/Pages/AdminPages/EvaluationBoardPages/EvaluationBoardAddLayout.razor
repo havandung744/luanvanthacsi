@@ -21,7 +21,7 @@
         <ChildContent>
             <TabPane Key="1" ForceRender>
                 <TabTemplate>
-                    <span><Icon Type="user" />Học viên  >></span>
+                    <span><Icon Type="user" />Học viên</span>
                 </TabTemplate>
                 <ChildContent>
                     <StudentOfEvaluationBoard @ref="StudentOfEvaluationBoardRef"></StudentOfEvaluationBoard>
@@ -32,7 +32,7 @@
                     <span><Icon Type="user" />Chủ tịch</span>
                 </TabTemplate>
                 <ChildContent>
-                    <President @ref="PresidentRef"></President>
+                    <ScientistOfEvaluationBoard @ref="PresidentRef" tab="2"></ScientistOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
             <TabPane Key="3" ForceRender>
@@ -40,7 +40,7 @@
                     <span><Icon Type="user" />Phản biện</span>
                 </TabTemplate>
                 <ChildContent>
-                    <Counterattacker @ref="CounterattackerRef"></Counterattacker>
+                    <ScientistOfEvaluationBoard @ref="CounterattackerRef" tab="1"></ScientistOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
             <TabPane Key="5" ForceRender>
@@ -48,7 +48,7 @@
                     <span><Icon Type="user" />Thư ký</span>
                 </TabTemplate>
                 <ChildContent>
-                    <SecretaryOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef"></SecretaryOfEvaluationBoard>
+                    <ScientistOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef" tab="2"></ScientistOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
             <TabPane Key="4" ForceRender>
@@ -56,10 +56,10 @@
                     <span><Icon Type="user" />Ủy viên</span>
                 </TabTemplate>
                 <ChildContent>
-                    <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef"></ScientistOfEvaluationBoard>
+                    <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef" tab="1"></ScientistOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
-           
+
         </ChildContent>
     </Tabs>
 </luanvanthacsi.Data.Components.Lazy>
