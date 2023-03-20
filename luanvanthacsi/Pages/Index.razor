@@ -1,5 +1,6 @@
 ﻿@page "/"
 @page "/overview"
+@using luanvanthacsi.Data.Entities;
 <PageHeader Class="site-page-header" Title="Tổng quan">
     <PageHeaderExtra>
         <Breadcrumb>
@@ -64,34 +65,73 @@
 </Row>
 <Row Style="margin-top: 16px">
     <AntDesign.Col Span="12" Style="padding-right: 5px">
-        <div class="shadow_css background-white ">
-            <Row Justify="space-between">
-                <Title Level="4" Class="text-chart">Học viên tham gia bảo vệ</Title>
+        <div class="shadow_css background-white" style="padding-bottom: 10px">
+            <Row Justify="space-between" Style="padding-top: 8px">
+                <Title Level="4" Style="margin-left: 24px">Thống kê nhà khoa học</Title>
+                <Space Size="@("small")">
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Text" Icon="@IconType.Fill.Setting" OnClick="@(()=>{ _visible = true; })"></Button>
+                    </SpaceItem>
+                </Space>
             </Row>
-            <div style="margin-left: 15px">
-                <span>Khoa công nghệ thông tin</span>
-            </div>
-            <AntDesign.Charts.Column Data="data1" Config="config2" />
+            @if (id == null)
+            {
+                <span style="padding-left: 24px; font-weight: 500">Tổng quát</span>
+            }
+            else
+            {
+                var name = scientistList.Where(x => x.Id == id).Select(x => x.Name).FirstOrDefault();
+                <span style="padding-left: 24px; font-weight: 500">@name</span>
+            }
+            @if (DataStatisticalScient?.Any() == true)
+            {
+                <AntDesign.Charts.Pie @ref="Chart1" Data="DataStatisticalScient" Config="config1" />
+            }
         </div>
     </AntDesign.Col>
     <AntDesign.Col Span="12" Style="padding-right: 5px">
-        <div class="shadow_css background-white ">
-            <Row Justify="space-between">
-                <Title Level="4" Class="text-chart">Thông tin giảng viên</Title>
+        <div class="shadow_css background-white" style="padding-bottom: 10px">
+            <Row Justify="space-between" Style="padding-top: 8px">
+                <Title Level="4" Style="margin-left: 24px">Thống kê học viên</Title>
+                <Space Size="@("small")">
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Text" Icon="@IconType.Fill.Setting"></Button>
+                    </SpaceItem>
+                </Space>
             </Row>
-            <div style="margin-left: 15px">
-                <span>Khoa công nghệ thông tin</span>
-            </div>
-            <AntDesign.Charts.Column Data="data1" Config="config2" />
+            <span style="padding-left: 24px; font-weight: 400">Tổng quát</span>
+            @if (DataStatisticalStudent?.Any() == true)
+            {
+                <AntDesign.Charts.Column Data="data2" Config="config2" />
+            }
         </div>
     </AntDesign.Col>
 </Row>
-@*<Tabs>
-    <TabPane Key="1">
-        <TabTemplate>Biểu đồ</TabTemplate>
-        <ChildContent>
-            <AntDesign.Charts.Column Data="data1" Config="config2" />
-        </ChildContent>
-    </TabPane>
-</Tabs>*@
+<Modal Title="@title"
+       Visible="@_visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+    <Select TItem="Scientist" TItemValue="string"
+            DataSource="scientistList" AllowClear
+            EnableSearch @bind-Value="id"
+            ValueName="@nameof(Scientist.Id)"
+            LabelName="@nameof(Scientist.Name)"
+            Placeholder="Chọn nhà khoa học"></Select>
+</Modal>
+@code {
+    string id;
+    string title = "Tham số biểu đồ hội đồng đánh giá";
+    bool _visible = false;
 
+    private async Task HandleOk(MouseEventArgs e)
+    {
+        _visible = false;
+        await LoadAsync();
+    }
+
+    private void HandleCancel(MouseEventArgs e)
+    {
+        Console.WriteLine(e);
+        _visible = false;
+    }
+}

@@ -250,7 +250,7 @@ a, .btn-link {
 
 .site-content {
     min-height: calc(100vh - 150px) !important;
-    width: 1500px !important;
+    width: 1557px !important;
     margin-bottom: 20px;
 }
 
@@ -262,4 +262,11 @@ a, .btn-link {
     color: #212529;
     background-color: rgba(0, 0, 0, 0.075);
 }
+
+.shadow_css {
+    box-shadow: 1px 1px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -2px rgb(0 0 0 / 5%) !important;
+    border-radius: 3px !important;
+}
+
+
 
