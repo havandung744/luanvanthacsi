@@ -1,5 +1,6 @@
 ﻿@page "/"
 @page "/overview"
+@using Hrm.Web.Share.Ultils;
 @using luanvanthacsi.Data.Entities;
 <PageHeader Class="site-page-header" Title="Tổng quan">
     <PageHeaderExtra>
@@ -85,7 +86,7 @@
             }
             @if (DataStatisticalScient?.Any() == true)
             {
-                <AntDesign.Charts.Pie @ref="Chart1" Data="DataStatisticalScient" Config="config1" />
+                <AntDesign.Charts.Pie @ref="Chart1" Data="DataStatisticalScient" Config="ConfigStatisticalStaff" JsConfig="@DefaultChartConfig.JsDonutChartConfig" />
             }
         </div>
     </AntDesign.Col>
