@@ -113,12 +113,13 @@ namespace luanvanthacsi.Data.Services
                 {
                     try
                     {
-
+                        scientist.SpecializedId = scientist?.Specialized?.Id;
+                        scientist.Specialized = null;
                         await session.DeleteAsync(scientist);
                         await transaction.CommitAsync();
                         result = true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         await transaction.RollbackAsync();
                     }
@@ -160,6 +161,8 @@ namespace luanvanthacsi.Data.Services
                     {
                         foreach (var item in scientists)
                         {
+                            item.SpecializedId = item?.Specialized?.Id;
+                            item.Specialized = null;
                             await session.DeleteAsync(item);
                         }
                         await transaction.CommitAsync();

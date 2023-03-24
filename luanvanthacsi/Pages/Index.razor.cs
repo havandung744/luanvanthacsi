@@ -148,7 +148,7 @@ namespace luanvanthacsi.Pages
                     totalCounterattackers += evaluationBoards.Where(x => x.CounterattackerIdThree == id).Count();
 
                     // lấy tổng số Thư kí
-                    totalSecretarys = evaluationBoards.Where(x => x.SecretaryId != id).Count();
+                    totalSecretarys = evaluationBoards.Where(x => x.SecretaryId == id).Count();
 
                     // lấy tổng số ủy viên
                     totalScientists += evaluationBoards.Where(x => x.ScientistIdOne == id).Count();

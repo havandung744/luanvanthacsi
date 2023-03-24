@@ -54,6 +54,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         }
         async Task HandleOk()
         {
+
             if (ListSelectedIds.Count > 0)
             {
                 List<Student> convert = new List<Student>();
@@ -61,32 +62,47 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
                 foreach (string item in ListSelectedIds)
                 {
                     var student = studentDatas.Where(x => x.Id == item).FirstOrDefault();
-                    listStudentThenIds.Add(student);
+                    if (student != null)
+                    {
+                        listStudentThenIds.Add(student);
+                    }
                 }
+                if (listStudentThenIds.Count == 0)
+                {
+                    Notice.NotiWarning("Không có học viên nào");
+                    ChangeModalVisible();
+                }
+                else
+                {
                     convert = GetViewModels(listStudentThenIds);
                     await ThesisDefenseService.UpdateStudentListByIds(convert);
                     ChangeModalVisible();
                     await ChangeStudentList.InvokeAsync();
-                    StateHasChanged();
+                }
+                StateHasChanged();
             }
         }
 
         List<Student> GetViewModels(List<StudentData> datas)
         {
             var models = new List<Student>();
-            models = _mapper.Map<List<Student>>(datas);
-            models.ForEach(c =>
+            if (datas.IsNullOrEmpty())
             {
-               c.ThesisDefenseId = currentThesisDefenseId;
-            });
-            return models;
+                Notice.NotiError("Không có học viên nào");
+                ChangeModalVisible();
+                return models;
+            }
+            else
+            {
+                models = _mapper.Map<List<Student>>(datas);
+                models.ForEach(c =>
+                {
+                    c.ThesisDefenseId = currentThesisDefenseId;
+                });
+                return models;
+            }
         }
 
-        /// <summary>
-        /// thực hiện gọi db lấy dữ liệu để hiển thị
-        /// Author: hvdung
-        /// Create:19/02/2023
-        /// </summary>
         public async Task LoadAsync(string id)
         {
             currentThesisDefenseId = id;
