@@ -2,6 +2,7 @@
 @using luanvanthacsi.Data.Components
 @using luanvanthacsi.Data.Data;
 @using System.ComponentModel;
+@using luanvanthacsi.Data.Entities;
 @using luanvanthacsi.Excel;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý học viên</PageTitle>
@@ -16,17 +17,23 @@
 </PageHeader>
 <Row>
     <Space>
-        <SpaceItem>
-            <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddStudent">Thêm</Button>
-        </SpaceItem>
-        <SpaceItem>
-            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ShowImport">
-                Nhập Excel
-            </Button>
-        </SpaceItem>
+        @if (CurrentUser?.FacultyId != null)
+        {
+            <SpaceItem>
+                <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddStudent">Thêm</Button>
+            </SpaceItem>
+        }
+        @if (CurrentUser?.FacultyId != null)
+        {
+            <SpaceItem>
+                <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ShowImport">
+                    Nhập Excel
+                </Button>
+            </SpaceItem>
+        }
         <SpaceItem>
             <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ExportExcelAsync">
-                Xuất Excel 
+                Xuất Excel
             </Button>
         </SpaceItem>
         <SpaceItem>
@@ -43,7 +50,7 @@
                         Bạn có chắc chắn muốn xóa
                         @if (selectedRows.Count() == 1)
                         {
-                            <strong> @selectedRows?.FirstOrDefault().Name</strong>
+                            <strong> @selectedRows?.FirstOrDefault()?.Name</strong>
 
                             <span>?</span>
                         }
@@ -57,6 +64,21 @@
             }
         </SpaceItem>
     </Space>
+</Row>
+<br />
+<Row>
+    <AntDesign.Col Span="12">
+        @if (CurrentUser?.FacultyId == null)
+        {
+            <Select TItem="Faculty" TItemValue="string" EnableSearch Placeholder="Chọn khoa"
+                DataSource="facultyList"
+                ValueName="@nameof(Faculty.Id)"
+                LabelName="@nameof(Faculty.Name)"
+                @bind-Value="@facultyId"
+            OnSelectedItemChanged="ChangeFacultyId">
+            </Select>
+        }
+    </AntDesign.Col>
 </Row>
 <br />
 <Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
@@ -73,29 +95,32 @@
         <Column @bind-Field="context.TopicName" Width="250p" Ellipsis Sortable Filterable></Column>
         <Column @bind-Field="context.InstructorOne" Width="150" Ellipsis Sortable Filterable></Column>
         <Column @bind-Field="context.OnstructorTwo" Width="150" Ellipsis Sortable Filterable></Column>
-        <ActionColumn Title="Thao tác">
-            <ChildContent>
-                <Row Justify="center">
-                    <Space>
-                        <SpaceItem>
-                            <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
-                                <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation/>
-                            </Tooltip>
-                        </SpaceItem>
-                        <SpaceItem>
-                            <Tooltip Placement="@Placement.Top" Title="@("Xóa")">
-                                <Popconfirm Title="Xác nhận xóa?"
+        @if (CurrentUser?.FacultyId != null)
+        {
+            <ActionColumn Title="Thao tác">
+                <ChildContent>
+                    <Row Justify="center">
+                        <Space>
+                            <SpaceItem>
+                                <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
+                                    <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation />
+                                </Tooltip>
+                            </SpaceItem>
+                            <SpaceItem>
+                                <Tooltip Placement="@Placement.Top" Title="@("Xóa")">
+                                    <Popconfirm Title="Xác nhận xóa?"
                                             OnConfirm="()=> DeleteStudent(context)"
                                             OkText="Có"
                                             CancelText="Không">
-                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" />
-                                </Popconfirm>
-                            </Tooltip>
-                        </SpaceItem>
-                    </Space>
-                </Row>
-            </ChildContent>
-        </ActionColumn>
+                                        <Icon Type="delete" Theme="fill" Class="btn-icon-delete" />
+                                    </Popconfirm>
+                                </Tooltip>
+                            </SpaceItem>
+                        </Space>
+                    </Row>
+                </ChildContent>
+            </ActionColumn>
+        }
     </ChildContent>
     <PaginationTemplate>
         <PaginationCustom Context="context"></PaginationCustom>

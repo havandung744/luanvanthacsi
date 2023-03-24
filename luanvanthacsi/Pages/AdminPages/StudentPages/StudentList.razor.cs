@@ -41,21 +41,24 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] AntDesign.NotificationService Notice { get; set; }
         [Inject] IStudentService StudentService { get; set; }
+        [Inject] IFacultyService FacultyService { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
+        [Inject] IMapper _mapper { get; set; }
         List<StudentData>? studentDatas { get; set; }
         StudentEdit studentEdit = new StudentEdit();
         IEnumerable<StudentData>? selectedRows;
         StudentData? selectData;
         Table<StudentData>? table;
         List<string>? ListSelectedStudentIds;
-        [Inject] IMapper _mapper { get; set; }
         bool visible = false;
         bool loading = false;
         bool showExcelForm = false;
         User CurrentUser;
         bool importVisible = false;
         bool existModalVisible = false;
+        string facultyId = "bb10f205-e5ac-46a3-8e3f-159a87d19f91";
+        List<Faculty> facultyList { get; set; }
 
         List<Student> ExcelStudentDatas { get; set; }
 
@@ -99,10 +102,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     return package.GetAsByteArray();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
-                return null;
+                throw;
             }
         }
 
@@ -119,12 +121,13 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 string id = await getUserId();
                 CurrentUser = await UserService.GetUserByIdAsync(id);
                 studentDatas = new();
+                facultyList = await FacultyService.GetAllAsync();
                 await LoadAsync();
                 Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HocVien", "KEY_STAFFIMPORT", 6, null, GetTable().GetDataColumns(), 5) };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -148,10 +151,18 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
 
         public async Task LoadAsync()
         {
-            studentDatas.Clear();
+            studentDatas?.Clear();
             loading = true;
             visible = false;
-            var students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+            List<Student> students = new List<Student>();
+            if (CurrentUser.FacultyId == null)
+            {
+                students = await StudentService.GetAllByIdAsync(facultyId);
+            }
+            else
+            {
+                students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+            }
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             studentDatas = _mapper.Map<List<StudentData>>(list);
             int stt = 1;
@@ -251,9 +262,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 table?.SetSelection(ids.ToArray());
                 ListSelectedStudentIds = ids;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
 
         }
@@ -431,15 +442,15 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                         var data = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
                         if (data.Any() == true)
                         {
-                            List<StudentExportExcel> studentExportExcels= new List<StudentExportExcel>();
+                            List<StudentExportExcel> studentExportExcels = new List<StudentExportExcel>();
                             studentExportExcels = _mapper.Map<List<StudentExportExcel>>(data);
                             int stt = 1;
-                            foreach(var item in studentExportExcels)
+                            foreach (var item in studentExportExcels)
                             {
                                 item.stt = stt;
                                 stt++;
                             }
-                            
+
                             ExcelExporter.WriteToSheet(studentExportExcels, wSheet, Sheets.First());
                         }
                         else
@@ -462,8 +473,10 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 throw;
             }
         }
-
-
-
+        
+        async Task ChangeFacultyId()
+        {
+        await LoadAsync();
+        }
     }
 }
