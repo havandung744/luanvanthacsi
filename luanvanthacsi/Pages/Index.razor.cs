@@ -1,11 +1,16 @@
-﻿using AntDesign.Charts;
+﻿using AntDesign;
+using AntDesign.Charts;
 using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Pages.AdminPages.StudentPages;
+using luanvanthacsi.Pages.AdminPages.ThesisDefensepages;
 using luanvanthacsi.Pages.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
+using Umbraco.Core;
 using static NPOI.HSSF.Util.HSSFColor;
 using Title = AntDesign.Charts.Title;
 namespace luanvanthacsi.Pages
@@ -14,24 +19,29 @@ namespace luanvanthacsi.Pages
     {
         [Inject] NavigationManager NavigationManager { get; set; }
         [Inject] IEvaluationBoardService EvaluationBoardService { get; set; }
+        [Inject] IThesisDefenseService ThesisDefenseService { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         List<StaffTypeViewModel> DataStatisticalScient { get; set; } = new List<StaffTypeViewModel>();
-        List<StaffTypeViewModel> DataStatisticalStudent { get; set; } = new List<StaffTypeViewModel>();
         User CurrentUser;
-        object[] data2 = new object[9999];
+        object[] data2 { get; set; } = new object[100];
         bool DataStatisticalScientVisible = false;
         PieConfig ConfigStatisticalStaff;
+        ColumnConfig config2;
         List<Scientist> scientistList { get; set; }
+        List<ThesisDefense> ThesisDefenseList { get; set; }
         IChartComponent Chart1;
+        IChartComponent Chart2;
+        List<int> yearList;
 
         protected override async Task OnInitializedAsync()
         {
             string id = await getUserId();
             CurrentUser = await UserService.GetUserByIdAsync(id);
             DataStatisticalScient = new() { };
+            data2 = new object[100];
             ConfigStatisticalStaff = new PieConfig()
             {
                 AppendPadding = 10,
@@ -55,8 +65,40 @@ namespace luanvanthacsi.Pages
                         },
                    },
             };
-            await LoadAsync();
+            config2 = new ColumnConfig
+            {
+                ForceFit = true,
+                Padding = "auto",
+                XField = "type",
+                YField = "sales",
+                Meta = new
+                {
+                    Type = new
+                    {
+                        Alias = "Đợt bảo vệ"
+                    },
+                    Sales = new
+                    {
+                        Alias = "Số lượng học viên"
+                    }
+                },
+                Label = new ColumnViewConfigLabel
+                {
+                    Visible = true,
+                    Style = new TextStyle
+                    {
+                        FontSize = 12,
+                        FontWeight = 600,
+                        Opacity = 0.6,
+                    }
+                }
+            };
+
+            await LoadScientistAsync();
+            await LoadStudentAsync();
             scientistList = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+            ThesisDefenseList = await ThesisDefenseService.GetAllByIdAsync(CurrentUser.FacultyId);
+            yearList = ThesisDefenseList.Select(x => x.YearOfProtection.Year).Distinct().ToList();
         }
         async Task<string> getUserId()
         {
@@ -65,7 +107,7 @@ namespace luanvanthacsi.Pages
             return UserId;
         }
 
-        async Task LoadAsync()
+        async Task LoadScientistAsync()
         {
             try
             {
@@ -136,75 +178,60 @@ namespace luanvanthacsi.Pages
                     Value = totalScientists,
                     Type = "Ủy viên"
                 });
-
-                #endregion
-                #region Thống kê thông tin học viên theo đợt bảo vệ
-                List<Student> students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
-                DataStatisticalStudent.Add(new StaffTypeViewModel()
-                {
-                    Value = 12,
-                    Type = "Đợt 1"
-                });
-                DataStatisticalStudent.Add(new StaffTypeViewModel()
-                {
-                    Value = 9,
-                    Type = "Đợt 2"
-                });
-                #endregion
-                object[] data02 =
-                    {
-                    new
-                    {
-                        type = "Đợt 1",
-                        sales = 25
-                    },
-                    new
-                    {
-                        type = "Đợt 2",
-                        sales = 14
-                    }
-                  };
-                data2 = data02;
                 if (Chart1.IsNotNullOrEmpty())
                 {
                     await Chart1.ChangeData(DataStatisticalScient);
                 }
+                #endregion   
             }
             catch (Exception)
             {
                 throw;
             }
-
         }
 
-        ColumnConfig config2 = new ColumnConfig
+        async Task LoadStudentAsync()
         {
-            ForceFit = true,
-            Padding = "auto",
-            XField = "type",
-            YField = "sales",
-            Meta = new
+            try
             {
-                Type = new
+                data2 = new object[100];
+                List<ThesisDefense> thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(CurrentUser.FacultyId);
+                List<Student> students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+
+                int currentYear;
+                if (id1 == 0)
                 {
-                    Alias = "Đợt bảo vệ"
-                },
-                Sales = new
-                {
-                    Alias = "Số lượng học viên"
+                    currentYear = DateTime.Now.Year;
                 }
-            },
-            Label = new ColumnViewConfigLabel
-            {
-                Visible = true,
-                Style = new TextStyle
+                else
                 {
-                    FontSize = 12,
-                    FontWeight = 600,
-                    Opacity = 0.6,
+                    currentYear = id1.ToInt();
                 }
+                var thesisDefensesOfYear = thesisDefenses.Where(x => x.YearOfProtection.Year == currentYear);
+                var thesisDefenseStudentsCount = thesisDefensesOfYear
+                    .Select(td => new
+                    {
+                        ThesisDefense = td,
+                        StudentsCount = students.Count(s => s.ThesisDefenseId == td.Id)
+                    });
+                Array.Clear(data2, 0, data2.Length);
+                int i = 0;
+                foreach (var item in thesisDefenseStudentsCount)
+                {
+                    data2[i] = new
+                    {
+                        type = item.ThesisDefense.Name,
+                        sales = item.StudentsCount
+                    };
+                    i++;
+                }
+                chartKey++;
             }
-        };
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         void OpenScientists()
         {
@@ -222,11 +249,5 @@ namespace luanvanthacsi.Pages
         {
             NavigationManager.NavigateTo($"/evaluationBoards");
         }
-
-        async Task OpenChartOptionFormAsync()
-        {
-            DataStatisticalScientVisible = true;
-        }
-
     }
 }

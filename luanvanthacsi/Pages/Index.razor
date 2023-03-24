@@ -96,14 +96,14 @@
                 <Title Level="4" Style="margin-left: 24px">Thống kê học viên</Title>
                 <Space Size="@("small")">
                     <SpaceItem>
-                        <Button Type="@ButtonType.Text" Icon="@IconType.Fill.Setting"></Button>
+                        <Button Type="@ButtonType.Text" Icon="@IconType.Fill.Setting" OnClick="@(()=>{ _visible1 = true; })"></Button>
                     </SpaceItem>
                 </Space>
             </Row>
-            <span style="padding-left: 24px; font-weight: 400">Tổng quát</span>
-            @if (DataStatisticalStudent?.Any() == true)
+            <span style="padding-left: 24px; font-weight: 500"> Năm @id1</span>
+            @if (data2?.Any() == true)
             {
-                <AntDesign.Charts.Column Data="data2" Config="config2" />
+                <AntDesign.Charts.Column @ref="Chart2" @key="chartKey" Data="data2" Config="config2" />
             }
         </div>
     </AntDesign.Col>
@@ -119,20 +119,49 @@
             LabelName="@nameof(Scientist.Name)"
             Placeholder="Chọn nhà khoa học"></Select>
 </Modal>
+<Modal Title="@title1"
+       Visible="@_visible1"
+       OnOk="@HandleOk1"
+       OnCancel="@HandleCancel1">
+       <label> Chọn năm</label>
+    <Select TItem="int" TItemValue="int"
+            EnableSearch @bind-Value="id1"
+            Placeholder="Chọn năm bảo vệ">
+        <SelectOptions>
+            @foreach (var item in yearList)
+            {
+                <SelectOption TItemValue="int" TItem="int" Value=@item Label=@item.ToString() />
+            }
+        </SelectOptions>
+    </Select>
+</Modal>
 @code {
     string id;
-    string title = "Tham số biểu đồ hội đồng đánh giá";
+    int id1 = DateTime.Now.Year;
+    int chartKey = 0;
+    string title = "Tham số biểu đồ nhà khoa học";
+    string title1 = "Tham số biểu đồ học viên";
     bool _visible = false;
+    bool _visible1 = false;
 
     private async Task HandleOk(MouseEventArgs e)
     {
         _visible = false;
-        await LoadAsync();
+        await LoadScientistAsync();
     }
 
     private void HandleCancel(MouseEventArgs e)
     {
-        Console.WriteLine(e);
         _visible = false;
+    }
+    private async Task HandleOk1(MouseEventArgs e)
+    {
+        _visible1 = false;
+        await LoadStudentAsync();
+    }
+
+    private void HandleCancel1(MouseEventArgs e)
+    {
+        _visible1 = false;
     }
 }
