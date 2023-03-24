@@ -18,7 +18,10 @@ namespace luanvanthacsi.Data.Components
 
             // map nhà khoa học
             CreateMap<ScientistData, Scientist>().ReverseMap();
-            CreateMap<ScientistEditModel, Scientist>().ReverseMap();
+            //CreateMap<ScientistEditModel, Scientist>()
+            //     .ForMember(src => src.Specialized.Id, dest => dest.MapFrom(c => c.SpecializedId)).ReverseMap();
+             CreateMap<Scientist, ScientistEditModel>()
+                 .ForMember(src => src.SpecializedId, dest => dest.MapFrom(c => c.Specialized.Id)).ReverseMap();
 
             // map hội đồng đánh giá
             CreateMap<EvaluationBoardData, EvaluationBoard>().ReverseMap();
@@ -40,7 +43,7 @@ namespace luanvanthacsi.Data.Components
             CreateMap<Student, StudentExportExcel>()
                .ForMember(src => src.DateOfBirth, dest => dest.MapFrom(c => c.DateOfBirth.ToShortDate())).ReverseMap();
 
-            CreateMap<EvaluationBoardData, EvaluationBoardExcel>().ReverseMap();    
+            CreateMap<EvaluationBoardData, EvaluationBoardExcel>().ReverseMap();
 
 
         }

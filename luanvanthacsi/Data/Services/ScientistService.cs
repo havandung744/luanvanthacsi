@@ -39,7 +39,7 @@ namespace luanvanthacsi.Data.Services
                 Specialized specialized;
                 using (ISession session = FluentNHibernateHelper.OpenSession())
                 {
-                    scientists = session.Query<Scientist>().Where(x => x.FacultyId == id).ToList();
+                    scientists = session.Query<Scientist>().Fetch(x => x.Specialized).Where(x => x.FacultyId == id).ToList();
                 }
                 return scientists;
             }

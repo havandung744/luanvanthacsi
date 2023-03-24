@@ -78,16 +78,16 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             StateHasChanged();
         }
 
-        public async void UpdateScientist()
+        public async Task UpdateScientist()
         {
             Scientist scientist = _mapper.Map<Scientist>(EditModel);
             scientist.FacultyId = CurrentUser.FacultyId;
-            ValueChange.InvokeAsync(scientist);
+            await ValueChange.InvokeAsync(scientist);
         }
 
-        private void OnFinish(EditContext editContext)
+        private async void OnFinish(EditContext editContext)
         {
-            UpdateScientist();
+            await UpdateScientist();
         }
 
         private void OnFinishFailed(EditContext editContext)

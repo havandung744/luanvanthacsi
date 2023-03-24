@@ -13,11 +13,8 @@ namespace luanvanthacsi.Data.Services
 {
     public class UserService : IUserService
     {
-
-        
         async Task<User> IUserService.GetUserByIdAsync(string id)
         {
-            
             User user;
             using (var session = FluentNHibernateHelper.OpenSession())
             {
@@ -28,10 +25,9 @@ namespace luanvanthacsi.Data.Services
                         user = await session.GetAsync<User>(id);
                         return user;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        //await transaction.RollbackAsync();
-                        throw ex;
+                        throw;
                     }
                 }
             }

@@ -19,7 +19,8 @@ namespace luanvanthacsi.Data.Entities
         public virtual string FileName { get; set;}
         public virtual int InUniversity { get; set;}
         public virtual string SpecializedId { get; set;}
-        public virtual string SpecializedName { get; set;}
+        public virtual string SpecializedName { get => Specialized?.Name; set { } }
+        public virtual Specialized Specialized { get; set;}
 
     }
 }

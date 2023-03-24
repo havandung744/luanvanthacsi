@@ -20,7 +20,7 @@
             <DatePicker @bind-Value="@context.DateOfBirth" Format="dd/MM/yyyy" Style="width: 301px" DisabledDate="@DisabledDate"></DatePicker>
         </FormItem>
         <FormItem Label="Tên đề tài">
-            <Input @bind-Value="@context.TopicName" />
+            <TextArea @bind-Value="@context.TopicName" MaxLength="100" ShowCount></TextArea>
         </FormItem>
         <FormItem Label="Người hướng dẫn 1">
             <Input @bind-Value="@context.InstructorOne" />

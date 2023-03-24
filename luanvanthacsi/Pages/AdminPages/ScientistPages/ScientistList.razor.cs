@@ -19,7 +19,6 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] IUserService UserService { get; set; }
-        [Inject] ISpecializedService SpecializedService { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
@@ -58,11 +57,6 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             var scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = scientists.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
-             var specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
-            foreach(var item in list)
-            {
-                item.SpecializedName = specializedList.Where(x => x.Id == item.SpecializedId).Select(x => x.Name).FirstOrDefault();
-            }
             scientistDatas = _mapper.Map<List<ScientistData>>(list);
             int stt = 1;
             scientistDatas.ForEach(x => { x.stt = stt++; });
@@ -70,7 +64,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             StateHasChanged();
         }
 
-        void AddScientist()
+        async Task AddScientist()
         {
             var scientistData = new Scientist();
             var lastCode = scientistDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
@@ -81,12 +75,12 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             }
             string newCode = "NKH" + codeNumber.ToString("D3");
             scientistData.Code = newCode;
-            ShowScientistDetail(scientistData);
+            await ShowScientistDetail(scientistData);
         }
 
-        void ShowScientistDetail(Scientist data)
+        async Task ShowScientistDetail(Scientist data)
         {
-            scientistEdit.LoadData(data);
+            await scientistEdit.LoadData(data);
             visible = true;
         }
 
@@ -113,7 +107,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         async Task Edit(ScientistData scientistData)
         {
             Scientist scientis = await ScientistService.GetScientistByIdAsync(scientistData.Id);
-            ShowScientistDetail(scientis);
+            await ShowScientistDetail(scientis);
         }
 
         async Task DeleteScientist(ScientistData scientistData)
