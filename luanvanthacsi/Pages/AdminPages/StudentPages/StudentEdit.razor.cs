@@ -10,6 +10,7 @@ using AntDesign;
 using Microsoft.AspNetCore.Components.Web;
 using AutoMapper;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Data.Migrations;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
 {
@@ -20,6 +21,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<Student> ValueChange { get; set; }
         [Parameter] public User CurrentUser { get; set; }
+        [Parameter] public string facultyId { get; set; }
         StudentEditModel EditModel { get; set; } = new StudentEditModel();
         Form<StudentEditModel> form;
         public void LoadData(Student student)
@@ -36,6 +38,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             EditModel.UpdateDate = student.UpdateDate;
             StateHasChanged();
         }
+
         private bool DisabledDate(DateTime current)
         {
             return current > DateTime.Now;
@@ -45,7 +48,14 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         {
             Student student = new Student();
             student = _mapper.Map<Student>(EditModel);
-            student.FacultyId = CurrentUser.FacultyId;
+            if (student.FacultyId == null)
+            {
+                student.FacultyId = facultyId;
+            }
+            else
+            {
+                student.FacultyId = CurrentUser.FacultyId;
+            }
             ValueChange.InvokeAsync(student);
         }
 

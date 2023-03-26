@@ -10,6 +10,7 @@ namespace luanvanthacsi.Data.Map
             Id(x => x.Id).GeneratedBy.Assigned().Column("Id");
             Map(x => x.UserName).Column("UserName");
             Map(x => x.FacultyId).Column("FacultyId");
+            Map(x => x.Role).Column("Role");
             Table("AspNetUsers");
         }
     }

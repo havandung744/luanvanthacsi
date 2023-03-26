@@ -1,6 +1,7 @@
 ﻿@page "/scientists"
 @using luanvanthacsi.Data.Components
 @using luanvanthacsi.Data.Data;
+@using luanvanthacsi.Data.Entities;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý nhà khoa học</PageTitle>
 <PageHeader Style="padding: 0;">
@@ -32,7 +33,7 @@
                             Bạn có chắc chắn muốn xóa
                             @if (selectedRows.Count() == 1)
                             {
-                                <strong> @selectedRows?.FirstOrDefault().Name</strong>
+                                <strong> @selectedRows?.FirstOrDefault()?.Name</strong>
 
                                 <span>?</span>
                             }
@@ -48,8 +49,23 @@
     </Space>
 </Row>
 <br />
+<Row>
+    <AntDesign.Col Span="12">
+        @if (CurrentUser?.FacultyId == null)
+        {
+            <Select TItem="Faculty" TItemValue="string" EnableSearch Placeholder="Chọn khoa"
+                DataSource="facultyList"
+                ValueName="@nameof(Faculty.Id)"
+                LabelName="@nameof(Faculty.Name)"
+                @bind-Value="@facultyId"
+            OnSelectedItemChanged="ChangeFacultyId">
+            </Select>
+        }
+    </AntDesign.Col>
+</Row>
+<br />
 <Table @ref="table" DataSource="scientistDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
-       TItem="ScientistData" Size=@TableSize.Small 
+       TItem="ScientistData" Size=@TableSize.Small
        OnRowClick="OnRowClick"
        @bind-SelectedRows="selectedRows">
     <ChildContent>
@@ -66,7 +82,7 @@
             {
                 <span>Giáo sư</span>
             }
-            else if(context.AcademicRank == 0)
+            else if (context.AcademicRank == 0)
             {
                 <span>Phó giáo sư</span>
             }
@@ -84,7 +100,7 @@
         </Column>
         <ActionColumn Title="Thao tác">
             <ChildContent>
-                <Row Justify="center">
+                <Row>
                     <Space>
                         <SpaceItem>
                             <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
@@ -97,7 +113,7 @@
                                             OnConfirm="()=> DeleteScientist(context)"
                                             OkText="Có"
                                             CancelText="Không">
-                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete"/>
+                                    <Icon Type="delete" Theme="fill" Class="btn-icon-delete" />
                                 </Popconfirm>
                             </Tooltip>
                         </SpaceItem>
@@ -112,5 +128,5 @@
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Nhà khoa học")' OnClose="OnClose">
-    <ScientistEdit @ref="scientistEdit" Cancel="() => visible = false" ValueChange="Save"></ScientistEdit>
+    <ScientistEdit @ref="scientistEdit" Cancel="() => visible = false" ValueChange="Save" facultyId="@facultyId"></ScientistEdit>
 </Drawer>

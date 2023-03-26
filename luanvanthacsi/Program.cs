@@ -1,4 +1,5 @@
 ﻿using AntDesign;
+using Blazored.LocalStorage;
 using luanvanthacsi.Areas.Identity;
 using luanvanthacsi.Data;
 using luanvanthacsi.Data.Components;
@@ -44,6 +45,7 @@ builder.Services.AddSingleton<ILecturersService, LecturersService>();
 builder.Services.AddSingleton<ISecretaryService, SecretaryService>();
 builder.Services.AddSingleton<ISpecializedService, SpecializedService>();
 builder.Services.AddSingleton<IFacultyService, FacultyService>();
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSingleton<ExcelExporter>();
 builder.Services.AddSingleton<TableLocale>(c =>
 {

@@ -43,7 +43,7 @@
                         <CardGrid Class="card-grid" Hoverable="true">
                             <div style="margin-top: -12px;">
                                 <Icon Type="swap" Theme="outline" Width="32px" Height="32px" /><br />
-                                <b>Mở đợt bảo vệ</b>
+                                <b>Đợt đợt bảo vệ</b>
                             </div>
                         </CardGrid>
                     </Card>
@@ -75,6 +75,14 @@
                     </SpaceItem>
                 </Space>
             </Row>
+            @if (CurrentUser?.FacultyId == null)
+            {
+                if (facultyList != null)
+                {
+                    var name = facultyList.Where(x => x.Id == facultyId).Select(x => x.Name).FirstOrDefault();
+                    <span style="padding-left: 24px; font-weight: 500">@name</span>
+                }
+            }
             @if (id == null)
             {
                 <span style="padding-left: 24px; font-weight: 500">Tổng quát</span>
@@ -112,18 +120,49 @@
        Visible="@_visible"
        OnOk="@HandleOk"
        OnCancel="@HandleCancel">
+    @if (CurrentUser.FacultyId == null)
+    {
+        <label>Chọn khoa</label>
+        <Select TItem="Faculty" TItemValue="string"
+            DataSource="facultyList" AllowClear
+            EnableSearch @bind-Value="facultyId"
+            ValueName="@nameof(Scientist.Id)"
+            LabelName="@nameof(Scientist.Name)"
+            Placeholder="Chọn khoa"
+            OnSelectedItemChanged="ChangeFaculty">
+        </Select>
+        <br />
+        <br />
+    }
+    <label>Chọn nhà khoa học</label> 
     <Select TItem="Scientist" TItemValue="string"
             DataSource="scientistList" AllowClear
             EnableSearch @bind-Value="id"
             ValueName="@nameof(Scientist.Id)"
             LabelName="@nameof(Scientist.Name)"
-            Placeholder="Chọn nhà khoa học"></Select>
+            Placeholder="Chọn nhà khoa học">
+    </Select>
 </Modal>
+
 <Modal Title="@title1"
        Visible="@_visible1"
        OnOk="@HandleOk1"
        OnCancel="@HandleCancel1">
-       <label> Chọn năm</label>
+    <label> Chọn năm</label>
+    @if (CurrentUser.FacultyId == null)
+    {
+        <label>Chọn khoa</label>
+        <Select TItem="Faculty" TItemValue="string"
+            DataSource="facultyList" AllowClear
+            EnableSearch @bind-Value="facultyIdOfStudent"
+            ValueName="@nameof(Scientist.Id)"
+            LabelName="@nameof(Scientist.Name)"
+            Placeholder="Chọn khoa"
+            OnSelectedItemChanged="ChangeFacultyOfStudent">
+        </Select>
+        <br />
+        <br />
+    }
     <Select TItem="int" TItemValue="int"
             EnableSearch @bind-Value="id1"
             Placeholder="Chọn năm bảo vệ">

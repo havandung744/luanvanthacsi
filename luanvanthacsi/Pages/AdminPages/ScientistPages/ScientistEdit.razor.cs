@@ -30,11 +30,11 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] ISpecializedService SpecializedService { get; set; }
         [Inject] IMapper _mapper { get; set; }
-
         [Inject] IFileReaderService FileReaderService { get; set; }
         User CurrentUser;
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<Scientist> ValueChange { get; set; }
+        [Parameter] public string facultyId { get; set; }
         ScientistEditModel EditModel { get; set; } = new ScientistEditModel();
         Form<ScientistEditModel> form;
         IFileReaderRef Reader;
@@ -64,7 +64,6 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 new selectAcademicRank {Value = 1, Name="Giáo sư"},
                 new selectAcademicRank {Value = -1, Name="Không"},
             };
-            specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
         }
         async Task<string> getUserId()
         {
@@ -75,13 +74,28 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         public async Task LoadData(Scientist scientist)
         {
             EditModel = _mapper.Map<ScientistEditModel>(scientist);
+            if (CurrentUser.FacultyId == null)
+            {
+                specializedList = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
+            }
+            else
+            {
+                specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
+            }
             StateHasChanged();
         }
 
         public async Task UpdateScientist()
         {
             Scientist scientist = _mapper.Map<Scientist>(EditModel);
-            scientist.FacultyId = CurrentUser.FacultyId;
+            if (CurrentUser.FacultyId == null)
+            {
+                scientist.FacultyId = facultyId;
+            }
+            else
+            {
+                scientist.FacultyId = CurrentUser.FacultyId;
+            }
             await ValueChange.InvokeAsync(scientist);
         }
 

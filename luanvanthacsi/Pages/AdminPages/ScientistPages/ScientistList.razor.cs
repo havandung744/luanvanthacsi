@@ -12,14 +12,18 @@ using luanvanthacsi.Data.Extentions;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components.Authorization;
 using AutoMapper;
+using Microsoft.JSInterop;
 
 namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 {
     public partial class ScientistList : ComponentBase
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
+        [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
+        [Inject] IFacultyService FacultyService { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         List<ScientistData>? scientistDatas { get; set; }
@@ -33,13 +37,19 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         Table<ScientistData>? table;
         List<string>? ListSelectedScientistIds;
         User CurrentUser;
+        List<Faculty> facultyList { get; set; }
+        string facultyId;
+        string value;
+
         protected override async Task OnInitializedAsync()
         {
             string id = await getUserId();
             CurrentUser = await UserService.GetUserByIdAsync(id);
             scientistDatas = new();
+            facultyList = await FacultyService.GetAllAsync();
             await LoadAsync();
         }
+        
         async Task<string> getUserId()
         {
             var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -49,19 +59,40 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 
         public async Task LoadAsync()
         {
-            scientistDatas?.Clear();
-            loading = true;
-            visible = false;
-            StateHasChanged();
-            //var scientists = await ScientistService.GetAll();
-            var scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
-            // hiển thị dữ liệu mới nhất lên đầu trang
-            var list = scientists.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
-            scientistDatas = _mapper.Map<List<ScientistData>>(list);
-            int stt = 1;
-            scientistDatas.ForEach(x => { x.stt = stt++; });
-            loading = false;
-            StateHasChanged();
+            try
+            {
+                scientistDatas?.Clear();
+                loading = true;
+                visible = false;
+                try
+                {
+                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfScientist");
+                }
+                catch
+                {
+                    facultyId = null;
+                }
+                List<Scientist> scientists = new List<Scientist>();
+                if (CurrentUser.FacultyId == null)
+                {
+                    scientists = await ScientistService.GetAllByIdAsync(facultyId);
+                }
+                else
+                {
+                    scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                }
+                // hiển thị dữ liệu mới nhất lên đầu trang
+                var list = scientists.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
+                scientistDatas = _mapper.Map<List<ScientistData>>(list);
+                int stt = 1;
+                scientistDatas.ForEach(x => { x.stt = stt++; });
+                loading = false;
+                StateHasChanged();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         async Task AddScientist()
@@ -86,9 +117,10 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 
         async Task Save(Scientist data)
         {
+            var check = data?.Id;
             var resultAdd = await ScientistService.AddOrUpdateScientist(data);
             await LoadAsync();
-            if (data.Id.IsNotNullOrEmpty())
+            if (check != null)
             {
                 Notice.NotiSuccess("Cập nhật dữ liệu thành công");
             }
@@ -154,13 +186,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             {
                 var deleteModel = scientistDatas?.Where(c => selectedRows.Select(r => r.Id).Contains(c.Id)).ToList();
                 List<Scientist> scientists = new List<Scientist>();
-                // maping từ studentData thành student
-                foreach (var scientistData in deleteModel)
-                {
-                    Scientist scientist = new Scientist();
-                    scientist.Id = scientistData.Id;
-                    scientists.Add(scientist);
-                }
+                scientists = _mapper.Map<List<Scientist>>(deleteModel);
                 var result = await ScientistService.DeleteScientistListAsync(scientists);
                 if (result.Equals(true))
                 {
@@ -177,6 +203,11 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             {
                 throw;
             }
+        }
+        async Task ChangeFacultyId()
+        {
+            await localStorage.SetItemAsync("facultyIdOfScientist", facultyId);
+            await LoadAsync();
         }
     }
 }

@@ -4,6 +4,7 @@ using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Pages.AdminPages.ScientistPages;
 using luanvanthacsi.Pages.AdminPages.StudentPages;
 using luanvanthacsi.Pages.AdminPages.ThesisDefensepages;
 using luanvanthacsi.Pages.Shared;
@@ -22,6 +23,7 @@ namespace luanvanthacsi.Pages
         [Inject] IThesisDefenseService ThesisDefenseService { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
+        [Inject] IFacultyService FacultyService { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         List<StaffTypeViewModel> DataStatisticalScient { get; set; } = new List<StaffTypeViewModel>();
@@ -31,11 +33,13 @@ namespace luanvanthacsi.Pages
         PieConfig ConfigStatisticalStaff;
         ColumnConfig config2;
         List<Scientist> scientistList { get; set; }
+        List<Faculty> facultyList { get; set; }
         List<ThesisDefense> ThesisDefenseList { get; set; }
         IChartComponent Chart1;
         IChartComponent Chart2;
         List<int> yearList;
-
+        string facultyId;
+        string facultyIdOfStudent;
         protected override async Task OnInitializedAsync()
         {
             string id = await getUserId();
@@ -93,11 +97,15 @@ namespace luanvanthacsi.Pages
                     }
                 }
             };
-
+            if (CurrentUser.FacultyId != null)
+            {
+                scientistList = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+            }
             await LoadScientistAsync();
             await LoadStudentAsync();
-            scientistList = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
-            ThesisDefenseList = await ThesisDefenseService.GetAllByIdAsync(CurrentUser.FacultyId);
+            facultyList = await FacultyService.GetAllAsync();
+
+            ThesisDefenseList = await ThesisDefenseService.GetAllAsync();
             yearList = ThesisDefenseList.Select(x => x.YearOfProtection.Year).Distinct().ToList();
         }
         async Task<string> getUserId()
@@ -113,7 +121,19 @@ namespace luanvanthacsi.Pages
             {
                 DataStatisticalScient = new List<StaffTypeViewModel>();
                 #region thống kê thông tin hội đồng đánh giá
-                List<EvaluationBoard> evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(CurrentUser.FacultyId);
+                List<EvaluationBoard> evaluationBoards;
+                if (CurrentUser.FacultyId == null && facultyId == null)
+                {
+                    evaluationBoards = await EvaluationBoardService.GetAllAsync();
+                }
+                else if (facultyId != null)
+                {
+                    evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(facultyId);
+                }
+                else
+                {
+                    evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(CurrentUser?.FacultyId);
+                }
                 // lấy tổng số chủ tịch
                 int totalPresidents;
                 int totalCounterattackers = 0;
@@ -195,8 +215,19 @@ namespace luanvanthacsi.Pages
             try
             {
                 data2 = new object[100];
-                List<ThesisDefense> thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(CurrentUser.FacultyId);
-                List<Student> students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+                List<ThesisDefense> thesisDefenses = new List<ThesisDefense>();
+                List<Student> students = new List<Student>();
+
+                if (facultyIdOfStudent != null)
+                {
+                    thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(facultyIdOfStudent);
+                    students = await StudentService.GetAllByIdAsync(facultyIdOfStudent);
+                }
+                else
+                {
+                    thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(CurrentUser?.FacultyId);
+                    students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+                }
 
                 int currentYear;
                 if (id1 == 0)
@@ -231,6 +262,15 @@ namespace luanvanthacsi.Pages
             {
                 throw;
             }
+        }
+
+        async Task ChangeFaculty()
+        {
+            scientistList = await ScientistService.GetAllByIdAsync(facultyId);
+        }
+        async Task ChangeFacultyOfStudent()
+        {
+            scientistList = await ScientistService.GetAllByIdAsync(facultyIdOfStudent);
         }
 
         void OpenScientists()

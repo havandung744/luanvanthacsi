@@ -17,6 +17,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         [Parameter] public User CurrentUser { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<ThesisDefense> ValueChange { get; set; }
+        [Parameter] public string FacultyId { get; set; }
         ThesisDefenseEditModel EditModel { get; set; } = new ThesisDefenseEditModel();
         Form<ThesisDefenseEditModel> form;
         public void LoadData(ThesisDefense thesisDefense)
@@ -40,7 +41,15 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         {
             ThesisDefense thesisDefense = new ThesisDefense();
             thesisDefense = _mapper.Map<ThesisDefense>(EditModel);
-            thesisDefense.FacultyId = CurrentUser.FacultyId;
+            if (CurrentUser.FacultyId == null)
+            {
+
+                thesisDefense.FacultyId = FacultyId;
+            }
+            else
+            {
+                thesisDefense.FacultyId = CurrentUser.FacultyId;
+            }
             ValueChange.InvokeAsync(thesisDefense);
         }
 

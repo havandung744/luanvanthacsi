@@ -17,20 +17,14 @@
 </PageHeader>
 <Row>
     <Space>
-        @if (CurrentUser?.FacultyId != null)
-        {
             <SpaceItem>
                 <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddStudent">Thêm</Button>
             </SpaceItem>
-        }
-        @if (CurrentUser?.FacultyId != null)
-        {
             <SpaceItem>
                 <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ShowImport">
                     Nhập Excel
                 </Button>
             </SpaceItem>
-        }
         <SpaceItem>
             <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ExportExcelAsync">
                 Xuất Excel
@@ -128,7 +122,7 @@
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Học viên")' OnClose="OnClose">
-    <StudentEdit @ref="studentEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></StudentEdit>
+    <StudentEdit @ref="studentEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser" facultyId="@facultyId"></StudentEdit>
 </Drawer>
 
 <ImportExcelForm @ref="importExcelFormRef" Visible="importVisible" CancelChange="ImportExcelCancel"

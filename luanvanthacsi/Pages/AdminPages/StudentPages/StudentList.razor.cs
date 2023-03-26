@@ -37,6 +37,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
     public partial class StudentList : ComponentBase
     {
         [Inject] ExcelExporter ExcelExporter { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] AntDesign.NotificationService Notice { get; set; }
@@ -57,7 +58,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         User CurrentUser;
         bool importVisible = false;
         bool existModalVisible = false;
-        string facultyId = "bb10f205-e5ac-46a3-8e3f-159a87d19f91";
+        string facultyId;
         List<Faculty> facultyList { get; set; }
 
         List<Student> ExcelStudentDatas { get; set; }
@@ -154,6 +155,14 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             studentDatas?.Clear();
             loading = true;
             visible = false;
+            try
+            {
+                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfStudent");
+            }
+            catch
+            {
+                facultyId = null;
+            }
             List<Student> students = new List<Student>();
             if (CurrentUser.FacultyId == null)
             {
@@ -354,7 +363,15 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         {
             try
             {
-                bool save = await StudentService.AddOrUpdateStudentListAsync(ExcelStudentDatas, CurrentUser.FacultyId);
+                bool save;
+                if (CurrentUser.FacultyId == null)
+                {
+                    save = await StudentService.AddOrUpdateStudentListAsync(ExcelStudentDatas, facultyId);
+                }
+                else
+                {
+                    save = await StudentService.AddOrUpdateStudentListAsync(ExcelStudentDatas, CurrentUser.FacultyId);
+                }
                 if (save == true)
                 {
                     Notice.NotiSuccess("Thêm mới và cập nhật danh sách học viên từ Excel thành công.");
@@ -439,7 +456,15 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                         {
                             wSheet = package.Workbook.Worksheets[Sheets.First().Name];
                         }
-                        var data = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+                        List<Student> data = new List<Student>();
+                        if (CurrentUser.FacultyId != null)
+                        {
+                            data = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+                        }
+                        else
+                        {
+                            data = await StudentService.GetAllByIdAsync(facultyId);
+                        }
                         if (data.Any() == true)
                         {
                             List<StudentExportExcel> studentExportExcels = new List<StudentExportExcel>();
@@ -473,10 +498,11 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 throw;
             }
         }
-        
+
         async Task ChangeFacultyId()
         {
-        await LoadAsync();
+            await localStorage.SetItemAsync("facultyIdOfStudent", facultyId);
+            await LoadAsync();
         }
     }
 }

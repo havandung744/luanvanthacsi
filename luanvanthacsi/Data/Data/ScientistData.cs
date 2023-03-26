@@ -31,7 +31,7 @@ namespace luanvanthacsi.Data.Data
         [Display(Name = "Vị trí")]
         public int InUniversity;
         public string SpecializedId;
-        [Display(Name = "chuyên nghành")]
+        [Display(Name = "Chuyên nghành")]
         public string SpecializedName;
     }
 

@@ -86,6 +86,23 @@ namespace luanvanthacsi.Data.Services
             return result;
         }
 
+        public async Task<List<EvaluationBoard>> GetAllAsync()
+        {
+            try
+            {
+                List<EvaluationBoard> evaluationBoard;
+                using (NHibernate.ISession session = FluentNHibernateHelper.OpenSession())
+                {
+                    evaluationBoard = session.Query<EvaluationBoard>().ToList();
+                }
+                return evaluationBoard;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<List<EvaluationBoard>> GetAllByIdAsync(string id)
         {
             try

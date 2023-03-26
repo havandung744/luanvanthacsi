@@ -29,9 +29,11 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
     public partial class ThesisDefenseList : ComponentBase
     {
         [Inject] IMapper _mapper { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
+        [Inject] IFacultyService FacultyService { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IThesisDefenseService ThesisDefenseService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
@@ -51,14 +53,16 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         bool loading = false;
         User CurrentUser;
         string titleOfThesisDefenseDetail;
+        List<Faculty> facultyList { get; set; }
+        string facultyId { get; set; }
 
 
         protected override async Task OnInitializedAsync()
         {
-            // lấy thông tin User đang đăng nhập
             string id = await getUserId();
             CurrentUser = await UserService.GetUserByIdAsync(id);
             thesisDefenseDatas = new();
+            facultyList = await FacultyService.GetAllAsync();
             await LoadAsync();
         }
 
@@ -69,7 +73,23 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             loading = true;
             visible = false;
             visibleForDetail = false;
-            var thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(CurrentUser.FacultyId);
+            try
+            {
+                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfThesisDefense");
+            }
+            catch
+            {
+                facultyId = null;
+            }
+            List<ThesisDefense> thesisDefenses = new List<ThesisDefense>();
+            if (CurrentUser.FacultyId == null)
+            {
+                thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(facultyId);
+            }
+            else
+            {
+                thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(CurrentUser.FacultyId);
+            }
             var list = thesisDefenses.OrderByDescending(x => x.CreateDate).ToList();
             thesisDefenseDatas = _mapper.Map<List<ThesisDefenseData>>(list);
             int stt = 1;
@@ -237,6 +257,11 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
             var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
             return UserId;
+        }
+        async Task ChangeFacultyId()
+        {
+            await localStorage.SetItemAsync("facultyIdOfThesisDefense", facultyId);
+            await LoadAsync();
         }
 
     }

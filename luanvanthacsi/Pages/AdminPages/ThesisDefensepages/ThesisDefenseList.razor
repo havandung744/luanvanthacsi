@@ -1,7 +1,8 @@
 ﻿@page "/thesisDefenses"
 @using luanvanthacsi.Data.Data;
+@using luanvanthacsi.Data.Entities;
 @attribute [Authorize(Roles = "Admin")]
-<PageTitle>Mở đợt bảo vệ</PageTitle>
+<PageTitle>Đợt bảo vệ</PageTitle>
 <PageHeader Style="padding: 0;">
     <PageHeaderExtra>
         <Breadcrumb>
@@ -31,13 +32,13 @@
                             Bạn có chắc chắn muốn xóa
                             @if (selectedRows.Count() == 1)
                             {
-                                <strong> @selectedRows?.FirstOrDefault().Name</strong>
+                                <strong> @selectedRows?.FirstOrDefault()?.Name</strong>
 
                                 <span>?</span>
                             }
                             else
                             {
-                                <strong> @selectedRows.Count()</strong> <span>nhân viên?</span>
+                                <strong> @selectedRows.Count()</strong> <span>đợt bảo vệ?</span>
                             }
 
                         </TitleTemplate>
@@ -46,6 +47,21 @@
             }
         </SpaceItem>
     </Space>
+</Row>
+<br />
+<Row>
+    <AntDesign.Col Span="12">
+        @if (CurrentUser?.FacultyId == null)
+        {
+            <Select TItem="Faculty" TItemValue="string" EnableSearch Placeholder="Chọn khoa"
+                DataSource="facultyList"
+                ValueName="@nameof(Faculty.Id)"
+                LabelName="@nameof(Faculty.Name)"
+                @bind-Value="@facultyId"
+                OnSelectedItemChanged="ChangeFacultyId">
+            </Select>
+        }
+    </AntDesign.Col>
 </Row>
 <br />
 <Table @ref="table" DataSource="thesisDefenseDatas" Loading="loading" ScrollX="1500" ScrollY="600" ScrollBarWidth="5px" Locale="TableLocale"
@@ -93,7 +109,8 @@
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Đợt bảo vệ")' OnClose="OnClose">
-    <ThesisDefenseEdit @ref="thesisDefenseEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></ThesisDefenseEdit>
+    <ThesisDefenseEdit @ref="thesisDefenseEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"
+                       FacultyId="@facultyId"></ThesisDefenseEdit>
 </Drawer>
 <Drawer Closable="true" Width="1500" Visible="visibleForDetail" OnClose="OnCloseForDetail" Title='(titleOfThesisDefenseDetail)'>
     <ThesisDefenseDetail @ref="ThesisDefenseDetail"></ThesisDefenseDetail>

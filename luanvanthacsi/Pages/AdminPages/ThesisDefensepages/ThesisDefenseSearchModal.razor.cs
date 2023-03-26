@@ -6,6 +6,7 @@ using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
+using luanvanthacsi.Data.Migrations;
 using luanvanthacsi.Data.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -16,6 +17,8 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
     public partial class ThesisDefenseSearchModal : ComponentBase
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
+
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] IThesisDefenseService ThesisDefenseService { get; set; }
@@ -38,13 +41,13 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         StudentData? selectData;
         List<string> ListSelectedIds = new();
         IEnumerable<StudentData>? selectedRows;
-        List<StudentData> studentOfThesisDefenseEditModels { get; set; }
+        string facultyId { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             string id = await getUserId();
             CurrentUser = await UserService.GetUserByIdAsync(id);
             studentDatas = new();
-            //selectedTripId = new();
         }
         async Task<string> getUserId()
         {
@@ -54,7 +57,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         }
         async Task HandleOk()
         {
-
             if (ListSelectedIds.Count > 0)
             {
                 List<Student> convert = new List<Student>();
@@ -107,10 +109,24 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         {
             currentThesisDefenseId = id;
             studentDatas.Clear();
-            // lấy full dữ liệu
-            //var students = await StudentService.GetAllAsync();
             // lấy dữ liệu học viên chưa đăng ký đợt bảo vệ
-            var students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+            List<Student> students = new List<Student>();
+            if (CurrentUser.FacultyId != null)
+            {
+                students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+            }
+            else
+            {
+                try
+                {
+                    facultyId = await localStorage.GetItemAsync<string>("facultyIdOfThesisDefense");
+                }
+                catch
+                {
+                    facultyId = null;
+                }
+                students = await StudentService.GetAllByIdAsync(facultyId);
+            }
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = students.Where(x => x.ThesisDefenseId == null).OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             studentDatas = _mapper.Map<List<StudentData>>(list);
@@ -139,9 +155,9 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
                 table?.SetSelection(ids.ToArray());
                 ListSelectedIds = ids;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
 
         }
