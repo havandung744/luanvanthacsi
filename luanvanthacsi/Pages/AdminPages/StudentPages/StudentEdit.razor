@@ -1,11 +1,12 @@
-﻿<Form @ref="form"
+﻿@using luanvanthacsi.Data.Entities;
+<Form @ref="form"
       Model="EditModel" LabelColSpan="8"
       WrapperColSpan="16"
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     <Template style="height:90%">
         <FormItem Label="Mã học viên">
-            <Input @bind-Value="@context.Code" ReadOnly/>
+            <Input @bind-Value="@context.Code" ReadOnly />
         </FormItem>
         <FormItem Label="Tên học viên">
             <Input @bind-Value="@context.Name" />
@@ -22,13 +23,22 @@
         <FormItem Label="Tên đề tài">
             <TextArea @bind-Value="@context.TopicName" MaxLength="100" ShowCount></TextArea>
         </FormItem>
-        <FormItem Label="Người hướng dẫn 1">
-            <Input @bind-Value="@context.InstructorOne" />
+        <FormItem Label="Hướng dẫn 1">
+            <Select TItem="Scientist" TItemValue="string" DataSource="scientistList"
+                    EnableSearch Placeholder="Chọn chuyên ngành"
+                    @bind-Value="@context.InstructorIdOne"
+                    ValueName="@nameof(Scientist.Id)"
+                    LabelName="@nameof(Scientist.Name)">
+            </Select>
         </FormItem>
-        <FormItem Label="Người hướng dẫn 2">
-            <Input @bind-Value="@context.OnstructorTwo" />
+        <FormItem Label="Hướng dẫn 2">
+            <Select TItem="Scientist" TItemValue="string" DataSource="scientistList"
+                    EnableSearch Placeholder="Chọn chuyên ngành"
+                    @bind-Value="@context.InstructorIdTwo"
+                    ValueName="@nameof(Scientist.Id)"
+                    LabelName="@nameof(Scientist.Name)">
+            </Select>
         </FormItem>
-
 
         <FormItem WrapperColOffset="8" WrapperColSpan="16">
             <Button Type="@ButtonType.Primary" HtmlType="submit">

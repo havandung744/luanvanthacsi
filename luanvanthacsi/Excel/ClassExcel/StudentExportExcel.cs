@@ -12,7 +12,7 @@
         public virtual string? PhoneNumber { get; set; }
         public virtual string? DateOfBirth { get; set; }
         public virtual string? TopicName { get; set; }
-        public virtual string? InstructorOne { get; set; }
-        public virtual string? OnstructorTwo { get; set; }
+        public virtual string? InstructorIdOne { get; set; }
+        public virtual string? InstructorIdTwo { get; set; }
     }
 }

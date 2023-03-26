@@ -8,8 +8,8 @@ namespace luanvanthacsi.Excel.ClassExcel
         public virtual string StudentName { get; set; }
         public virtual string TopicName { get; set; }
         public virtual string Branch { get; set; }
-        public virtual string InstructorOne { get; set; }
-        public virtual string OnstructorTwo { get; set; }
+        public virtual string InstructorIdOne { get; set; }
+        public virtual string InstructorIdTwo { get; set; }
         public virtual string PresidentName { get; set; }
         public virtual string CounterattackerOne { get; set; }
         public virtual string CounterattackerTwo { get; set; }

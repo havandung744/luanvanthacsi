@@ -18,8 +18,8 @@ namespace luanvanthacsi.Data.Map
             Map(x => x.FacultyId).Column("FacultyId");
             Map(x => x.ThesisDefenseId).Column("ThesisDefenseId");
             Map(x => x.TopicName).Column("TopicName");
-            Map(x => x.OnstructorTwo).Column("OnstructorTwo");
-            Map(x => x.InstructorOne).Column("InstructorOne");
+            Map(x => x.InstructorIdTwo).Column("InstructorIdTwo");
+            Map(x => x.InstructorIdOne).Column("InstructorIdOne");
             Table("Student");
         }
 

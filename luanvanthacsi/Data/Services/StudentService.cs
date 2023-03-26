@@ -106,8 +106,8 @@ namespace luanvanthacsi.Data.Services
                                 exist.Email = student.Email;
                                 exist.PhoneNumber = student.PhoneNumber;
                                 exist.TopicName = student.TopicName;
-                                exist.InstructorOne = student.InstructorOne;
-                                exist.OnstructorTwo = student.OnstructorTwo;
+                                exist.InstructorIdOne = student.InstructorIdOne;
+                                exist.InstructorIdTwo = student.InstructorIdTwo;
                                 await session.MergeAsync(exist);
                             }
                             else

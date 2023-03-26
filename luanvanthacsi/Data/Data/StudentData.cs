@@ -30,9 +30,9 @@ namespace luanvanthacsi.Data.Data
         [Display(Name = "Tên đề tài")]
         public string TopicName;
         [Display(Name = "Hướng dẫn 1")]
-        public string InstructorOne;
+        public string InstructorIdOne;
         [Display(Name = "Hướng dẫn 2")]
-        public string OnstructorTwo;
+        public string InstructorIdTwo;
          
 
     }

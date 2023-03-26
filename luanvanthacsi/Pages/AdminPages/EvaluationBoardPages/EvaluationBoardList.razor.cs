@@ -97,8 +97,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 // lấy thông tin student
                 Student student = await StudentService.GetStudentByIdAsync(item.StudentId);
                 item.StudentName = student?.Name;
-                item.InstructorOne = student?.InstructorOne;
-                item.OnstructorTwo = student?.OnstructorTwo;
+                item.InstructorIdOne = student?.InstructorIdOne;
+                item.InstructorIdTwo = student?.InstructorIdTwo;
                 item.TopicName = student?.TopicName;
                 item.Branch = scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
                 // lấy thông tin chủ tịch

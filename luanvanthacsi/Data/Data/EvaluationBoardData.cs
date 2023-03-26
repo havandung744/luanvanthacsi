@@ -20,9 +20,9 @@ namespace luanvanthacsi.Data.Data
         [Display(Name = "Học viên")]
         public string StudentName;
         [Display(Name = "GVHD 1")]
-        public string InstructorOne;
+        public string InstructorIdOne;
         [Display(Name = "GVHD 2")]
-        public string OnstructorTwo;
+        public string InstructorIdTwo;
         [Display(Name = "Id khoa")]
         public string FacultyId;
         [Display(Name = "Id chủ tịch")]

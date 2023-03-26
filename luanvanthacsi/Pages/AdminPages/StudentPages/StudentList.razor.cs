@@ -348,8 +348,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     student.Email = result.Rows[i][nameof(Student.Email)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.Email)].ToString() : student.Email;
                     student.PhoneNumber = result.Rows[i][nameof(Student.PhoneNumber)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.PhoneNumber)].ToString() : student.PhoneNumber;
                     student.TopicName = result.Rows[i][nameof(Student.TopicName)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.TopicName)].ToString() : student.TopicName;
-                    student.InstructorOne = result.Rows[i][nameof(Student.InstructorOne)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorOne)].ToString() : student.InstructorOne;
-                    student.OnstructorTwo = result.Rows[i][nameof(Student.OnstructorTwo)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.OnstructorTwo)].ToString() : student.OnstructorTwo;
+                    student.InstructorIdOne = result.Rows[i][nameof(Student.InstructorIdOne)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorIdOne)].ToString() : student.InstructorIdOne;
+                    student.InstructorIdTwo = result.Rows[i][nameof(Student.InstructorIdTwo)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorIdTwo)].ToString() : student.InstructorIdTwo;
                     student.DateOfBirth = result.Rows[i][nameof(Student.DateOfBirth)].IsNotNullOrEmpty() ? Convert.ToDateTime(result.Rows[i][nameof(Student.DateOfBirth)]) : student.DateOfBirth;
                     #endregion
                     students.Add(student);

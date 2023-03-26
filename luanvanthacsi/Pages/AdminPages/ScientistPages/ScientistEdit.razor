@@ -23,7 +23,8 @@
                     EnableSearch Placeholder="Chọn chuyên ngành"
                     @bind-Value="@context.SpecializedId"
                     ValueName="@nameof(Specialized.Id)"
-                    LabelName="@nameof(Specialized.Name)"></Select>
+                    LabelName="@nameof(Specialized.Name)">
+            </Select>
         </FormItem>
         <FormItem Label="Vị trí">
             <Select TItem="selectInUniversity" TItemValue="int"

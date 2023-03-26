@@ -13,7 +13,7 @@
         public virtual DateTime CreateDate { get; set; }
         public virtual DateTime UpdateDate { get; set; }
         public virtual string? TopicName { get; set; }
-        public virtual string? InstructorOne { get; set; }
-        public virtual string? OnstructorTwo { get; set; }
+        public virtual string? InstructorIdOne { get; set; }
+        public virtual string? InstructorIdTwo { get; set; }
     }
 }
