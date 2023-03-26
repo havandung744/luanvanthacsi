@@ -19,7 +19,7 @@
                         <CardGrid Class="card-grid" Hoverable="true">
                             <div style="margin-top: -12px;">
                                 <Icon Type="clock-circle" Theme="outline" Width="32px" Height="32px" /><br />
-                                <b>Quản lý nhà khoa học</b>
+                                <b>Nhà khoa học</b>
                             </div>
                         </CardGrid>
                     </Card>
@@ -31,7 +31,7 @@
                         <CardGrid Class="card-grid" Hoverable="true">
                             <div style="margin-top: -12px;">
                                 <Icon Type="calendar" Theme="outline" Width="32px" Height="32px" /><br />
-                                <b>Quản lý học viên</b>
+                                <b>Học viên</b>
                             </div>
                         </CardGrid>
                     </Card>
@@ -43,7 +43,7 @@
                         <CardGrid Class="card-grid" Hoverable="true">
                             <div style="margin-top: -12px;">
                                 <Icon Type="swap" Theme="outline" Width="32px" Height="32px" /><br />
-                                <b>Đợt đợt bảo vệ</b>
+                                <b>Đợt bảo vệ</b>
                             </div>
                         </CardGrid>
                     </Card>
@@ -109,6 +109,14 @@
                 </Space>
             </Row>
             <span style="padding-left: 24px; font-weight: 500"> Năm @id1</span>
+            @if (CurrentUser?.FacultyId == null)
+            {
+                if (facultyList != null)
+                {
+                    var name = facultyList.Where(x => x.Id == facultyIdOfStudent).Select(x => x.Name).FirstOrDefault();
+                    <span style="padding-left: 24px; font-weight: 500">@name</span>
+                }
+            }
             @if (data2?.Any() == true)
             {
                 <AntDesign.Charts.Column @ref="Chart2" @key="chartKey" Data="data2" Config="config2" />
@@ -134,7 +142,7 @@
         <br />
         <br />
     }
-    <label>Chọn nhà khoa học</label> 
+    <label>Chọn nhà khoa học</label>
     <Select TItem="Scientist" TItemValue="string"
             DataSource="scientistList" AllowClear
             EnableSearch @bind-Value="id"
@@ -148,7 +156,6 @@
        Visible="@_visible1"
        OnOk="@HandleOk1"
        OnCancel="@HandleCancel1">
-    <label> Chọn năm</label>
     @if (CurrentUser.FacultyId == null)
     {
         <label>Chọn khoa</label>
@@ -163,6 +170,7 @@
         <br />
         <br />
     }
+    <label> Chọn năm</label>
     <Select TItem="int" TItemValue="int"
             EnableSearch @bind-Value="id1"
             Placeholder="Chọn năm bảo vệ">

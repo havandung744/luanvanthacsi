@@ -60,8 +60,8 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             };
             _selectAcademicRanks = new List<selectAcademicRank>
             {
-                new selectAcademicRank {Value = 0, Name="Phó giáo sư"},
                 new selectAcademicRank {Value = 1, Name="Giáo sư"},
+                new selectAcademicRank {Value = 0, Name="Phó giáo sư"},
                 new selectAcademicRank {Value = -1, Name="Không"},
             };
         }
@@ -88,6 +88,10 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         public async Task UpdateScientist()
         {
             Scientist scientist = _mapper.Map<Scientist>(EditModel);
+            if(scientist.InUniversity == 1)
+            {
+                scientist.WorkingAgency = "Trường ĐHSP Hà Nội";
+            }
             if (CurrentUser.FacultyId == null)
             {
                 scientist.FacultyId = facultyId;

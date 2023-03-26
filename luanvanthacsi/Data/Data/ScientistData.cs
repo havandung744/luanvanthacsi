@@ -32,7 +32,9 @@ namespace luanvanthacsi.Data.Data
         public int InUniversity;
         public string SpecializedId;
         [Display(Name = "Chuyên nghành")]
-        public string SpecializedName;
+        public string SpecializedName; 
+        [Display(Name = "Cơ quan công tác")]
+        public string WorkingAgency;
     }
 
 }

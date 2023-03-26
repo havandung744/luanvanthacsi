@@ -12,18 +12,18 @@
         <FormItem Label="Họ và tên">
             <Input @bind-Value="@context.Name" />
         </FormItem>
+        <FormItem Label="Email">
+            <Input @bind-Value="@context.Email" />
+        </FormItem>
+        <FormItem Label="Số điện thoại">
+            <Input @bind-Value="@context.PhoneNumber" />
+        </FormItem>
         <FormItem Label="Chuyên ngành">
             <Select TItem="Specialized" TItemValue="string" DataSource="specializedList"
                     EnableSearch Placeholder="Chọn chuyên ngành"
                     @bind-Value="@context.SpecializedId"
                     ValueName="@nameof(Specialized.Id)"
                     LabelName="@nameof(Specialized.Name)"></Select>
-        </FormItem>
-        <FormItem Label="Email">
-            <Input @bind-Value="@context.Email" />
-        </FormItem>
-        <FormItem Label="Số điện thoại">
-            <Input @bind-Value="@context.PhoneNumber" />
         </FormItem>
         <FormItem Label="Vị trí">
             <Select TItem="selectInUniversity" TItemValue="int"
@@ -32,6 +32,12 @@
                     ValueName="@nameof(selectInUniversity.Value)">
             </Select>
         </FormItem>
+        @if (context.InUniversity == 0)
+        {
+            <FormItem Label="Cơ quan công tác">
+                <Input @bind-Value="@context.WorkingAgency" />
+            </FormItem>
+        }
         <FormItem Label="Học hàm">
             <Select TItem="selectAcademicRank" TItemValue="int"
                     @bind-Value="@context.AcademicRank" DataSource="@_selectAcademicRanks"

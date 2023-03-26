@@ -5,11 +5,11 @@ namespace luanvanthacsi.Data.Edit
     public class StudentEditModel
     {
         public string Id { get; set; }
-        [Required(ErrorMessage = "Vui lòng nhập vào mã học viên")]
+        [Required(ErrorMessage = "Vui lòng nhập mã học viên")]
         public string Code { get; set; }
-        [Required(ErrorMessage = "Vui lòng nhập vào tên học viên")]
+        [Required(ErrorMessage = "Vui lòng nhập tên học viên")]
         public string Name { get; set; }
-        [Required(ErrorMessage = "Vui lòng nhập vào email")]
+        [Required(ErrorMessage = "Vui lòng nhập email")]
         [RegularExpression(@"^[\w-\._\+%]+@(?:[\w-]+\.)+[\w]{2,6}$", ErrorMessage = "Email không hợp lệ")]
         public string? Email { get; set; }
         public string PhoneNumber { get; set; }

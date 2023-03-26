@@ -21,6 +21,7 @@ namespace luanvanthacsi.Data.Entities
         public virtual string SpecializedId { get; set;}
         public virtual string SpecializedName { get => Specialized?.Name; set { } }
         public virtual Specialized? Specialized { get; set;}
+        public virtual string WorkingAgency { get; set;}
 
     }
 }
