@@ -78,11 +78,16 @@
                         <Column @bind-Field="context.SecretaryName" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.ScientistOne" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.ScientistTwo" Width="200" Sortable Ellipsis></Column>
-                        <ActionColumn Title="Thao tác" Width="80" Fixed="right">
+                        <ActionColumn Title="Thao tác" Width="100" Fixed="right">
                             <Space>
                                 <SpaceItem>
                                     <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
                                         <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation />
+                                    </Tooltip>
+                                </SpaceItem>     
+                                <SpaceItem>
+                                    <Tooltip Placement="@Placement.Top" Title="@("Tải quyết định")">
+                                        <Icon Type="download" @onclick="() => ExportDocxAsync(context)" Theme="outline" Class="btn-icon-edit" StopPropagation />
                                     </Tooltip>
                                 </SpaceItem>
                                 <SpaceItem>
@@ -108,7 +113,10 @@
 </div>
 
 
-<Drawer Closable="false" Visible="addVisible" Height="965" OnClose="() => addVisible=false"
+@*<Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Hội đồng đánh giá")' OnClose="OnClose">
+    <EvaluationBoardEdit @ref="evaluationBoardEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"></EvaluationBoardEdit>
+</Drawer>*@
+<Drawer Closable="false" Visible="addVisible" Height="SessionData.BrowserDimension.Height" OnClose="() => addVisible=false"
         Title='("Lập hội đồng đánh giá")' Placement="bottom">
     <Template>
         <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser" CancelDetail="CancelDetail"></EvaluationBoardAddLayout>

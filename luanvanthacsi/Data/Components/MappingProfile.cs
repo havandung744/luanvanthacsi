@@ -2,7 +2,9 @@
 using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
+using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Excel.ClassExcel;
+using luanvanthacsi.Models;
 using luanvanthacsi.Pages.AdminPages.ScientistPages;
 using luanvanthacsi.Ultils;
 
@@ -20,8 +22,8 @@ namespace luanvanthacsi.Data.Components
             CreateMap<ScientistData, Scientist>().ReverseMap();
             //CreateMap<ScientistEditModel, Scientist>()
             //     .ForMember(src => src.Specialized.Id, dest => dest.MapFrom(c => c.SpecializedId)).ReverseMap();
-             CreateMap<Scientist, ScientistEditModel>()
-                 .ForMember(src => src.SpecializedId, dest => dest.MapFrom(c => c.Specialized.Id)).ReverseMap();
+            CreateMap<Scientist, ScientistEditModel>()
+                .ForMember(src => src.SpecializedId, dest => dest.MapFrom(c => c.Specialized.Id)).ReverseMap();
 
             // map hội đồng đánh giá
             CreateMap<EvaluationBoardData, EvaluationBoard>().ReverseMap();
@@ -44,7 +46,10 @@ namespace luanvanthacsi.Data.Components
                .ForMember(src => src.DateOfBirth, dest => dest.MapFrom(c => c.DateOfBirth.ToShortDate())).ReverseMap();
 
             CreateMap<EvaluationBoardData, EvaluationBoardExcel>().ReverseMap();
-
+            CreateMap<Scientist, EvaluationBoardDocx.EvaluationBoard>()
+                .ForMember(dest => dest.Title, src => src.MapFrom(c => c.EvaluationRole.GetDescription()))
+                .ForMember(dest => dest.Price, src => src.MapFrom(c => c.EvaluationRole.GetDegreeFee()))
+                .ForMember(dest => dest.WorkUnit, src => src.MapFrom(c => c.WorkingAgency));
 
         }
     }

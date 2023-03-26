@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static luanvanthacsi.Data.Components.Enum;
 
 namespace luanvanthacsi.Data.Entities
 {
@@ -22,6 +23,8 @@ namespace luanvanthacsi.Data.Entities
         public virtual string SpecializedName { get => Specialized?.Name; set { } }
         public virtual Specialized? Specialized { get; set;}
         public virtual string WorkingAgency { get; set;}
+        public virtual EvaluationRole EvaluationRole { get; set; }
+
 
     }
 }

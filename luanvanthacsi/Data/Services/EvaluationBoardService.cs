@@ -1,5 +1,7 @@
 ﻿using luanvanthacsi.Data.Entities;
 using NHibernate;
+using NHibernate.Linq;
+using static NHibernate.Engine.Query.CallableParser;
 
 namespace luanvanthacsi.Data.Services
 {
@@ -110,7 +112,19 @@ namespace luanvanthacsi.Data.Services
                 List<EvaluationBoard> evaluationBoard;
                 using (NHibernate.ISession session = FluentNHibernateHelper.OpenSession())
                 {
-                    evaluationBoard = session.Query<EvaluationBoard>().Where(x => x.FacultyId == id).ToList();
+                    evaluationBoard = await session.Query<EvaluationBoard>().Where(x => x.FacultyId == id).ToListAsync();
+                    if (evaluationBoard.Any())
+                    {
+                        var listFacltyIds = evaluationBoard.Select(c => c.FacultyId);
+                        var faculty = await session.Query<Faculty>().Where(c => listFacltyIds.Contains(c.Id)).ToListAsync();
+                        evaluationBoard = evaluationBoard.GroupJoin(faculty, ev => ev.FacultyId, fa => fa.Id, (ev, fa) => (ev, fa))
+                        .Select(x =>
+                        {
+                            x.ev.Faculty = x.fa.FirstOrDefault();
+                            return x.ev;
+                        }).ToList();
+
+                    }
                 }
                 return evaluationBoard;
             }

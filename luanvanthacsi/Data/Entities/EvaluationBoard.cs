@@ -24,6 +24,7 @@
          //thư ký
         public virtual string SecretaryId { get; set; }
 
+        public virtual Faculty Faculty { get; set; }
         
     }
 }

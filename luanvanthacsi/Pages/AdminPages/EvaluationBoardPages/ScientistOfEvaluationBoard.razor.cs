@@ -48,13 +48,17 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             scientistDatas?.Clear();
             loading = true;
             visible = false;
-            var lecturers = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
-            var list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == CurrentUser.FacultyId).ToList();
+            var scientistes = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+            var list = scientistes.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == CurrentUser.FacultyId).ToList();
             var specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
-            foreach (var item in list)
-            {
-                item.SpecializedName = specializedList.Where(x => x.Id == item.SpecializedId).Select(x => x.Name).FirstOrDefault();
-            }
+
+            list = list.GroupJoin(specializedList, sc => sc.SpecializedId, spec => spec.Id, (sc, spec) => (sc, spec))
+                .Select(c => 
+                {
+                    c.sc.SpecializedName = c.spec != null ? c.spec.FirstOrDefault()?.Name : string.Empty;
+                    return c.sc;
+                }).ToList();
+
             scientistDatas = _mapper.Map<List<ScientistData>>(list);
             int stt = 1;
             scientistDatas.ForEach(x => { x.stt = stt++; });

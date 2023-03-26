@@ -1,11 +1,13 @@
 ﻿using AntDesign;
 using Blazored.LocalStorage;
+using luanvanthacsi;
 using luanvanthacsi.Areas.Identity;
 using luanvanthacsi.Data;
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Excel;
+using luanvanthacsi.Ultils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -16,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using NHibernate.Mapping;
+using NPOI.HSSF.Record.Chart;
 using System.Globalization;
 using System.Reflection;
 using Tewr.Blazor.FileReader;
@@ -47,6 +50,7 @@ builder.Services.AddSingleton<ISpecializedService, SpecializedService>();
 builder.Services.AddSingleton<IFacultyService, FacultyService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSingleton<ExcelExporter>();
+builder.Services.AddScoped<BrowserService>();
 builder.Services.AddSingleton<TableLocale>(c =>
 {
     var locale = new TableLocale()
@@ -91,13 +95,16 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
+
+var startUp = new Startup(builder.Configuration);
+
 var app = builder.Build();
 
 LocaleProvider.SetLocale("vi-VN");
 var supportedCultures = new[]
 {
     new CultureInfo("vi-VN"),
-};
+};  
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
     DefaultRequestCulture = new RequestCulture("vi-VN"),
@@ -125,7 +132,7 @@ app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
     //FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\bin\\Debug\\net7.0\\Upload"),
-    FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\scientist"),
+    FileProvider = new PhysicalFileProvider("D:\\Git\\Luan-van\\luanvanthacsi\\bin\\Debug\\net7.0\\Upload"),
     //RequestPath = "/Upload"
     RequestPath = "/scientist"
 });

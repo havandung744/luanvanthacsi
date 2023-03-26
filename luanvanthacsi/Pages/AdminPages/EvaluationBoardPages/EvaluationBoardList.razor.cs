@@ -19,13 +19,19 @@ using NPOI.SS.UserModel;
 using OfficeOpenXml;
 using luanvanthacsi.Ultils;
 using System.Data;
+using luanvanthacsi.Models;
+using ICSharpCode.SharpZipLib.Core;
+using static luanvanthacsi.Data.Components.Enum;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
     public partial class EvaluationBoardList : ComponentBase
     {
+        [CascadingParameter] SessionData SessionData { get; set; }
+
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] ExcelExporter ExcelExporter { get; set; }
+
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
@@ -34,7 +40,10 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] IMapper _mapper { get; set; }
-        List<EvaluationBoardData>? evaluationBoardDatas { get; set; }
+
+
+        List<EvaluationBoardData>? evaluationBoardDatas { get; set; } = new();
+        List<Scientist>? Scientists { get; set; } = new();
         bool visible = false;
         EvaluationBoardEdit evaluationBoardEdit = new EvaluationBoardEdit();
         bool loading = false;
@@ -91,30 +100,31 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             var list = evaluationBoards.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             evaluationBoardDatas = _mapper.Map<List<EvaluationBoardData>>(list);
             #region join bảng lấy dữ liệu
-            List<Scientist> scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+            Scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
             foreach (var item in evaluationBoardDatas)
             {
                 // lấy thông tin student
                 Student student = await StudentService.GetStudentByIdAsync(item.StudentId);
                 item.StudentName = student?.Name;
+                item.DOB = student?.DateOfBirth;
                 item.InstructorOne = student?.InstructorOne;
                 item.OnstructorTwo = student?.OnstructorTwo;
                 item.TopicName = student?.TopicName;
-                item.Branch = scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
+                item.Branch = Scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).FirstOrDefault();
                 // lấy thông tin chủ tịch
-                item.PresidentName = scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
+                item.PresidentName = Scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).FirstOrDefault();
                 // lấy thông tin phản biện 1
-                item.CounterattackerOne = scientists.Where(x => x.Id == item.CounterattackerIdOne).Select(x => x.Name).First();
+                item.CounterattackerOne = Scientists.Where(x => x.Id == item.CounterattackerIdOne).Select(x => x.Name).FirstOrDefault();
                 // lấy thông tin phản biện 2
-                item.CounterattackerTwo = scientists.Where(x => x.Id == item.CounterattackerIdTwo).Select(x => x.Name).First();
+                item.CounterattackerTwo = Scientists.Where(x => x.Id == item.CounterattackerIdTwo).Select(x => x.Name).FirstOrDefault();
                 // lấy thông tin phản biện 3
-                item.CounterattackerThree = scientists.Where(x => x.Id == item.CounterattackerIdThree).Select(x => x.Name).First();
+                item.CounterattackerThree = Scientists.Where(x => x.Id == item.CounterattackerIdThree).Select(x => x.Name).FirstOrDefault();
                 // lấy thông tin phản biện thư kí
-                item.SecretaryName = scientists.Where(x => x.Id == item.SecretaryId).Select(x => x.Name).First();
+                item.SecretaryName = Scientists.Where(x => x.Id == item.SecretaryId).Select(x => x.Name).FirstOrDefault();
                 // lấy thông tin ủy viên 1
-                item.ScientistOne = scientists.Where(x => x.Id == item.ScientistIdOne).Select(x => x.Name).First();
+                item.ScientistOne = Scientists.Where(x => x.Id == item.ScientistIdOne).Select(x => x.Name).FirstOrDefault();
                 // lấy thông tin ủy viên 2
-                item.ScientistTwo = scientists.Where(x => x.Id == item.ScientistIdTwo).Select(x => x.Name).First();
+                item.ScientistTwo = Scientists.Where(x => x.Id == item.ScientistIdTwo).Select(x => x.Name).FirstOrDefault();
             }
             #endregion
 
@@ -298,6 +308,83 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 throw;
             }
         }
+
+        async Task ExportDocxAsync(EvaluationBoardData dt)
+        {
+            try
+            {
+                #region get Data
+
+                var counterAttachIds = new List<string> { dt.CounterattackerIdOne, dt.CounterattackerIdTwo, dt.CounterattackerIdThree };
+                var scientistIds = new List<string> { dt.ScientistIdOne, dt.ScientistIdTwo };
+
+                var counters = Scientists.Where(c => counterAttachIds.Contains(c.Id)).ToList();
+                var scientists = Scientists.Where(c => scientistIds.Contains(c.Id)).ToList();
+                var president = Scientists.Where(c => c.Id == dt.PresidentId).ToList();
+                var secretary = Scientists.Where(c => c.Id == dt.SecretaryId).ToList();
+
+                counters.ForEach(c => c.EvaluationRole = EvaluationRole.CounterAttack);
+                scientists.ForEach(c => c.EvaluationRole = EvaluationRole.Scientist);
+                president.ForEach(c => c.EvaluationRole = EvaluationRole.President);
+                secretary.ForEach(c => c.EvaluationRole = EvaluationRole.Secretary);
+
+                var listEvaluationBoard = counters.Concat(scientists).Concat(president).Concat(secretary).ToList();
+                var listEvaluationBoardAll = counters.Concat(scientists).Concat(president).Concat(secretary).ToList();
+                listEvaluationBoardAll.Add(new() 
+                { 
+                    Name = dt.InstructorOne,
+                    WorkingAgency = "Đơn vị TEST",
+                    EvaluationRole = EvaluationRole.Instructor
+                });
+
+                int i = 1;
+                int j = 1;
+                #endregion
+
+                EvaluationBoardDocx documentData = new();
+                documentData.Content = new EvaluationBoardDocx.Data
+                {
+                    DateForm = DateTime.Now.FormatDayMonthYear(),
+                    StudentName = dt.StudentName,
+                    DOB = dt.DOB.ToShortDate(),
+                    TopicName = dt.TopicName,
+                    FacultyName = dt.Faculty?.Name,
+                    FacultyCode = dt.Faculty?.Code,
+                    InstructorName = dt.InstructorOne,
+                    BoardTotal = listEvaluationBoard.Count().ToString(),
+                    EvaluationBoards = _mapper.Map<List<EvaluationBoardDocx.EvaluationBoard>>(listEvaluationBoard.OrderBy(c => c.EvaluationRole.EnumToInt())),
+                    EvaluationBoardAll = _mapper.Map<List<EvaluationBoardDocx.EvaluationBoard>>(listEvaluationBoardAll.OrderBy(c => c.EvaluationRole.EnumToInt()))
+                };
+
+                if (documentData.Content.EvaluationBoards.Any())
+                {
+                    foreach (var item in documentData.Content.EvaluationBoards)
+                    {
+                        item.No = i++.ToString();
+                        item.Name = $"{item.Degree.FormatDegree()} {item.Name}";
+                    }
+                }      
+                if (documentData.Content.EvaluationBoardAll.Any())
+                {
+                    foreach (var item in documentData.Content.EvaluationBoardAll)
+                    {
+                        item.No = j++.ToString();
+                        item.Name = $"{item.Degree.FormatDegree()} {item.Name}";
+                    }
+                }
+
+                var fileBytes = WordUltil.WriteDOCX("EvaluationBoardDocxTemplate.docx", documentData);
+                var fileBase64 = Convert.ToBase64String(fileBytes);
+                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy-HHmmss") + "-HoiDongBaoVe.docx", fileBase64);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
     }
 }

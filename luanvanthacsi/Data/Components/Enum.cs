@@ -14,6 +14,20 @@ namespace luanvanthacsi.Data.Components
         public enum LoaiExcelImport
         {
             StaffProfile
+        }       
+        public enum EvaluationRole
+        {
+            [Display(Name = "Chủ tịch")]
+            President,
+            [Display(Name = "Phản biện")]
+            CounterAttack,
+            [Display(Name = "Thư ký")]
+            Secretary,
+            [Display(Name = "Ủy viên")]
+            Scientist,
+            [Display(Name = "GVHD")]
+            Instructor
         }
+
     }
 }

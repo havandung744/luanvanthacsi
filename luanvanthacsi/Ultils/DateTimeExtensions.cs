@@ -96,5 +96,15 @@ namespace luanvanthacsi.Ultils
             var interval = TimeSpan.FromMinutes(minute);
             return $"{interval.Days * 24 + interval.Hours} giờ {interval.Minutes} phút";
         }
+        public static string FormatDayMonthYear(this DateTime? date)
+        {
+            return date != null ? string.Format("ngày {0:00} tháng {1:00} năm {2}", date.Value.Day, date.Value.Month, date.Value.Year) : string.Empty;
+        }
+        public static string FormatDayMonthYear(this DateTime date)
+        {
+            return string.Format("ngày {0:00} tháng {1:00} năm {2}", date.Day, date.Month, date.Year);
+        }
+
+
     }
 }
