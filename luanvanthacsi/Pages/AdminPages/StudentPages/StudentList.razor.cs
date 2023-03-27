@@ -1,35 +1,20 @@
-﻿using luanvanthacsi.Data.Services;
-using Microsoft.AspNetCore.Components;
-using System.Runtime.CompilerServices;
-using luanvanthacsi.Data.Entities;
-using luanvanthacsi.Data.Data;
-using luanvanthacsi.Data.Edit;
-using System.Linq;
-using AntDesign;
-using luanvanthacsi.Data.Components;
-using FluentNHibernate.Conventions;
-using luanvanthacsi.Data.Extentions;
+﻿using AntDesign;
 using AntDesign.TableModels;
 using AutoMapper;
-using OfficeOpenXml.Style;
-using OfficeOpenXml.Table;
-using OfficeOpenXml;
-using Microsoft.JSInterop;
-using luanvanthacsi.Ultils;
-using Color = System.Drawing.Color;
-using BlazorInputFile;
-using OneOf.Types;
-using Microsoft.AspNetCore.Components.Authorization;
-using luanvanthacsi.Areas.Identity;
-using ICSharpCode.SharpZipLib.Core;
-using Tewr.Blazor.FileReader;
+using FluentNHibernate.Conventions;
+using luanvanthacsi.Data.Components;
+using luanvanthacsi.Data.Data;
+using luanvanthacsi.Data.Entities;
+using luanvanthacsi.Data.Extentions;
+using luanvanthacsi.Data.Services;
 using luanvanthacsi.Excel;
-using NPOI.SS.UserModel;
-using System.Data;
-using MathNet.Numerics.Providers.SparseSolver;
-using Umbraco.Core.Services.Implement;
-using luanvanthacsi.Data;
 using luanvanthacsi.Excel.ClassExcel;
+using luanvanthacsi.Ultils;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
+using OfficeOpenXml;
+using System.Data;
 //using LightInject;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
@@ -94,9 +79,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         {
             try
             {
-                string fileName = "DanhSachHocVien.xlsx";
-                string pathFile = Path.Combine("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\Excel\\Template", fileName);
 
+                string pathFile = Path.Combine(Directory.GetCurrentDirectory(), "Excel\\Template", "DanhSachHocVien.xlsx");
                 using (var stream = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
                 {
                     var package = new ExcelPackage(stream);
@@ -206,9 +190,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             ShowStudentDetail(studentData);
         }
 
-        void ShowStudentDetail(Student data)
+        async Task ShowStudentDetail(Student data)
         {
-            studentEdit.LoadData(data);
+            await studentEdit.LoadData(data);
             visible = true;
         }
 
@@ -235,7 +219,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         async Task Edit(StudentData studentData)
         {
             Student student = await StudentService.GetStudentByIdAsync(studentData.Id);
-            ShowStudentDetail(student);
+            await ShowStudentDetail(student);
         }
 
         async Task DeleteStudent(StudentData StudentData)
@@ -441,7 +425,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         {
             try
             {
-                string pathFile = Path.Combine("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\Excel\\Template", "DanhSachHocVien.xlsx");
+                string pathFile = Path.Combine(Directory.GetCurrentDirectory(), "Excel\\Template", "DanhSachHocVien.xlsx");
                 using (var stream = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
                 {
                     var package = new ExcelPackage(stream);

@@ -25,7 +25,7 @@
         </FormItem>
         <FormItem Label="Hướng dẫn 1">
             <Select TItem="Scientist" TItemValue="string" DataSource="scientistList"
-                    EnableSearch Placeholder="Chọn chuyên ngành"
+                    EnableSearch Placeholder="Chọn hướng dẫn 1"
                     @bind-Value="@context.InstructorIdOne"
                     ValueName="@nameof(Scientist.Id)"
                     LabelName="@nameof(Scientist.Name)">
@@ -33,7 +33,7 @@
         </FormItem>
         <FormItem Label="Hướng dẫn 2">
             <Select TItem="Scientist" TItemValue="string" DataSource="scientistList"
-                    EnableSearch Placeholder="Chọn chuyên ngành"
+                    EnableSearch Placeholder="Chọn hướng dẫn 2"
                     @bind-Value="@context.InstructorIdTwo"
                     ValueName="@nameof(Scientist.Id)"
                     LabelName="@nameof(Scientist.Name)">

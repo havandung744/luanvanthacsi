@@ -1,23 +1,19 @@
-﻿using luanvanthacsi.Data.Services;
-using Microsoft.AspNetCore.Components;
-using System.Runtime.CompilerServices;
-using luanvanthacsi.Data.Entities;
-using luanvanthacsi.Data.Data;
-using luanvanthacsi.Data.Edit;
-using System.Linq;
-using AntDesign;
-using luanvanthacsi.Data.Components;
-using FluentNHibernate.Conventions;
-using luanvanthacsi.Data.Extentions;
+﻿using AntDesign;
 using AntDesign.TableModels;
-using Microsoft.AspNetCore.Components.Authorization;
 using AutoMapper;
-using luanvanthacsi.Excel.ClassExcel;
+using FluentNHibernate.Conventions;
+using luanvanthacsi.Data.Components;
+using luanvanthacsi.Data.Data;
+using luanvanthacsi.Data.Entities;
+using luanvanthacsi.Data.Extentions;
+using luanvanthacsi.Data.Services;
 using luanvanthacsi.Excel;
-using Microsoft.JSInterop;
-using NPOI.SS.UserModel;
-using OfficeOpenXml;
+using luanvanthacsi.Excel.ClassExcel;
 using luanvanthacsi.Ultils;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
+using OfficeOpenXml;
 using System.Data;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
@@ -258,7 +254,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             try
             {
-                string pathFile = Path.Combine("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\Excel\\Template", "HoiDongBaoVe.xlsx");
+                string pathFile = Path.Combine(Directory.GetCurrentDirectory(), "Excel\\Template", "HoiDongBaoVe.xlsx");
                 using (var stream = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
                 {
                     var package = new ExcelPackage(stream);

@@ -2,24 +2,15 @@
 using Blazored.LocalStorage;
 using luanvanthacsi.Areas.Identity;
 using luanvanthacsi.Data;
-using luanvanthacsi.Data.Components;
-using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Excel;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using NHibernate.Mapping;
 using System.Globalization;
 using System.Reflection;
 using Tewr.Blazor.FileReader;
-using Umbraco.Core.Composing.CompositionExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -122,13 +113,13 @@ else
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    //FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\bin\\Debug\\net7.0\\Upload"),
-    FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\scientist"),
-    //RequestPath = "/Upload"
-    RequestPath = "/scientist"
-});
+//app.UseStaticFiles(new StaticFileOptions
+//{
+//    //FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\bin\\Debug\\net7.0\\Upload"),
+//    FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\scientist"),
+//    //RequestPath = "/Upload"
+//    RequestPath = "/scientist"
+//});
 
 app.UseRouting();
 
