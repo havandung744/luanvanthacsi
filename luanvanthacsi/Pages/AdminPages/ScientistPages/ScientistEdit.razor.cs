@@ -1,23 +1,16 @@
-﻿using luanvanthacsi.Data.Edit;
-using luanvanthacsi.Data.Entities;
-using Microsoft.AspNetCore.Components;
-using luanvanthacsi.Data;
-using System.Net.NetworkInformation;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
-using Microsoft.AspNetCore.Components.Forms;
-using AntDesign;
-using Microsoft.AspNetCore.Components.Web;
-using luanvanthacsi.Data.Extentions;
-using Tewr.Blazor.FileReader;
-using Microsoft.JSInterop;
-using OfficeOpenXml.Style.XmlAccess;
-using static luanvanthacsi.Data.Components.Enum;
+﻿using AntDesign;
 using AutoMapper;
+using luanvanthacsi.Data.Edit;
+using luanvanthacsi.Data.Entities;
+using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Ultils;
-using NPOI.Util;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
+using Tewr.Blazor.FileReader;
 
 namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 {
@@ -62,7 +55,6 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             {
                 new selectAcademicRank {Value = 1, Name="Giáo sư"},
                 new selectAcademicRank {Value = 0, Name="Phó giáo sư"},
-                new selectAcademicRank {Value = -1, Name="Không"},
             };
         }
         async Task<string> getUserId()
@@ -88,9 +80,13 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         public async Task UpdateScientist()
         {
             Scientist scientist = _mapper.Map<Scientist>(EditModel);
-            if(scientist.InUniversity == 1)
+            if (scientist.InUniversity == 1)
             {
                 scientist.WorkingAgency = "Trường ĐHSP Hà Nội";
+            }
+            else
+            {
+                scientist.Specialized = null;
             }
             if (CurrentUser.FacultyId == null)
             {
@@ -223,6 +219,5 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 throw;
             }
         }
-
     }
 }

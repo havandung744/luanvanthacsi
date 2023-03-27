@@ -2,13 +2,6 @@
 using NHibernate;
 using NHibernate.Linq;
 using ISession = NHibernate.ISession;
-using FluentNHibernate.Cfg;
-using FluentNHibernate.Cfg.Db;
-using NHibernate.Tool.hbm2ddl;
-using System.Linq;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using MathNet.Numerics.Distributions;
 
 namespace luanvanthacsi.Data.Services
 {

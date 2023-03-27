@@ -6,7 +6,7 @@
       OnFinish="OnFinish"
       OnFinishFailed="OnFinishFailed">
     <Template style="height:90%">
-        <FormItem Label="Mã">
+        <FormItem Label="Mã" Required>
             <Input @bind-Value="@context.Code" ReadOnly />
         </FormItem>
         <FormItem Label="Họ và tên">
@@ -18,35 +18,41 @@
         <FormItem Label="Số điện thoại">
             <Input @bind-Value="@context.PhoneNumber" />
         </FormItem>
-        <FormItem Label="Chuyên ngành">
-            <Select TItem="Specialized" TItemValue="string" DataSource="specializedList"
-                    EnableSearch Placeholder="Chọn chuyên ngành"
-                    @bind-Value="@context.SpecializedId"
-                    ValueName="@nameof(Specialized.Id)"
-                    LabelName="@nameof(Specialized.Name)">
-            </Select>
-        </FormItem>
-        <FormItem Label="Vị trí">
+        <FormItem Label="Vị trí" Required>
             <Select TItem="selectInUniversity" TItemValue="int"
-                    @bind-Value="@context.InUniversity" DataSource="@_selectInUniversity"
+                    @bind-Value="@context.InUniversity"
+                    DataSource="@_selectInUniversity"
                     LabelName="@nameof(selectInUniversity.Name)"
                     ValueName="@nameof(selectInUniversity.Value)">
             </Select>
         </FormItem>
+        @if (context.InUniversity == 1)
+        {
+            <FormItem Label="Chuyên ngành">
+                <Select TItem="Specialized" TItemValue="string" DataSource="specializedList"
+                    EnableSearch Placeholder="Chọn chuyên ngành"
+                    @bind-Value="@context.SpecializedId"
+                    ValueName="@nameof(Specialized.Id)"
+                    LabelName="@nameof(Specialized.Name)">
+                </Select>
+                </FormItem>
+        }
         @if (context.InUniversity == 0)
         {
-            <FormItem Label="Cơ quan công tác">
-                <Input @bind-Value="@context.WorkingAgency" />
-            </FormItem>
+            <FormItem Label="Cơ quan công tác" Required>
+            <Input @bind-Value="@context.WorkingAgency" />
+        </FormItem>
         }
         <FormItem Label="Học hàm">
             <Select TItem="selectAcademicRank" TItemValue="int"
-                    @bind-Value="@context.AcademicRank" DataSource="@_selectAcademicRanks"
+                    @bind-Value="@context.AcademicRank"
+                    DataSource="@_selectAcademicRanks"
+                    AllowClear
                     LabelName="@nameof(selectAcademicRank.Name)"
                     ValueName="@nameof(selectAcademicRank.Value)">
             </Select>
         </FormItem>
-        <FormItem Label="Học vị">
+        <FormItem Label="Học vị" Required>
             <Input @bind-Value="@context.Degree" ReadOnly />
         </FormItem>
         <FormItem Label="CV">
