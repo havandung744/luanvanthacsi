@@ -32,7 +32,7 @@ namespace luanvanthacsi.Data.Services
                 Specialized specialized;
                 using (ISession session = FluentNHibernateHelper.OpenSession())
                 {
-                    scientists = session.Query<Scientist>().Fetch(x => x.Specialized).Where(x => x.FacultyId == id).ToList();
+                    scientists = session.Query<Scientist>().Where(x => x.FacultyId == id).ToList();
                 }
                 return scientists;
             }
@@ -106,8 +106,6 @@ namespace luanvanthacsi.Data.Services
                 {
                     try
                     {
-                        scientist.SpecializedId = scientist?.Specialized?.Id;
-                        scientist.Specialized = null;
                         await session.DeleteAsync(scientist);
                         await transaction.CommitAsync();
                         result = true;
@@ -154,8 +152,6 @@ namespace luanvanthacsi.Data.Services
                     {
                         foreach (var item in scientists)
                         {
-                            item.SpecializedId = item?.Specialized?.Id;
-                            item.Specialized = null;
                             await session.DeleteAsync(item);
                         }
                         await transaction.CommitAsync();

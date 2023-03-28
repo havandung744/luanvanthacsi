@@ -2,6 +2,7 @@
 @using luanvanthacsi.Data.Components
 @using luanvanthacsi.Data.Data;
 @using System.ComponentModel;
+@using luanvanthacsi.Data.Entities;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý hội đồng đánh giá</PageTitle>
 <PageHeader Style="padding: 0;">
@@ -56,6 +57,21 @@
                         }
                     </SpaceItem>
                 </Space>
+            </Row>
+            <br />
+            <Row>
+                <AntDesign.Col Span="12">
+                    @if (CurrentUser?.FacultyId == null)
+                    {
+                        <Select TItem="Faculty" TItemValue="string" EnableSearch Placeholder="Chọn khoa"
+                            DataSource="facultyList"
+                            ValueName="@nameof(Faculty.Id)"
+                            LabelName="@nameof(Faculty.Name)"
+                            @bind-Value="@facultyId"
+                            OnSelectedItemChanged="ChangeFacultyId">
+                        </Select>
+                    }
+                </AntDesign.Col>
             </Row>
             <br />
             <Row>

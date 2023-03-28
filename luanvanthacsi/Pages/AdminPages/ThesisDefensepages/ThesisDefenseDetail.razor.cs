@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using luanvanthacsi.Data.Data;
-using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Runtime.CompilerServices;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
@@ -16,11 +14,13 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         [Inject] IUserService UserService { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IMapper _mapper { get; set; }
+        [Parameter] public string facultyId { get; set; }
         List<StudentData>? studentDatas { get; set; }
         ThesisDefenseSearchModal? thesisDefenseSearchModal;
         bool modalVisible;
         string currentThesisDefense;
         User CurrenUser;
+
         protected override async Task OnInitializedAsync()
         {
             string id = await getUserId();
@@ -38,19 +38,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         public void loadData(List<Student> students, string id)
         {
             currentThesisDefense = id;
-            foreach (var student in students)
-            {
-                // lấy id của đợt bảo vệ hiện đang truy cập.
-                StudentData studentData = new StudentData();
-                studentData.Id = student.Id;
-                studentData.Code = student.Code;
-                studentData.Name = student.Name;
-                studentData.Email = student.Email;
-                studentData.PhoneNumber = student.PhoneNumber;
-                studentData.DateOfBirth = student.DateOfBirth;
-                studentData.CreateDate = student.CreateDate;
-                studentDatas?.Add(studentData);
-            }
+            studentDatas = _mapper.Map<List<StudentData>>(students);
             StateHasChanged();
         }
         public void Close()
@@ -61,16 +49,18 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 
         public async Task LoadAsync()
         {
-            studentDatas.Clear();
-            //loading = true;
-            //visible = false;
-            //visibleForDetail = false;
-            var students = await ThesisDefenseService.GetCurrentListStaff(CurrenUser.FacultyId, currentThesisDefense);
-            //var thesisDefenses = await ThesisDefenseService.GetAllAsync();
-            // hiển thị dữ liệu mới nhất lên đầu trang
+            studentDatas?.Clear();
+            List<Student> students = new List<Student>();
+            if (CurrenUser.FacultyId == null)
+            {
+                students = await ThesisDefenseService.GetCurrentListStaff(facultyId, currentThesisDefense);
+            }
+            else
+            {
+                students = await ThesisDefenseService.GetCurrentListStaff(CurrenUser.FacultyId, currentThesisDefense);
+            }
             var list = students.OrderByDescending(x => x.CreateDate).ToList();
             studentDatas = _mapper.Map<List<StudentData>>(list);
-            //loading = false;
             StateHasChanged();
         }
 
@@ -84,10 +74,17 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         async Task RemoveThesisDefense(StudentData student)
         {
             var studentUp = _mapper.Map<Student>(student);
-            studentUp.FacultyId = CurrenUser.FacultyId;
+            if (CurrenUser.FacultyId == null)
+            {
+                studentUp.FacultyId = facultyId;
+            }
+            else
+            {
+                studentUp.FacultyId = CurrenUser.FacultyId;
+            }
             studentUp.ThesisDefenseId = null;
             await ThesisDefenseService.UpdateStudentById(studentUp);
-            LoadAsync();
+            await LoadAsync();
             StateHasChanged();
         }
 

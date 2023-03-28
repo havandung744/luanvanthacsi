@@ -22,6 +22,7 @@
             <Select TItem="selectInUniversity" TItemValue="int"
                     @bind-Value="@context.InUniversity"
                     DataSource="@_selectInUniversity"
+                    OnSelectedItemChanged="ChangeSelected"
                     LabelName="@nameof(selectInUniversity.Name)"
                     ValueName="@nameof(selectInUniversity.Value)">
             </Select>
@@ -37,17 +38,17 @@
                 </Select>
                 </FormItem>
         }
-        @if (context.InUniversity == 0)
+        else
         {
-            <FormItem Label="Cơ quan công tác" Required>
-            <Input @bind-Value="@context.WorkingAgency" />
-        </FormItem>
+            <FormItem Label="Cơ quan công tác">
+                <Input @bind-Value="@context.WorkingAgency"  />
+            </FormItem>
         }
+
         <FormItem Label="Học hàm">
             <Select TItem="selectAcademicRank" TItemValue="int"
                     @bind-Value="@context.AcademicRank"
                     DataSource="@_selectAcademicRanks"
-                    AllowClear
                     LabelName="@nameof(selectAcademicRank.Name)"
                     ValueName="@nameof(selectAcademicRank.Value)">
             </Select>

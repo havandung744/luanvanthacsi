@@ -1,21 +1,11 @@
-﻿using AntDesign.TableModels;
-using AntDesign;
-using BlazorInputFile;
+﻿using AntDesign;
+using AutoMapper;
 using luanvanthacsi.Data.Data;
+using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
-using luanvanthacsi.Pages.AdminPages.StudentPages;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
-using OfficeOpenXml.Style;
-using OfficeOpenXml.Table;
-using OfficeOpenXml;
 using Microsoft.AspNetCore.Components;
-using AutoMapper;
-using luanvanthacsi.Data.Extentions;
-using luanvanthacsi.Data.Components;
-using luanvanthacsi.Ultils;
-using luanvanthacsi.Data.Edit;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
@@ -53,11 +43,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         public async Task SetSelectedRows(string id, string currentId)
         {
-            // lấy ra thông tin base gồm mã và tên hội đồng đánh giá
-            //EvaluationBoard evaluationBoard = await EvaluationBoardService.GetEvaluationBoardByIdAsync(currentId);
-            //evaluationBoardEditModel.Code= evaluationBoard.Code;
-            //evaluationBoardEditModel.Name= evaluationBoard.Name;
-
             // lấy thông học viên bảo vệ
             Student student = await StudentService.GetStudentByIdAsync(id);
             StudentData studentData = _mapper.Map<StudentData>(student);
@@ -65,26 +50,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             table.SetSelection(selectedRows.Select(x => id).ToArray());
         }
 
-        //async Task<string> AddEvaluationBoard()
-        //{
-        //    var evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(CurrentUser.FacultyId);
-        //    // hiển thị dữ liệu mới nhất lên đầu trang
-        //    var list = evaluationBoards.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
-        //    var evaluationBoardDatas = _mapper.Map<List<EvaluationBoardData>>(list);
-
-        //    var lastCode = evaluationBoardDatas?.OrderByDescending(x => x.Code).Select(x => x.Code).FirstOrDefault();
-        //    int codeNumber = 1;
-        //    if (lastCode != null && int.TryParse(lastCode.Substring(4), out codeNumber))
-        //    {
-        //        codeNumber++;
-        //    }
-        //    string newCode = "HDDG" + codeNumber.ToString("D3");
-        //    return newCode;
-        //}
-
         public async Task LoadAsync()
         {
-            //evaluationBoardEditModel.Code = await AddEvaluationBoard();
             studentDatas?.Clear();
             loading = true;
             visible = false;
@@ -95,11 +62,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             studentDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
             StateHasChanged();
-        }
-
-        public EvaluationBoardEditModel GetInfoBase()
-        {
-            return evaluationBoardEditModel;
         }
 
         public string GetStudentId()

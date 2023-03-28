@@ -3,10 +3,8 @@ using AutoMapper;
 using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
-using luanvanthacsi.Pages.AdminPages.StudentPages;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Linq;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
@@ -29,6 +27,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         bool loading = false;
         User CurrentUser;
         [Parameter] public string EvaluationBoardCode { get; set; }
+        [Parameter] public List<string> SelectedScientistIds { get; set; }
+
+
         async Task<string> getUserId()
         {
             var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -37,6 +38,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         }
         protected override async Task OnInitializedAsync()
         {
+            SelectedScientistIds = new List<string>();
             string id = await getUserId();
             CurrentUser = await UserService.GetUserByIdAsync(id);
             scientistDatas = new();
@@ -87,7 +89,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         public List<string> GetId()
         {
-            List<string> ids = new();
+            List<string> ids = new List<string>();
             if (selectedRows != null)
             {
                 foreach (var selected in selectedRows)

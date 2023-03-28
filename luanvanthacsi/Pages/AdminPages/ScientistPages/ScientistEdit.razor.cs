@@ -53,8 +53,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             };
             _selectAcademicRanks = new List<selectAcademicRank>
             {
-                new selectAcademicRank {Value = 1, Name="Giáo sư"},
                 new selectAcademicRank {Value = 0, Name="Phó giáo sư"},
+                new selectAcademicRank {Value = 1, Name="Giáo sư"},
+                new selectAcademicRank {Value = -1, Name="Không"},
             };
         }
         async Task<string> getUserId()
@@ -80,13 +81,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         public async Task UpdateScientist()
         {
             Scientist scientist = _mapper.Map<Scientist>(EditModel);
-            if (scientist.InUniversity == 1)
+            if (scientist.InUniversity == 0)
             {
-                scientist.WorkingAgency = "Trường ĐHSP Hà Nội";
-            }
-            else
-            {
-                scientist.Specialized = null;
+                scientist.SpecializedId = null;
             }
             if (CurrentUser.FacultyId == null)
             {
@@ -219,5 +216,18 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 throw;
             }
         }
+
+        async void ChangeSelected()
+        {
+            if (EditModel.InUniversity == 1)
+            {
+                EditModel.WorkingAgency = "Trường ĐHSP Hà Nội";
+            }
+            else
+            {
+                EditModel.SpecializedId = specializedList?.Select(x => x.Id).FirstOrDefault();
+            }
+        }
+
     }
 }

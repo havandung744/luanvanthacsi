@@ -1,28 +1,15 @@
-﻿using luanvanthacsi.Data.Services;
-using Microsoft.AspNetCore.Components;
-using System.Runtime.CompilerServices;
-using luanvanthacsi.Data.Entities;
-using luanvanthacsi.Data.Data;
-using luanvanthacsi.Data.Edit;
-using System.Linq;
-using AntDesign;
-using luanvanthacsi.Data.Components;
-using FluentNHibernate.Conventions;
-using luanvanthacsi.Data.Extentions;
+﻿using AntDesign;
 using AntDesign.TableModels;
 using AutoMapper;
-using OfficeOpenXml.Style;
-using OfficeOpenXml.Table;
-using OfficeOpenXml;
-using Microsoft.JSInterop;
-using luanvanthacsi.Ultils;
-using Color = System.Drawing.Color;
-using BlazorInputFile;
-using OneOf.Types;
-using luanvanthacsi.Pages.AdminPages.StudentPages;
-using MathNet.Numerics.Distributions;
+using FluentNHibernate.Conventions;
+using luanvanthacsi.Data.Components;
+using luanvanthacsi.Data.Data;
+using luanvanthacsi.Data.Entities;
+using luanvanthacsi.Data.Extentions;
+using luanvanthacsi.Data.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using luanvanthacsi.Data.Migrations;
+using Microsoft.JSInterop;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
@@ -200,9 +187,9 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
                 table?.SetSelection(ids.ToArray());
                 ListSelectedIds = ids;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
 
         }
@@ -231,9 +218,9 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
         async Task OpenDetailAsync(ThesisDefenseData data)
@@ -242,13 +229,20 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             {
                 titleOfThesisDefenseDetail = data.Name;
                 var StudentOfthesisDefense = new List<Student>();
-                StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(CurrentUser.FacultyId, data.Id).Result;
+                if (CurrentUser.FacultyId == null)
+                {
+                    StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(facultyId, data.Id).Result;
+                }
+                else
+                {
+                    StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(CurrentUser.FacultyId, data.Id).Result;
+                }
                 ThesisDefenseDetail.loadData(StudentOfthesisDefense, data.Id);
                 visibleForDetail = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 

@@ -3,7 +3,6 @@ using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Excel.ClassExcel;
-using luanvanthacsi.Pages.AdminPages.ScientistPages;
 using luanvanthacsi.Ultils;
 
 namespace luanvanthacsi.Data.Components
@@ -20,8 +19,7 @@ namespace luanvanthacsi.Data.Components
             CreateMap<ScientistData, Scientist>().ReverseMap();
             //CreateMap<ScientistEditModel, Scientist>()
             //     .ForMember(src => src.Specialized.Id, dest => dest.MapFrom(c => c.SpecializedId)).ReverseMap();
-             CreateMap<Scientist, ScientistEditModel>()
-                 .ForMember(src => src.SpecializedId, dest => dest.MapFrom(c => c.Specialized.Id)).ReverseMap();
+            CreateMap<Scientist, ScientistEditModel>().ReverseMap();
 
             // map hội đồng đánh giá
             CreateMap<EvaluationBoardData, EvaluationBoard>().ReverseMap();

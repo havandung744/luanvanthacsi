@@ -10,9 +10,10 @@
         <Table Context="tableContext" TItem="StudentData" DataSource="@studentDatas" Class="table-striped" ScrollY="300">
             <Column @bind-Field="@tableContext.Code" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.Name" Ellipsis="true"></Column>
-            <Column @bind-Field="@tableContext.DateOfBirth" Format="dd/mm/yyyy" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.Email" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.PhoneNumber" Ellipsis="true"></Column>
+            <Column @bind-Field="@tableContext.DateOfBirth" Format="dd/mm/yyyy" Ellipsis="true"></Column>
+            <Column @bind-Field="@tableContext.TopicName" Ellipsis="true"></Column>
             <ActionColumn Ellipsis="true">
                 <Popconfirm Placement="Placement.LeftBottom" Title="Bạn có chắc chắn muốn xóa dữ liệu đã chọn?"
                             OnConfirm="() => RemoveThesisDefense(tableContext)"

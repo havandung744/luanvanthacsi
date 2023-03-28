@@ -8,7 +8,7 @@ namespace luanvanthacsi.Data.Map
         public ScientistMap()
         {
             Id(x => x.Id).GeneratedBy.Assigned().Column("Id");
-            References(x => x.Specialized).Column("SpecializedId");
+            Map(x => x.SpecializedId).Column("SpecializedId");
             Map(x => x.Code).Column("Code");
             Map(x => x.Name).Column("Name");
             Map(x => x.Email).Column("Email");

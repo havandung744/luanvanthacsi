@@ -21,6 +21,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
     public partial class EvaluationBoardList : ComponentBase
     {
         [Inject] IJSRuntime JSRuntime { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] ExcelExporter ExcelExporter { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] IUserService UserService { get; set; }
@@ -29,6 +30,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IEvaluationBoardService EvaluationBoardService { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
+        [Inject] IFacultyService FacultyService { get; set; }
         [Inject] IMapper _mapper { get; set; }
         List<EvaluationBoardData>? evaluationBoardDatas { get; set; }
         bool visible = false;
@@ -40,13 +42,17 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         List<string>? ListSelectedEvaluationBoardDataIds;
         User CurrentUser;
         bool addVisible;
+        List<Faculty> facultyList { get; set; }
         List<ExcelSheetObject> Sheets { get; set; }
         EvaluationBoardAddLayout EvaluationBoardAddLayoutRef { get; set; } = new();
+        string facultyId;
+
         protected override async Task OnInitializedAsync()
         {
             string id = await getUserId();
             CurrentUser = await UserService.GetUserByIdAsync(id);
             evaluationBoardDatas = new();
+            facultyList = await FacultyService.GetAllAsync();
             await LoadAsync();
             Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HoiDong", "KEY_STAFFIMPORT", 4, null, GetTable().GetDataColumns(), 3) };
         }
@@ -81,13 +87,36 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             evaluationBoardDatas?.Clear();
             loading = true;
             visible = false;
-            StateHasChanged();
-            var evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(CurrentUser.FacultyId);
+            try
+            {
+                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
+            }
+            catch
+            {
+                facultyId = null;
+            }
+            List<EvaluationBoard> evaluationBoards = new List<EvaluationBoard>();
+            if (CurrentUser.FacultyId == null)
+            {
+                evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(facultyId);
+            }
+            else
+            {
+                evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(CurrentUser.FacultyId);
+            }
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = evaluationBoards.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             evaluationBoardDatas = _mapper.Map<List<EvaluationBoardData>>(list);
             #region join bảng lấy dữ liệu
-            List<Scientist> scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+            List<Scientist> scientists = new List<Scientist>();
+            if (CurrentUser.FacultyId == null)
+            {
+                scientists = await ScientistService.GetAllByIdAsync(facultyId);
+            }
+            else
+            {
+                scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+            }
             foreach (var item in evaluationBoardDatas)
             {
                 // lấy thông tin student
@@ -293,6 +322,11 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             {
                 throw;
             }
+        }
+        async Task ChangeFacultyId()
+        {
+            await localStorage.SetItemAsync("facultyIdOfEvaluation", facultyId);
+            await LoadAsync();
         }
 
     }

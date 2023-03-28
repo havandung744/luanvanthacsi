@@ -20,7 +20,14 @@
     <ChildContent>
         @if (tab == 2)
         {
-            <Selection Key="@context.Id" Fixed="left" Type="radio" Width="50"></Selection>
+            if (SelectedScientistIds.Contains(context.Id))
+            {
+                <Selection Key="@context.Id" Fixed="left" Type="radio" Width="50" Disabled></Selection>
+            }
+            else
+            {
+                <Selection Key="@context.Id" Fixed="left" Type="radio" Width="50" ></Selection>
+            }
         }
         else
         {

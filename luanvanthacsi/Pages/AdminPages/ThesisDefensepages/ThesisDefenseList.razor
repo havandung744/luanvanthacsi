@@ -74,9 +74,9 @@
         <Column @bind-Field="context.Code" Sortable></Column>
         <Column @bind-Field="context.Name" Sortable></Column>
         <Column @bind-Field="context.YearOfProtection" Format="yyyy" Sortable></Column>
-        <ActionColumn Title="Thao tác">
+        <ActionColumn Title="Thao tác" Width="100">
             <ChildContent>
-                <Row Justify="center">
+                <Row>
                     <Space>
                         <SpaceItem>
                             <Tooltip Placement="@Placement.Top" Title="@("Danh sách học viên bảo vệ")">
@@ -113,5 +113,5 @@
                        FacultyId="@facultyId"></ThesisDefenseEdit>
 </Drawer>
 <Drawer Closable="true" Width="1500" Visible="visibleForDetail" OnClose="OnCloseForDetail" Title='(titleOfThesisDefenseDetail)'>
-    <ThesisDefenseDetail @ref="ThesisDefenseDetail"></ThesisDefenseDetail>
+    <ThesisDefenseDetail @ref="ThesisDefenseDetail" facultyId="@facultyId"></ThesisDefenseDetail>
 </Drawer>

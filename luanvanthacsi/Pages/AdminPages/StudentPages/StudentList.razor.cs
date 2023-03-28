@@ -29,6 +29,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IFacultyService FacultyService { get; set; }
         [Inject] IUserService UserService { get; set; }
+        [Inject] IScientistService ScientistService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] IMapper _mapper { get; set; }
         List<StudentData>? studentDatas { get; set; }
@@ -45,6 +46,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         bool existModalVisible = false;
         string facultyId;
         List<Faculty> facultyList { get; set; }
+        List<Scientist> scientistList { get; set; }
 
         List<Student> ExcelStudentDatas { get; set; }
 
@@ -107,6 +109,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 CurrentUser = await UserService.GetUserByIdAsync(id);
                 studentDatas = new();
                 facultyList = await FacultyService.GetAllAsync();
+                scientistList = await ScientistService.GetAll();
                 await LoadAsync();
                 Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HocVien", "KEY_STAFFIMPORT", 6, null, GetTable().GetDataColumns(), 5) };
             }
@@ -115,7 +118,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 throw;
             }
         }
-
         public DataTable GetTable()
         {
             try
@@ -157,6 +159,19 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
             }
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
+            foreach (Student item in list)
+            {
+                Scientist studentObj1 = scientistList?.FirstOrDefault(s => s.Id == item.InstructorIdOne);
+                Scientist studentObj2 = scientistList?.FirstOrDefault(s => s.Id == item.InstructorIdTwo);
+                if (studentObj1 != null)
+                {
+                    item.InstructorNameOne = studentObj1?.Name;
+                }
+                if (studentObj2 != null)
+                {
+                    item.InstructorNameTwo = studentObj2?.Name;
+                }
+            }
             studentDatas = _mapper.Map<List<StudentData>>(list);
             int stt = 1;
             studentDatas.ForEach(x => { x.stt = stt++; });

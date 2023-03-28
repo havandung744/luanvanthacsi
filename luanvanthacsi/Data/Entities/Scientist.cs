@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace luanvanthacsi.Data.Entities
+﻿namespace luanvanthacsi.Data.Entities
 {
     public class Scientist
     {
@@ -14,14 +12,13 @@ namespace luanvanthacsi.Data.Entities
         public virtual string? Degree { get; set; }
         public virtual DateTime CreateDate { get; set; }
         public virtual DateTime UpdateDate { get; set; }
-        public virtual string FacultyId { get; set;}
-        public virtual string AttachFilePath { get; set;}
-        public virtual string FileName { get; set;}
-        public virtual int InUniversity { get; set;}
-        public virtual string SpecializedId { get; set;}
-        public virtual string SpecializedName { get => Specialized?.Name; set { } }
-        public virtual Specialized? Specialized { get; set;}
-        public virtual string WorkingAgency { get; set;}
+        public virtual string FacultyId { get; set; }
+        public virtual string AttachFilePath { get; set; }
+        public virtual string FileName { get; set; }
+        public virtual int InUniversity { get; set; }
+        public virtual string SpecializedId { get; set; }
+        public virtual string SpecializedName { get; set; }
+        public virtual string WorkingAgency { get; set; }
 
     }
 }

@@ -14,6 +14,8 @@
         public virtual DateTime UpdateDate { get; set; }
         public virtual string? TopicName { get; set; }
         public virtual string? InstructorIdOne { get; set; }
+        public virtual string? InstructorNameOne { get; set; }
         public virtual string? InstructorIdTwo { get; set; }
+        public virtual string? InstructorNameTwo { get; set; }
     }
 }

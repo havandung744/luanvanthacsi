@@ -69,14 +69,24 @@
        OnRowClick="OnRowClick"
        @bind-SelectedRows="selectedRows">
     <ChildContent>
-        <Selection Key="@context.Id" Fixed="left" Width="50px"></Selection>
-        <Column @bind-Field="context.stt" Width="100px;" Sortable></Column>
+        <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+        <Column @bind-Field="context.stt" Width="80" Sortable></Column>
         <Column @bind-Field="context.Code" Filterable Ellipsis Sortable></Column>
         <Column @bind-Field="context.Name" Filterable Ellipsis Sortable></Column>
         <Column @bind-Field="context.Email" Ellipsis Filterable></Column>
         <Column @bind-Field="context.PhoneNumber" Ellipsis></Column>
-        <Column @bind-Field="context.SpecializedName" Ellipsis>
+        <Column @bind-Field="context.InUniversity">
+            @if (context.InUniversity == 1)
+            {
+                <span>Trong trường</span>
+            }
+            else
+            {
+                <span>Ngoài trường</span>
+            }
         </Column>
+        <Column @bind-Field="context.WorkingAgency" Ellipsis></Column>
+        <Column @bind-Field="context.SpecializedName" Ellipsis></Column>
         <Column @bind-Field="context.AcademicRank">
             @if (context.AcademicRank == 1)
             {
@@ -88,17 +98,8 @@
             }
         </Column>
         <Column @bind-Field="context.Degree"></Column>
-        <Column @bind-Field="context.InUniversity">
-            @if (context.InUniversity == 1)
-            {
-                <span>Trong trường</span>
-            }
-            else
-            {
-                <span>Ngoài trường</span>
-            }
-        </Column>
-        <ActionColumn Title="Thao tác">
+        
+        <ActionColumn Title="Thao tác" Width="80">
             <ChildContent>
                 <Row>
                     <Space>

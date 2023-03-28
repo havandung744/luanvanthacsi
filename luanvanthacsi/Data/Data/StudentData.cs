@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 
 namespace luanvanthacsi.Data.Data
 {
@@ -33,7 +32,11 @@ namespace luanvanthacsi.Data.Data
         public string InstructorIdOne;
         [Display(Name = "Hướng dẫn 2")]
         public string InstructorIdTwo;
-         
+        [Display(Name = "Hướng dẫn 1")]
+        public string InstructorNameOne;
+        [Display(Name = "Hướng dẫn 2")]
+        public string InstructorNameTwo;
+
 
     }
 }
