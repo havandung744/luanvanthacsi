@@ -11,6 +11,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
     public partial class CounterattackerOfEvaluationBoard : ComponentBase
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] TableLocale? TableLocale { get; set; }
         [Inject] NotificationService? Notice { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
@@ -47,27 +48,58 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         public async Task LoadAsync()
         {
-            scientistDatas?.Clear();
-            loading = true;
-            visible = false;
-            var lecturers = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
-            var list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == CurrentUser.FacultyId).ToList();
-            var specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
-            foreach (var item in list)
+            try
             {
-                item.SpecializedName = specializedList.Where(x => x.Id == item.SpecializedId).Select(x => x.Name).FirstOrDefault();
+                scientistDatas?.Clear();
+                loading = true;
+                StateHasChanged();
+                visible = false;
+                List<Scientist> lecturers = new List<Scientist>();
+                List<Specialized> specializedList = new List<Specialized>();
+                List<Scientist> list = new List<Scientist>();
+                if (CurrentUser.FacultyId == null)
+                {
+                    var facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
+                    lecturers = await ScientistService.GetAllByIdAsync(facultyId);
+                    list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == facultyId).ToList();
+                    specializedList = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
+                }
+                else
+                {
+                    lecturers = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                    list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == CurrentUser.FacultyId).ToList();
+                    specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
+                }
+                foreach (var item in list)
+                {
+                    item.SpecializedName = specializedList.Where(x => x.Id == item.SpecializedId).Select(x => x.Name).FirstOrDefault();
+                }
+                scientistDatas = _mapper.Map<List<ScientistData>>(list);
+                int stt = 1;
+                scientistDatas.ForEach(x => { x.stt = stt++; });
+                loading = false;
+                StateHasChanged();
             }
-            scientistDatas = _mapper.Map<List<ScientistData>>(list);
-            int stt = 1;
-            scientistDatas.ForEach(x => { x.stt = stt++; });
-            loading = false;
-            StateHasChanged();
+            catch (Exception)
+            {
+                throw;
+            }
         }
+
         public async Task SetSelectedRows(List<string> ids)
         {
             try
             {
-                List<Scientist> scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                List<Scientist> scientists = new List<Scientist>();
+                if (CurrentUser.FacultyId == null)
+                {
+                    var facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
+                    scientists = await ScientistService.GetAllByIdAsync(facultyId);
+                }
+                else
+                {
+                    scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                }
                 var filteredObjects = scientists.Where(o => ids.Contains(o.Id));
                 scientists.RemoveAll(o => !filteredObjects.Contains(o));
                 List<ScientistData> scientistData = _mapper.Map<List<ScientistData>>(scientists);

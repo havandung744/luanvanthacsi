@@ -3,14 +3,11 @@ using AntDesign.TableModels;
 using AutoMapper;
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Data;
-using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
-using luanvanthacsi.Data.Migrations;
 using luanvanthacsi.Data.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Runtime.CompilerServices;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
@@ -18,7 +15,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
-
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] IThesisDefenseService ThesisDefenseService { get; set; }

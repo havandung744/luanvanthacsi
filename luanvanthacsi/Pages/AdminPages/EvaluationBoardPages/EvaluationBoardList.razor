@@ -20,9 +20,12 @@
         <AntDesign.Col Span="24">
             <Row>
                 <Space>
-                    <SpaceItem>
-                        <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddEvaluationBoard">Lập hội đồng</Button>
-                    </SpaceItem>
+                    @if (CurrentUser?.FacultyId != null)
+                    {
+                        <SpaceItem>
+                            <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddEvaluationBoard">Lập hội đồng</Button>
+                        </SpaceItem>
+                    }
                     <SpaceItem>
                         <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ExportExcelAsync">
                             Xuất Excel
@@ -94,6 +97,7 @@
                         <Column @bind-Field="context.CounterattackerThree" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.SecretaryName" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.ScientistOne" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.ScientistTwo" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.Status" Width="100">
                             <Template>
                                 @if (context.Status == 1)
@@ -140,9 +144,9 @@
 </div>
 
 
-<Drawer Closable="false" Visible="addVisible" Height="965" OnClose="() => addVisible=false"
+<Drawer Closable="false" Visible="addVisible" Class="DrawerOfEvaluation" OnClose="() => addVisible=false"
         Title='("Lập hội đồng đánh giá")' Placement="bottom">
     <Template>
-        <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser" CancelDetail="CancelDetail"></EvaluationBoardAddLayout>
+        <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser" CancelDetail="CancelDetail" facultyId="@facultyId"></EvaluationBoardAddLayout>
     </Template>
 </Drawer>

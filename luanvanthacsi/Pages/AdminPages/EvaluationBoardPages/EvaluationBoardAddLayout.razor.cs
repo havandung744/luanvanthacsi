@@ -11,13 +11,14 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] NotificationService Notice { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; }
         [Parameter] public User CurrentUser { get; set; }
+        [Parameter] public EventCallback<EvaluationBoard> SaveChange { get; set; }
+        [Parameter] public EventCallback CancelDetail { get; set; }
+        [Parameter] public string facultyId { get; set; }
         public StudentOfEvaluationBoard StudentOfEvaluationBoardRef { get; set; } = new();
         public PresidentOfEvaluationBoard PresidentRef { get; set; } = new();
         public CounterattackerOfEvaluationBoard CounterattackerRef { get; set; } = new();
         public SecretaryOfEvaluationBoard SecretaryOfEvaluationBoardRef { get; set; } = new();
         public ScientistOfEvaluationBoard ScientistOfEvaluationBoardRef { get; set; } = new();
-        [Parameter] public EventCallback<EvaluationBoard> SaveChange { get; set; }
-        [Parameter] public EventCallback CancelDetail { get; set; }
         private string activeTab = "1";
         string idUpdate = "";
         List<string> selectedScientistIds { get; set; }
@@ -178,13 +179,17 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
                 // Thực hiện lưu
                 activeTab = "1";
-                //await StudentOfEvaluationBoardRef.LoadAsync();
-                //await PresidentRef.LoadAsync();
-                //await CounterattackerRef.LoadAsync();
-                //await ScientistOfEvaluationBoardRef.LoadAsync();
-                //await SecretaryOfEvaluationBoardRef.LoadAsync();
                 await CancelDetail.InvokeAsync();
-                evaluationBoard.FacultyId = CurrentUser.FacultyId;
+                if (CurrentUser.FacultyId == null)
+                {
+                    evaluationBoard.FacultyId = facultyId;
+                    evaluationBoard.Status = 2;
+                }
+                else
+                {
+                    evaluationBoard.FacultyId = CurrentUser.FacultyId;
+                    evaluationBoard.Status = 1;
+                }
                 evaluationBoard.Id = idUpdate;
                 await SaveChange.InvokeAsync(evaluationBoard);
             }
@@ -244,13 +249,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             idUpdate = "";
             selectedScientistIds.Clear();
-            //NavigationManager.NavigateTo($"/evaluationBoards", true);
             activeTab = "1";
-            //await StudentOfEvaluationBoardRef.LoadAsync();
-            //await PresidentRef.LoadAsync();
-            //await CounterattackerRef.LoadAsync();
-            //await ScientistOfEvaluationBoardRef.LoadAsync();
-            //await SecretaryOfEvaluationBoardRef.LoadAsync();
+
             await CancelDetail.InvokeAsync();
         }
 

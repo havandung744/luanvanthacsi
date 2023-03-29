@@ -12,11 +12,14 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
     public partial class StudentOfEvaluationBoard : ComponentBase
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
+
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] IEvaluationBoardService EvaluationBoardService { get; set; }
+        [Parameter] public string EvaluationBoardCode { get; set; }
         List<StudentData>? studentDatas { get; set; }
         IEnumerable<StudentData> selectedRows;
         StudentData? selectData;
@@ -26,7 +29,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         bool visible = false;
         bool loading = false;
         User CurrentUser;
-        [Parameter] public string EvaluationBoardCode { get; set; }
+
         async Task<string> getUserId()
         {
             var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -55,8 +58,18 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             studentDatas?.Clear();
             loading = true;
+            StateHasChanged();
             visible = false;
-            var students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+            List<Student> students = new List<Student>();
+            if (CurrentUser.FacultyId == null)
+            {
+                var facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
+                students = await StudentService.GetAllByIdAsync(facultyId);
+            }
+            else
+            {
+                students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+            }
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             studentDatas = _mapper.Map<List<StudentData>>(list);
             int stt = 1;
