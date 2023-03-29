@@ -10,20 +10,21 @@
         public virtual string FacultyId { get; set; }
         public virtual string StudentId { get; set; }
         // chủ tịch
-        public virtual string PresidentId { get;set; }
+        public virtual string PresidentId { get; set; }
         //Phản biện 1
         public virtual string CounterattackerIdOne { get; set; }
-         //Phản biện 2
+        //Phản biện 2
         public virtual string CounterattackerIdTwo { get; set; }
-         //Phản biện 3
+        //Phản biện 3
         public virtual string CounterattackerIdThree { get; set; }
-         //Nhà khoa học 1
+        //Nhà khoa học 1
         public virtual string ScientistIdOne { get; set; }
-         //Nhà khoa học 2
+        //Nhà khoa học 2
         public virtual string ScientistIdTwo { get; set; }
-         //thư ký
+        //thư ký
         public virtual string SecretaryId { get; set; }
+        public virtual int Status { get; set; }
 
-        
+
     }
 }

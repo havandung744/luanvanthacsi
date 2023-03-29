@@ -15,5 +15,11 @@ namespace luanvanthacsi.Data.Components
         {
             StaffProfile
         }
+        public enum Status
+        {
+            Pedding = 1,
+            Approved = 2,
+            refuse = 3
+        }
     }
 }

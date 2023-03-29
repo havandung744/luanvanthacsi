@@ -44,6 +44,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         public async Task SetSelectedRows(string id, string currentId)
         {
             // lấy thông học viên bảo vệ
+            selectedRows = null;
             Student student = await StudentService.GetStudentByIdAsync(id);
             StudentData studentData = _mapper.Map<StudentData>(student);
             selectedRows = new[] { studentData };

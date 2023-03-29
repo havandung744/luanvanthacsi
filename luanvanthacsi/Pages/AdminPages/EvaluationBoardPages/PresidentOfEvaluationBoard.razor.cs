@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
-    public partial class ScientistOfEvaluationBoard : ComponentBase
+    public partial class PresidentOfEvaluationBoard : ComponentBase
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale? TableLocale { get; set; }
@@ -19,7 +19,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Parameter] public int tab { get; set; }
 
         List<ScientistData>? scientistDatas { get; set; }
-        IEnumerable<ScientistData> selectedRows;
+        IEnumerable<ScientistData> selectedRows { get; set; }
         Scientist? selectData;
         Table<ScientistData> table;
         [Inject] IMapper _mapper { get; set; }
@@ -38,7 +38,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         }
         protected override async Task OnInitializedAsync()
         {
-            SelectedScientistIds = new List<string>();
             string id = await getUserId();
             CurrentUser = await UserService.GetUserByIdAsync(id);
             scientistDatas = new();
@@ -49,6 +48,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             scientistDatas?.Clear();
             loading = true;
+            StateHasChanged();
             visible = false;
             var lecturers = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
             var list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == CurrentUser.FacultyId).ToList();
@@ -61,7 +61,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             int stt = 1;
             scientistDatas.ForEach(x => { x.stt = stt++; });
             loading = false;
-            StateHasChanged();
         }
         public async Task SetSelectedRows(List<string> ids)
         {

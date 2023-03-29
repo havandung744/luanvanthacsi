@@ -3,7 +3,7 @@ using luanvanthacsi.Data.Entities;
 
 namespace luanvanthacsi.Data.Map
 {
-    public class EvaluationBoardMap: ClassMap<EvaluationBoard>
+    public class EvaluationBoardMap : ClassMap<EvaluationBoard>
     {
         public EvaluationBoardMap()
         {
@@ -21,6 +21,7 @@ namespace luanvanthacsi.Data.Map
             Map(x => x.ScientistIdOne).Column("ScientistIdOne");
             Map(x => x.ScientistIdTwo).Column("ScientistIdTwo");
             Map(x => x.SecretaryId).Column("SecretaryId");
+            Map(x => x.Status).Column("Status");
             Table("EvaluationBoard");
         }
     }

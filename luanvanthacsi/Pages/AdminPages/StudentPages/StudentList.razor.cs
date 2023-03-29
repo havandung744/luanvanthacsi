@@ -274,8 +274,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             {
                 throw;
             }
-
         }
+
         async Task DeleteAsync(StudentData model = null)
         {
             try

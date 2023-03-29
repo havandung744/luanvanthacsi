@@ -7,10 +7,6 @@ namespace luanvanthacsi.Data.Data
         [Display(Name = "STT")]
         public int stt;
         public string Id;
-        //[Display(Name = "Mã")]
-        //public string Code;
-        //[Display(Name = "Họ tên")]
-        //public string Name;
         [Display(Name = "Ngày tạo")]
         public DateTime CreateDate;
         [Display(Name = "Ngày Cập nhật")]
@@ -57,5 +53,12 @@ namespace luanvanthacsi.Data.Data
         public string TopicName;
         [Display(Name = "Chuyên ngành")]
         public string Branch;
+        [Display(Name = "Hướng dẫn 1")]
+        public string InstructorNameOne;
+        [Display(Name = "Hướng dẫn 2")]
+        public string InstructorNameTwo;
+        [Display(Name = "Trạng thái")]
+        public int Status;
+
     }
 }

@@ -84,73 +84,84 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         public async Task LoadAsync()
         {
-            evaluationBoardDatas?.Clear();
-            loading = true;
-            visible = false;
             try
             {
-                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
-            }
-            catch
-            {
-                facultyId = null;
-            }
-            List<EvaluationBoard> evaluationBoards = new List<EvaluationBoard>();
-            if (CurrentUser.FacultyId == null)
-            {
-                evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(facultyId);
-            }
-            else
-            {
-                evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(CurrentUser.FacultyId);
-            }
-            // hiển thị dữ liệu mới nhất lên đầu trang
-            var list = evaluationBoards.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
-            evaluationBoardDatas = _mapper.Map<List<EvaluationBoardData>>(list);
-            #region join bảng lấy dữ liệu
-            List<Scientist> scientists = new List<Scientist>();
-            if (CurrentUser.FacultyId == null)
-            {
-                scientists = await ScientistService.GetAllByIdAsync(facultyId);
-            }
-            else
-            {
-                scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
-            }
-            foreach (var item in evaluationBoardDatas)
-            {
-                // lấy thông tin student
-                Student student = await StudentService.GetStudentByIdAsync(item.StudentId);
-                item.StudentName = student?.Name;
-                item.InstructorIdOne = student?.InstructorIdOne;
-                item.InstructorIdTwo = student?.InstructorIdTwo;
-                item.TopicName = student?.TopicName;
-                item.Branch = scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
-                // lấy thông tin chủ tịch
-                item.PresidentName = scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
-                // lấy thông tin phản biện 1
-                item.CounterattackerOne = scientists.Where(x => x.Id == item.CounterattackerIdOne).Select(x => x.Name).First();
-                // lấy thông tin phản biện 2
-                item.CounterattackerTwo = scientists.Where(x => x.Id == item.CounterattackerIdTwo).Select(x => x.Name).First();
-                // lấy thông tin phản biện 3
-                item.CounterattackerThree = scientists.Where(x => x.Id == item.CounterattackerIdThree).Select(x => x.Name).First();
-                // lấy thông tin phản biện thư kí
-                item.SecretaryName = scientists.Where(x => x.Id == item.SecretaryId).Select(x => x.Name).First();
-                // lấy thông tin ủy viên 1
-                item.ScientistOne = scientists.Where(x => x.Id == item.ScientistIdOne).Select(x => x.Name).First();
-                // lấy thông tin ủy viên 2
-                item.ScientistTwo = scientists.Where(x => x.Id == item.ScientistIdTwo).Select(x => x.Name).First();
-            }
-            #endregion
+                evaluationBoardDatas?.Clear();
+                loading = true;
+                visible = false;
+                try
+                {
+                    facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
+                }
+                catch
+                {
+                    facultyId = null;
+                }
+                List<EvaluationBoard> evaluationBoards = new List<EvaluationBoard>();
+                if (CurrentUser.FacultyId == null)
+                {
+                    evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(facultyId);
+                }
+                else
+                {
+                    evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(CurrentUser.FacultyId);
+                }
+                // hiển thị dữ liệu mới nhất lên đầu trang
+                var list = evaluationBoards.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
+                evaluationBoardDatas = _mapper.Map<List<EvaluationBoardData>>(list);
+                #region join bảng lấy dữ liệu
+                List<Scientist> scientists = new List<Scientist>();
+                if (CurrentUser.FacultyId == null)
+                {
+                    scientists = await ScientistService.GetAllByIdAsync(facultyId);
+                }
+                else
+                {
+                    scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                }
+                foreach (var item in evaluationBoardDatas)
+                {
+                    // lấy thông tin student
+                    Student student = await StudentService.GetStudentByIdAsync(item.StudentId);
+                    item.StudentName = student?.Name;
+                    item.TopicName = student?.TopicName;
+                    item.Branch = scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
+                    // lấy thông tin hướng dẫn 1
+                    item.InstructorNameOne = scientists.Where(x => x.Id == student?.InstructorIdOne).Select(x => x.Name).FirstOrDefault();
+                    // lấy thông tin hướng dẫn 2
+                    item.InstructorNameTwo = scientists.Where(x => x.Id == student?.InstructorIdTwo).Select(x => x.Name).FirstOrDefault();
+                    // lấy thông tin chủ tịch
+                    item.PresidentName = scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
+                    // lấy thông tin phản biện 1
+                    item.CounterattackerOne = scientists.Where(x => x.Id == item.CounterattackerIdOne).Select(x => x.Name).First();
+                    // lấy thông tin phản biện 2
+                    item.CounterattackerTwo = scientists.Where(x => x.Id == item.CounterattackerIdTwo).Select(x => x.Name).First();
+                    // lấy thông tin phản biện 3
+                    item.CounterattackerThree = scientists.Where(x => x.Id == item.CounterattackerIdThree).Select(x => x.Name).First();
+                    // lấy thông tin phản biện thư kí
+                    item.SecretaryName = scientists.Where(x => x.Id == item.SecretaryId).Select(x => x.Name).First();
+                    // lấy thông tin ủy viên 1
+                    item.ScientistOne = scientists.Where(x => x.Id == item.ScientistIdOne).Select(x => x.Name).First();
+                    // lấy thông tin ủy viên 2
+                    item.ScientistTwo = scientists.Where(x => x.Id == item.ScientistIdTwo).Select(x => x.Name).First();
+                }
+                #endregion
 
-            int stt = 1;
-            evaluationBoardDatas.ForEach(x => { x.stt = stt++; });
-            loading = false;
-            StateHasChanged();
+                int stt = 1;
+                evaluationBoardDatas.ForEach(x => { x.stt = stt++; });
+                loading = false;
+                StateHasChanged();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
-        void AddEvaluationBoard()
+        async Task AddEvaluationBoard()
         {
+            await EvaluationBoardAddLayoutRef.LoadAddAsync();
             addVisible = true;
         }
 

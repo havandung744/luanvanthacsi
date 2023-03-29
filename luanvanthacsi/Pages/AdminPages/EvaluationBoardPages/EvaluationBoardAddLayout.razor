@@ -1,5 +1,4 @@
 ﻿
-<luanvanthacsi.Data.Components.Lazy>
     <Tabs OnChange="OnTabChange" DefaultActiveKey="1" ActiveKey="@activeTab">
         <TabBarExtraContent>
             <Space>
@@ -32,7 +31,7 @@
                     <span><Icon Type="user" />Chủ tịch</span>
                 </TabTemplate>
                 <ChildContent>
-                    <ScientistOfEvaluationBoard @ref="PresidentRef" tab="2"></ScientistOfEvaluationBoard>
+                    <PresidentOfEvaluationBoard @ref="PresidentRef" SelectedScientistIds="selectedScientistIds"></PresidentOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
             <TabPane Key="3" ForceRender>
@@ -40,26 +39,24 @@
                     <span><Icon Type="user" />Phản biện</span>
                 </TabTemplate>
                 <ChildContent>
-                    <ScientistOfEvaluationBoard @ref="CounterattackerRef" tab="1" SelectedScientistIds="@selectedScientistIds"></ScientistOfEvaluationBoard>
+                    <CounterattackerOfEvaluationBoard @ref="CounterattackerRef" SelectedScientistIds="@selectedScientistIds"></CounterattackerOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
-            <TabPane Key="5" ForceRender>
+           <TabPane Key="4" ForceRender>
                 <TabTemplate>
                     <span><Icon Type="user" />Thư ký</span>
                 </TabTemplate>
                 <ChildContent>
-                    <ScientistOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef" tab="2"></ScientistOfEvaluationBoard>
+                    <SecretaryOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds"></SecretaryOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
-            <TabPane Key="4" ForceRender>
+            <TabPane Key="5" ForceRender>
                 <TabTemplate>
                     <span><Icon Type="user" />Ủy viên</span>
                 </TabTemplate>
                 <ChildContent>
-                    <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef" tab="1"></ScientistOfEvaluationBoard>
+                    <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds"></ScientistOfEvaluationBoard>
                 </ChildContent>
             </TabPane>
-
         </ChildContent>
     </Tabs>
-</luanvanthacsi.Data.Components.Lazy>

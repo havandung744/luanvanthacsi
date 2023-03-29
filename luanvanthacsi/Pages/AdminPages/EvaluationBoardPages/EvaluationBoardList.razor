@@ -3,6 +3,7 @@
 @using luanvanthacsi.Data.Data;
 @using System.ComponentModel;
 @using luanvanthacsi.Data.Entities;
+@using static luanvanthacsi.Data.Components.Enum;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý hội đồng đánh giá</PageTitle>
 <PageHeader Style="padding: 0;">
@@ -85,15 +86,30 @@
                         <Column @bind-Field="context.stt" Sortable Width="80" Fixed="left"></Column>
                         <Column @bind-Field="context.StudentName" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.TopicName" Width="300" Sortable Ellipsis></Column>
-                        <Column @bind-Field="context.InstructorIdOne" Width="200" Sortable Ellipsis></Column>
-                        <Column @bind-Field="context.InstructorIdTwo" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.InstructorNameOne" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.InstructorNameTwo" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.PresidentName" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.CounterattackerOne" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.CounterattackerTwo" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.CounterattackerThree" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.SecretaryName" Width="200" Sortable Ellipsis></Column>
                         <Column @bind-Field="context.ScientistOne" Width="200" Sortable Ellipsis></Column>
-                        <Column @bind-Field="context.ScientistTwo" Width="200" Sortable Ellipsis></Column>
+                        <Column @bind-Field="context.Status" Width="100">
+                            <Template>
+                                @if (context.Status == 1)
+                                {
+                                    <AntDesign.Text Copyable="false" Type="warning">Chờ duyệt</AntDesign.Text>
+                                }
+                                else if (context.Status == 2)
+                                {
+                                    <AntDesign.Text Copyable="false" Type="success">Đã duyệt</AntDesign.Text>
+                                }
+                                else
+                                {
+                                    <AntDesign.Text Copyable="false" Type="danger">Huỷ duyệt</AntDesign.Text>
+                                }
+                            </Template>
+                        </Column>
                         <ActionColumn Title="Thao tác" Width="80" Fixed="right">
                             <Space>
                                 <SpaceItem>

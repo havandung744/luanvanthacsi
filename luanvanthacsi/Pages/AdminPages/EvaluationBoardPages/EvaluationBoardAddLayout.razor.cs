@@ -1,32 +1,38 @@
 ﻿using AntDesign;
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Entities;
+using luanvanthacsi.Data.Extentions;
 using Microsoft.AspNetCore.Components;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
     public partial class EvaluationBoardAddLayout : ComponentBase
     {
-        [Parameter] public User CurrentUser { get; set; }
         [Inject] NotificationService Notice { get; set; }
+        [Inject] NavigationManager NavigationManager { get; set; }
+        [Parameter] public User CurrentUser { get; set; }
         public StudentOfEvaluationBoard StudentOfEvaluationBoardRef { get; set; } = new();
-        public ScientistOfEvaluationBoard PresidentRef { get; set; } = new();
-        ScientistOfEvaluationBoard CounterattackerRef { get; set; } = new();
-        ScientistOfEvaluationBoard SecretaryOfEvaluationBoardRef { get; set; } = new();
-        ScientistOfEvaluationBoard ScientistOfEvaluationBoardRef { get; set; } = new();
+        public PresidentOfEvaluationBoard PresidentRef { get; set; } = new();
+        public CounterattackerOfEvaluationBoard CounterattackerRef { get; set; } = new();
+        public SecretaryOfEvaluationBoard SecretaryOfEvaluationBoardRef { get; set; } = new();
+        public ScientistOfEvaluationBoard ScientistOfEvaluationBoardRef { get; set; } = new();
         [Parameter] public EventCallback<EvaluationBoard> SaveChange { get; set; }
         [Parameter] public EventCallback CancelDetail { get; set; }
         private string activeTab = "1";
         string idUpdate = "";
         List<string> selectedScientistIds { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             selectedScientistIds = new List<string>();
         }
 
-        async Task OnTabChange(string key)
+        void OnTabChange(string key)
         {
+
+
+            selectedScientistIds.Clear();
             if (key != "1")
             {
                 string userId = StudentOfEvaluationBoardRef.GetStudentId();
@@ -48,7 +54,10 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
                 else
                 {
-                    selectedScientistIds.Add(presidentId?.FirstOrDefault());
+                    if (presidentId.FirstOrDefault().IsNotNullOrEmpty())
+                    {
+                        selectedScientistIds.Add(presidentId?.FirstOrDefault());
+                    }
                 }
             }
             if (key != "3")
@@ -60,6 +69,13 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     Notice.NotiWarning("Vui lòng chọ 3 phản biện.");
                     return;
                 }
+                else
+                {
+                    foreach (var item in counterattackerRef)
+                    {
+                        selectedScientistIds.Add(item);
+                    }
+                }
             }
             if (key != "4")
             {
@@ -70,6 +86,13 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     Notice.NotiWarning("Vui lòng chọn thư ký.");
                     return;
                 }
+                else
+                {
+                    if (secretaryOfEvaluationBoardRef.FirstOrDefault().IsNotNullOrEmpty())
+                    {
+                        selectedScientistIds.Add(secretaryOfEvaluationBoardRef?.FirstOrDefault());
+                    }
+                }
             }
             if (key != "5")
             {
@@ -79,6 +102,13 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     activeTab = "5";
                     Notice.NotiWarning("Vui lòng chọn 2 uỷ viên.");
                     return;
+                }
+                else
+                {
+                    foreach (var item in scientistOfEvaluationBoardRef)
+                    {
+                        selectedScientistIds.Add(item);
+                    }
                 }
             }
             activeTab = key;
@@ -148,11 +178,11 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
                 // Thực hiện lưu
                 activeTab = "1";
-                await StudentOfEvaluationBoardRef.LoadAsync();
-                await PresidentRef.LoadAsync();
-                await CounterattackerRef.LoadAsync();
-                await ScientistOfEvaluationBoardRef.LoadAsync();
-                await SecretaryOfEvaluationBoardRef.LoadAsync();
+                //await StudentOfEvaluationBoardRef.LoadAsync();
+                //await PresidentRef.LoadAsync();
+                //await CounterattackerRef.LoadAsync();
+                //await ScientistOfEvaluationBoardRef.LoadAsync();
+                //await SecretaryOfEvaluationBoardRef.LoadAsync();
                 await CancelDetail.InvokeAsync();
                 evaluationBoard.FacultyId = CurrentUser.FacultyId;
                 evaluationBoard.Id = idUpdate;
@@ -201,14 +231,26 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             }
         }
 
-        async Task CancelAsync()
+        public async Task LoadAddAsync()
         {
-            activeTab = "1";
             await StudentOfEvaluationBoardRef.LoadAsync();
             await PresidentRef.LoadAsync();
             await CounterattackerRef.LoadAsync();
             await ScientistOfEvaluationBoardRef.LoadAsync();
             await SecretaryOfEvaluationBoardRef.LoadAsync();
+        }
+
+        async Task CancelAsync()
+        {
+            idUpdate = "";
+            selectedScientistIds.Clear();
+            //NavigationManager.NavigateTo($"/evaluationBoards", true);
+            activeTab = "1";
+            //await StudentOfEvaluationBoardRef.LoadAsync();
+            //await PresidentRef.LoadAsync();
+            //await CounterattackerRef.LoadAsync();
+            //await ScientistOfEvaluationBoardRef.LoadAsync();
+            //await SecretaryOfEvaluationBoardRef.LoadAsync();
             await CancelDetail.InvokeAsync();
         }
 

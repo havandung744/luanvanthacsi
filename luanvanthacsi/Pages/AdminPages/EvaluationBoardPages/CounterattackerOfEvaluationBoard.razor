@@ -3,16 +3,6 @@
 @using System.ComponentModel;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 <PageTitle>Quản lý nhà khoa học</PageTitle>
-<PageHeader Style="padding: 0;">
-    <PageHeaderExtra>
-        <Breadcrumb>
-            <BreadcrumbItem><Icon Type="home"></Icon></BreadcrumbItem>
-            <BreadcrumbItem>Nhà khoa học</BreadcrumbItem>
-            <BreadcrumbItem>Danh sách nhà khoa học</BreadcrumbItem>
-        </Breadcrumb>
-    </PageHeaderExtra>
-</PageHeader>
-<br />
 
 <Table @ref="table" DataSource="scientistDatas" Loading="loading" Locale="TableLocale"
        TItem="ScientistData" ScrollX="1350"

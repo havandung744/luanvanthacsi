@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
-    public partial class ScientistOfEvaluationBoard : ComponentBase
+    public partial class SecretaryOfEvaluationBoard : ComponentBase
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] TableLocale? TableLocale { get; set; }
