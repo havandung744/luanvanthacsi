@@ -32,8 +32,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         void OnTabChange(string key)
         {
-
-
             selectedScientistIds.Clear();
             if (key != "1")
             {
@@ -251,7 +249,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             idUpdate = "";
             selectedScientistIds.Clear();
             activeTab = "1";
-
             await CancelDetail.InvokeAsync();
         }
 

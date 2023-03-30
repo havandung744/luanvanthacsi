@@ -301,9 +301,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
         public string GetFileMauUrl()

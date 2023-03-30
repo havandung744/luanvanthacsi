@@ -149,7 +149,7 @@
 </div>
 
 
-<Drawer Closable="false" Visible="addVisible" Class="DrawerOfEvaluation" OnClose="() => addVisible=false"
+<Drawer Closable="false" Visible="addVisible" Height="900" Class="DrawerOfEvaluation"
         Title='("Lập hội đồng đánh giá")' Placement="bottom">
     <Template>
         <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser" CancelDetail="CancelDetail" FacultyId="@facultyId"></EvaluationBoardAddLayout>
