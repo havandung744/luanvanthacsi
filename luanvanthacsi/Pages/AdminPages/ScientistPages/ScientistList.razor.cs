@@ -35,12 +35,10 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         ScientistData? selectData;
         Table<ScientistData>? table;
         List<string>? ListSelectedScientistIds;
-        //User CurrentUser;
         List<Faculty> facultyList { get; set; }
         List<Specialized> specializedList { get; set; }
         string facultyId;
         string value;
-      
 
         protected override async Task OnInitializedAsync()
         {
