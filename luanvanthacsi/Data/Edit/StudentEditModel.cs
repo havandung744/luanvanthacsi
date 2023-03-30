@@ -18,9 +18,11 @@ namespace luanvanthacsi.Data.Edit
         public DateTime UpdateDate { get; set; }
         public string FacultyId { get; set; }
         public string TopicName { get; set; }
-        [Required(ErrorMessage = "Vui lòng nhập hướng dẫn 1")]
+        [Required(ErrorMessage = "Vui lòng chọn hướng dẫn 1")]
         public string InstructorIdOne { get; set; }
         public string InstructorIdTwo { get; set; }
+        [Required(ErrorMessage = "Vui lòng chọn chuyên nghành")]
+        public string SpecializedId { get; set; }
 
     }
 }

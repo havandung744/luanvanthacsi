@@ -37,6 +37,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] IFacultyService FacultyService { get; set; }
         [Inject] IMapper _mapper { get; set; }
+        [Inject] ISpecializedService SpecializedService { get; set; }
 
 
         List<EvaluationBoardData>? evaluationBoardDatas { get; set; } = new();
@@ -61,8 +62,15 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             CurrentUser = await UserService.GetUserByIdAsync(id);
             evaluationBoardDatas = new();
             facultyList = await FacultyService.GetAllAsync();
-            await LoadAsync();
             Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HoiDong", "KEY_STAFFIMPORT", 4, null, GetTable().GetDataColumns(), 3) };
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await LoadAsync();
+            }
         }
 
         public DataTable GetTable()
@@ -94,10 +102,12 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             try
             {
-                evaluationBoardDatas?.Clear();
                 loading = true;
+                StateHasChanged();
                 visible = false;
+                evaluationBoardDatas?.Clear();
                 List<EvaluationBoard> evaluationBoards = new List<EvaluationBoard>();
+
                 if (CurrentUser.FacultyId == null)
                 {
                     facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
@@ -148,9 +158,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     item.ScientistTwo = Scientists.Where(x => x.Id == item.ScientistIdTwo).Select(x => x.Name).First();
                 }
                 #endregion
-
                 int stt = 1;
-                evaluationBoardDatas.ForEach(x => { x.stt = stt++; });
+                evaluationBoardDatas?.ForEach(x => { x.stt = stt++; });
                 loading = false;
                 StateHasChanged();
             }

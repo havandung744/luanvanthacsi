@@ -12,7 +12,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
     public partial class StudentOfEvaluationBoard : ComponentBase
     {
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
-        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
 
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] NotificationService Notice { get; set; }
@@ -20,6 +19,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IUserService UserService { get; set; }
         [Inject] IEvaluationBoardService EvaluationBoardService { get; set; }
         [Parameter] public string EvaluationBoardCode { get; set; }
+        [Parameter] public string facultyId { get; set; }
         List<StudentData>? studentDatas { get; set; }
         IEnumerable<StudentData> selectedRows;
         StudentData? selectData;
@@ -63,7 +63,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             List<Student> students = new List<Student>();
             if (CurrentUser.FacultyId == null)
             {
-                var facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
                 students = await StudentService.GetAllByIdAsync(facultyId);
             }
             else

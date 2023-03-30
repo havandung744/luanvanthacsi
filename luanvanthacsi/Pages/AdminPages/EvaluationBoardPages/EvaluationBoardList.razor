@@ -114,7 +114,7 @@
                                 }
                             </Template>
                         </Column>
-                        <ActionColumn Title="Thao tác" Width="80" Fixed="right">
+                        <ActionColumn Title="Thao tác" Width="100" Fixed="right">
                             <Space>
                                 <SpaceItem>
                                     <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
@@ -152,6 +152,6 @@
 <Drawer Closable="false" Visible="addVisible" Class="DrawerOfEvaluation" OnClose="() => addVisible=false"
         Title='("Lập hội đồng đánh giá")' Placement="bottom">
     <Template>
-        <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser" CancelDetail="CancelDetail" facultyId="@facultyId"></EvaluationBoardAddLayout>
+        <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser" CancelDetail="CancelDetail" FacultyId="@facultyId"></EvaluationBoardAddLayout>
     </Template>
 </Drawer>

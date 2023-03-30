@@ -13,7 +13,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Parameter] public User CurrentUser { get; set; }
         [Parameter] public EventCallback<EvaluationBoard> SaveChange { get; set; }
         [Parameter] public EventCallback CancelDetail { get; set; }
-        [Parameter] public string facultyId { get; set; }
+        [Parameter] public string FacultyId { get; set; }
         public StudentOfEvaluationBoard StudentOfEvaluationBoardRef { get; set; } = new();
         public PresidentOfEvaluationBoard PresidentRef { get; set; } = new();
         public CounterattackerOfEvaluationBoard CounterattackerRef { get; set; } = new();
@@ -22,6 +22,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         private string activeTab = "1";
         string idUpdate = "";
         List<string> selectedScientistIds { get; set; }
+
 
         protected override async Task OnInitializedAsync()
         {
@@ -182,7 +183,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 await CancelDetail.InvokeAsync();
                 if (CurrentUser.FacultyId == null)
                 {
-                    evaluationBoard.FacultyId = facultyId;
+                    evaluationBoard.FacultyId = FacultyId;
                     evaluationBoard.Status = 2;
                 }
                 else

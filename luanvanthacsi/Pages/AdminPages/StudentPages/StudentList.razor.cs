@@ -110,12 +110,18 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 studentDatas = new();
                 facultyList = await FacultyService.GetAllAsync();
                 scientistList = await ScientistService.GetAll();
-                await LoadAsync();
                 Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HocVien", "KEY_STAFFIMPORT", 6, null, GetTable().GetDataColumns(), 5) };
             }
             catch (Exception)
             {
                 throw;
+            }
+        }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await LoadAsync();
             }
         }
         public DataTable GetTable()
@@ -138,20 +144,14 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
 
         public async Task LoadAsync()
         {
-            studentDatas?.Clear();
             loading = true;
+            StateHasChanged();
             visible = false;
-            try
-            {
-                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfStudent");
-            }
-            catch
-            {
-                facultyId = null;
-            }
+            studentDatas?.Clear();
             List<Student> students = new List<Student>();
             if (CurrentUser.FacultyId == null)
             {
+                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfStudent");
                 students = await StudentService.GetAllByIdAsync(facultyId);
             }
             else

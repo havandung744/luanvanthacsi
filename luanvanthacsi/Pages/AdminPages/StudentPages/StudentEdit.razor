@@ -20,6 +20,14 @@
         <FormItem Label="Ngày sinh">
             <DatePicker @bind-Value="@context.DateOfBirth" Format="dd/MM/yyyy" Style="width: 301px" DisabledDate="@DisabledDate"></DatePicker>
         </FormItem>
+        <FormItem Label="Chuyên ngành">
+            <Select TItem="Specialized" TItemValue="string" DataSource="specializedList"
+                    EnableSearch Placeholder="Chọn chuyên ngành"
+                    @bind-Value="@context.SpecializedId"
+                    ValueName="@nameof(Specialized.Id)"
+                    LabelName="@nameof(Specialized.Name)">
+            </Select>
+            </FormItem>
         <FormItem Label="Tên đề tài">
             <TextArea @bind-Value="@context.TopicName" MaxLength="100" ShowCount></TextArea>
         </FormItem>

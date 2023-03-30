@@ -20,6 +20,7 @@ namespace luanvanthacsi.Data.Map
             Map(x => x.TopicName).Column("TopicName");
             Map(x => x.InstructorIdTwo).Column("InstructorIdTwo");
             Map(x => x.InstructorIdOne).Column("InstructorIdOne");
+            Map(x => x.SpecializedId).Column("SpecializedId");
             Table("Student");
         }
 

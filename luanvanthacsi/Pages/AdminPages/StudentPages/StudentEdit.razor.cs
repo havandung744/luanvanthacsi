@@ -1,17 +1,12 @@
-﻿using luanvanthacsi.Data.Edit;
-using luanvanthacsi.Data.Entities;
-using Microsoft.AspNetCore.Components;
-using luanvanthacsi.Data;
-using System.Net.NetworkInformation;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json;
-using Microsoft.AspNetCore.Components.Forms;
-using AntDesign;
-using Microsoft.AspNetCore.Components.Web;
+﻿using AntDesign;
 using AutoMapper;
-using luanvanthacsi.Data.Services;
-using luanvanthacsi.Data.Migrations;
 using luanvanthacsi.Data.Components;
+using luanvanthacsi.Data.Edit;
+using luanvanthacsi.Data.Entities;
+using luanvanthacsi.Data.Services;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
 {
@@ -19,7 +14,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
     {
         [Inject] IMapper _mapper { get; set; }
         [Inject] AntDesign.NotificationService Notice { get; set; }
-
+        [Inject] ISpecializedService SpecializedService { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
@@ -29,6 +24,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         StudentEditModel EditModel { get; set; } = new StudentEditModel();
         Form<StudentEditModel> form;
         List<Scientist> scientistList { get; set; }
+        List<Specialized> specializedList { get; set; }
+
 
         public async Task LoadData(Student student)
         {
@@ -45,10 +42,12 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             if (CurrentUser.FacultyId == null)
             {
                 scientistList = await ScientistService.GetAllByIdAsync(facultyId);
+                specializedList = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
             }
             else
             {
                 scientistList = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
             }
             StateHasChanged();
         }

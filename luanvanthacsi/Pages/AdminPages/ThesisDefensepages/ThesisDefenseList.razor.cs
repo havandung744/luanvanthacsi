@@ -50,27 +50,28 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             CurrentUser = await UserService.GetUserByIdAsync(id);
             thesisDefenseDatas = new();
             facultyList = await FacultyService.GetAllAsync();
-            await LoadAsync();
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await LoadAsync();
+            }
+        }
 
         public async Task LoadAsync()
         {
-            thesisDefenseDatas.Clear();
             loading = true;
+            StateHasChanged();
             visible = false;
+            thesisDefenseDatas.Clear();
             visibleForDetail = false;
-            try
-            {
-                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfThesisDefense");
-            }
-            catch
-            {
-                facultyId = null;
-            }
             List<ThesisDefense> thesisDefenses = new List<ThesisDefense>();
             if (CurrentUser.FacultyId == null)
             {
+
+                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfThesisDefense");
                 thesisDefenses = await ThesisDefenseService.GetAllByIdAsync(facultyId);
             }
             else

@@ -18,6 +18,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IUserService? UserService { get; set; }
         [Inject] ISpecializedService SpecializedService { get; set; }
         [Parameter] public int tab { get; set; }
+        [Parameter] public string facultyId { get; set; }
 
         List<ScientistData>? scientistDatas { get; set; }
         IEnumerable<ScientistData> selectedRows;
@@ -43,7 +44,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             string id = await getUserId();
             CurrentUser = await UserService.GetUserByIdAsync(id);
             scientistDatas = new();
-            await LoadAsync();
         }
 
         public async Task LoadAsync()
@@ -59,7 +59,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 List<Scientist> list = new List<Scientist>();
                 if (CurrentUser.FacultyId == null)
                 {
-                    var facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
                     lecturers = await ScientistService.GetAllByIdAsync(facultyId);
                     list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == facultyId).ToList();
                     specializedList = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
@@ -93,7 +92,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 List<Scientist> scientists = new List<Scientist>();
                 if (CurrentUser.FacultyId == null)
                 {
-                    var facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
                     scientists = await ScientistService.GetAllByIdAsync(facultyId);
                 }
                 else

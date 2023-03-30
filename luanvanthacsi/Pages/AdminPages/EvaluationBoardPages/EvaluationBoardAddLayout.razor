@@ -30,7 +30,7 @@
                 <span><Icon Type="user" />Học viên</span>
             </TabTemplate>
             <ChildContent>
-                <StudentOfEvaluationBoard @ref="StudentOfEvaluationBoardRef"></StudentOfEvaluationBoard>
+                <StudentOfEvaluationBoard @ref="StudentOfEvaluationBoardRef" facultyId="@FacultyId"></StudentOfEvaluationBoard>
             </ChildContent>
         </TabPane>
         <TabPane Key="2" ForceRender>
@@ -38,7 +38,7 @@
                 <span><Icon Type="user" />Chủ tịch</span>
             </TabTemplate>
             <ChildContent>
-                <PresidentOfEvaluationBoard @ref="PresidentRef" SelectedScientistIds="selectedScientistIds"></PresidentOfEvaluationBoard>
+                <PresidentOfEvaluationBoard @ref="PresidentRef" SelectedScientistIds="selectedScientistIds" facultyId="@FacultyId"></PresidentOfEvaluationBoard>
             </ChildContent>
         </TabPane>
         <TabPane Key="3" ForceRender>
@@ -46,7 +46,7 @@
                 <span><Icon Type="user" />Phản biện</span>
             </TabTemplate>
             <ChildContent>
-                <CounterattackerOfEvaluationBoard @ref="CounterattackerRef" SelectedScientistIds="@selectedScientistIds"></CounterattackerOfEvaluationBoard>
+                <CounterattackerOfEvaluationBoard @ref="CounterattackerRef" SelectedScientistIds="@selectedScientistIds" facultyId="@FacultyId"></CounterattackerOfEvaluationBoard>
             </ChildContent>
         </TabPane>
         <TabPane Key="4" ForceRender>
@@ -54,7 +54,7 @@
                 <span><Icon Type="user" />Thư ký</span>
             </TabTemplate>
             <ChildContent>
-                <SecretaryOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds"></SecretaryOfEvaluationBoard>
+                <SecretaryOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds" facultyId="@FacultyId"></SecretaryOfEvaluationBoard>
             </ChildContent>
         </TabPane>
         <TabPane Key="5" ForceRender>
@@ -62,7 +62,7 @@
                 <span><Icon Type="user" />Ủy viên</span>
             </TabTemplate>
             <ChildContent>
-                <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds"></ScientistOfEvaluationBoard>
+                <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds" facultyId="@FacultyId"></ScientistOfEvaluationBoard>
             </ChildContent>
         </TabPane>
     </ChildContent>

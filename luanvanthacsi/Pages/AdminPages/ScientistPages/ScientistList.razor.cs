@@ -47,7 +47,14 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             scientistDatas = new();
             facultyList = await FacultyService.GetAllAsync();
             specializedList = await SpecializedService.GetAllAsync();
-            await LoadAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await LoadAsync();
+            }
         }
 
         async Task<string> getUserId()
@@ -61,20 +68,14 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         {
             try
             {
-                scientistDatas?.Clear();
                 loading = true;
+                StateHasChanged();
                 visible = false;
-                try
-                {
-                    facultyId = await localStorage.GetItemAsync<string>("facultyIdOfScientist");
-                }
-                catch
-                {
-                    facultyId = null;
-                }
+                scientistDatas?.Clear();
                 List<Scientist> scientists = new List<Scientist>();
                 if (CurrentUser.FacultyId == null)
                 {
+                    facultyId = await localStorage.GetItemAsync<string>("facultyIdOfScientist");
                     scientists = await ScientistService.GetAllByIdAsync(facultyId);
                 }
                 else
@@ -183,9 +184,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 table?.SetSelection(ids.ToArray());
                 ListSelectedScientistIds = ids;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
         async Task DeleteAsync(ScientistData model = null)
