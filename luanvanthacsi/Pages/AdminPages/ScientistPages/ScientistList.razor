@@ -51,7 +51,7 @@
 <br />
 <Row>
     <AntDesign.Col Span="12">
-        @if (CurrentUser?.FacultyId == null)
+        @if (SessionData.CurrentUser?.FacultyId == null)
         {
             <Select TItem="Faculty" TItemValue="string" EnableSearch Placeholder="Chọn khoa"
                 DataSource="facultyList"
