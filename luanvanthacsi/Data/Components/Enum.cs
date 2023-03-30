@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace luanvanthacsi.Data.Components
 {
     public static class Enum
@@ -15,11 +14,27 @@ namespace luanvanthacsi.Data.Components
         {
             StaffProfile
         }
+
+        public enum EvaluationRole
+        {
+            [Display(Name = "Chủ tịch")]
+            President,
+            [Display(Name = "Phản biện")]
+            CounterAttack,
+            [Display(Name = "Thư ký")]
+            Secretary,
+            [Display(Name = "Ủy viên")]
+            Scientist,
+            [Display(Name = "GVHD")]
+            Instructor
+        }
+
         public enum Status
         {
             Pedding = 1,
             Approved = 2,
             refuse = 3
         }
+
     }
 }

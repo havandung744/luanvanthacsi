@@ -1,4 +1,6 @@
-﻿namespace luanvanthacsi.Data.Entities
+﻿using static luanvanthacsi.Data.Components.Enum;
+
+namespace luanvanthacsi.Data.Entities
 {
     public class Scientist
     {
@@ -19,6 +21,7 @@
         public virtual string SpecializedId { get; set; }
         public virtual string SpecializedName { get; set; }
         public virtual string WorkingAgency { get; set; }
+        public virtual EvaluationRole EvaluationRole { get; set; }
 
     }
 }

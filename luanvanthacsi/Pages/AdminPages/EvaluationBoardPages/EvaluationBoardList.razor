@@ -120,6 +120,11 @@
                                     <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
                                         <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation />
                                     </Tooltip>
+                                </SpaceItem>     
+                                <SpaceItem>
+                                    <Tooltip Placement="@Placement.Top" Title="@("Tải quyết định")">
+                                        <Icon Type="download" @onclick="() => ExportDocxAsync(context)" Theme="outline" Class="btn-icon-edit" StopPropagation />
+                                    </Tooltip>
                                 </SpaceItem>
                                 <SpaceItem>
                                     <Tooltip Placement="@Placement.Top" Title="@("Xóa")">

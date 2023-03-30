@@ -71,6 +71,22 @@
     <script src="_framework/blazor.server.js"></script>
 
     <script nws-csp-add-nonce="true">
+
+
+        function bindBrowserDimensionChange(dotNetHelper, methodName) {
+            $(window).resize(function () {
+                return dotNetHelper.invokeMethodAsync(methodName, window.getDimensions());
+            });
+        }
+
+        window.getDimensions = function () {
+            return {
+                width: window.innerWidth,
+                height: window.innerHeight
+            };
+        };
+
+
         $.ajaxTransport("+binary", function (options, originalOptions, jqXHR) {
             // check for conditions and support for blob / arraybuffer response type
             if (window.FormData && ((options.dataType && (options.dataType == 'binary')) || (options.data && ((window.ArrayBuffer && options.data instanceof ArrayBuffer) || (window.Blob && options.data instanceof Blob))))) {

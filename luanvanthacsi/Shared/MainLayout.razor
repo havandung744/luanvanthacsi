@@ -1,7 +1,12 @@
-﻿@inherits LayoutComponentBase
+﻿@using luanvanthacsi.Models;
+@using luanvanthacsi.Ultils;
+@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
+@inject BrowserService _browserService
 
 <PageTitle>Hệ thống bảo vệ luận văn Thạc sĩ</PageTitle>
+
+<CascadingValue Value="sessionData">
 
 <div class="page">
     <div class="sidebar">
@@ -18,18 +23,41 @@
         </article>
     </main>
 </div>
+</CascadingValue>
 
-@code { 
+@code {
 
     [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
 
+    SessionData sessionData = new SessionData();
+    DotNetObjectReference<BrowserService> browserServiceRef;
+
     protected async override Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        _browserService.WindowSizeChanged += e => WindowSizeChanged(e);
+        browserServiceRef = DotNetObjectReference.Create(_browserService);
         var user = (await AuthStat).User;
-        if (!user.Identity.IsAuthenticated)
+        if (user == null || !user.Identity.IsAuthenticated)
         {
             NavigationManager.NavigateTo($"Identity/Account/Login");
         }
+        await base.OnInitializedAsync();
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            WindowSizeChanged(await _browserService.GetDimensions());
+            await _browserService.BindBrowserDimensionChange(browserServiceRef);
+        }
+    }
+
+    void WindowSizeChanged(BrowserDimension dimension)
+    {
+        sessionData.BrowserDimension = dimension;
+        StateHasChanged();
+    }
+
+
 }

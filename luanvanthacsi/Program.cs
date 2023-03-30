@@ -1,9 +1,11 @@
 ﻿using AntDesign;
 using Blazored.LocalStorage;
+using luanvanthacsi;
 using luanvanthacsi.Areas.Identity;
 using luanvanthacsi.Data;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Excel;
+using luanvanthacsi.Ultils;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -39,6 +41,7 @@ builder.Services.AddSingleton<ISpecializedService, SpecializedService>();
 builder.Services.AddSingleton<IFacultyService, FacultyService>();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddSingleton<ExcelExporter>();
+builder.Services.AddScoped<BrowserService>();
 builder.Services.AddSingleton<TableLocale>(c =>
 {
     var locale = new TableLocale()
@@ -83,6 +86,9 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddFileReaderService(options => options.InitializeOnFirstCall = true);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
+
+var startUp = new Startup(builder.Configuration);
+
 var app = builder.Build();
 
 LocaleProvider.SetLocale("vi-VN");

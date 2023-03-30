@@ -2,7 +2,9 @@
 using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
+using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Excel.ClassExcel;
+using luanvanthacsi.Models;
 using luanvanthacsi.Ultils;
 
 namespace luanvanthacsi.Data.Components
@@ -42,7 +44,10 @@ namespace luanvanthacsi.Data.Components
                .ForMember(src => src.DateOfBirth, dest => dest.MapFrom(c => c.DateOfBirth.ToShortDate())).ReverseMap();
 
             CreateMap<EvaluationBoardData, EvaluationBoardExcel>().ReverseMap();
-
+            CreateMap<Scientist, EvaluationBoardDocx.EvaluationBoard>()
+                .ForMember(dest => dest.Title, src => src.MapFrom(c => c.EvaluationRole.GetDescription()))
+                .ForMember(dest => dest.Price, src => src.MapFrom(c => c.EvaluationRole.GetDegreeFee()))
+                .ForMember(dest => dest.WorkUnit, src => src.MapFrom(c => c.WorkingAgency));
 
         }
     }
