@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using System.Globalization;
 using System.Reflection;
 using Tewr.Blazor.FileReader;
@@ -113,13 +114,11 @@ else
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-//app.UseStaticFiles(new StaticFileOptions
-//{
-//    //FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\bin\\Debug\\net7.0\\Upload"),
-//    FileProvider = new PhysicalFileProvider("C:\\chuongtrinhki1nam4\\khoaluan\\luanvanthacsi\\luanvanthacsi\\scientist"),
-//    //RequestPath = "/Upload"
-//    RequestPath = "/scientist"
-//});
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "scientist")),
+    RequestPath = "/scientist"
+});
 
 app.UseRouting();
 
