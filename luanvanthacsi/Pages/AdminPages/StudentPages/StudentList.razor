@@ -61,7 +61,7 @@
 <br />
 <Row>
     <AntDesign.Col Span="12">
-        @if (CurrentUser?.FacultyId == null && facultyId != null)
+        @if (SessionData.CurrentUser?.FacultyId == null)
         {
             <Select TItem="Faculty" TItemValue="string" EnableSearch Placeholder="Chọn khoa"
                 DataSource="facultyList"
@@ -118,7 +118,7 @@
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Học viên")' OnClose="OnClose">
-    <StudentEdit @ref="studentEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser" facultyId="@facultyId"></StudentEdit>
+    <StudentEdit @ref="studentEdit" Cancel="() => visible = false" ValueChange="Save" facultyId="@facultyId"></StudentEdit>
 </Drawer>
 
 <ImportExcelForm @ref="importExcelFormRef" Visible="importVisible" CancelChange="ImportExcelCancel"

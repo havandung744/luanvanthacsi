@@ -9,6 +9,7 @@ using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Excel;
 using luanvanthacsi.Excel.ClassExcel;
+using luanvanthacsi.Models;
 using luanvanthacsi.Ultils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -32,6 +33,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] IMapper _mapper { get; set; }
+        [CascadingParameter] SessionData SessionData { get; set; }
         List<StudentData>? studentDatas { get; set; }
         StudentEdit studentEdit = new StudentEdit();
         IEnumerable<StudentData>? selectedRows;
@@ -41,7 +43,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         bool visible = false;
         bool loading = false;
         bool showExcelForm = false;
-        User CurrentUser;
         bool importVisible = false;
         bool existModalVisible = false;
         string facultyId;
@@ -105,8 +106,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         {
             try
             {
-                string id = await getUserId();
-                CurrentUser = await UserService.GetUserByIdAsync(id);
                 studentDatas = new();
                 facultyList = await FacultyService.GetAllAsync();
                 scientistList = await ScientistService.GetAll();
@@ -149,14 +148,14 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             visible = false;
             studentDatas?.Clear();
             List<Student> students = new List<Student>();
-            if (CurrentUser.FacultyId == null)
+            if (SessionData.CurrentUser?.FacultyId == null)
             {
                 facultyId = await localStorage.GetItemAsync<string>("facultyIdOfStudent");
                 students = await StudentService.GetAllByIdAsync(facultyId);
             }
             else
             {
-                students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+                students = await StudentService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
             }
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             foreach (Student item in list)
@@ -338,7 +337,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     Student student = new Student()
                     {
                         Id = ObjectExtentions.GenerateGuid(),
-                        FacultyId = CurrentUser.FacultyId,
+                        FacultyId = SessionData?.CurrentUser.FacultyId,
                     };
                     #region convert data
 
@@ -363,13 +362,13 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             try
             {
                 bool save;
-                if (CurrentUser.FacultyId == null)
+                if (SessionData?.CurrentUser.FacultyId == null)
                 {
                     save = await StudentService.AddOrUpdateStudentListAsync(ExcelStudentDatas, facultyId);
                 }
                 else
                 {
-                    save = await StudentService.AddOrUpdateStudentListAsync(ExcelStudentDatas, CurrentUser.FacultyId);
+                    save = await StudentService.AddOrUpdateStudentListAsync(ExcelStudentDatas, SessionData.CurrentUser.FacultyId);
                 }
                 if (save == true)
                 {
@@ -456,9 +455,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                             wSheet = package.Workbook.Worksheets[Sheets.First().Name];
                         }
                         List<Student> data = new List<Student>();
-                        if (CurrentUser.FacultyId != null)
+                        if (SessionData?.CurrentUser.FacultyId != null)
                         {
-                            data = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+                            data = await StudentService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
                         }
                         else
                         {

@@ -20,7 +20,7 @@
         <AntDesign.Col Span="24">
             <Row>
                 <Space>
-                    @if (CurrentUser?.FacultyId != null)
+                    @if (SessionData.CurrentUser?.FacultyId != null)
                     {
                         <SpaceItem>
                             <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" OnClick ="AddEvaluationBoard">Lập hội đồng</Button>
@@ -65,7 +65,7 @@
             <br />
             <Row>
                 <AntDesign.Col Span="12">
-                    @if (CurrentUser?.FacultyId == null)
+                    @if (SessionData.CurrentUser?.FacultyId == null)
                     {
                         <Select TItem="Faculty" TItemValue="string" EnableSearch Placeholder="Chọn khoa"
                             DataSource="facultyList"
@@ -149,9 +149,9 @@
 </div>
 
 
-<Drawer Visible="addVisible" Height="900" OnClose="() => addVisible = false"
+<Drawer Closable="false" Visible="addVisible" Height="SessionData.BrowserDimension.Height" OnClose="() => addVisible = false"
         Title='("Lập hội đồng đánh giá")' Placement="bottom">
     <Template>
-        <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser" CancelDetail="CancelDetail" FacultyId="@facultyId"></EvaluationBoardAddLayout>
+        <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CancelDetail="CancelDetail" FacultyId="@facultyId"></EvaluationBoardAddLayout>
     </Template>
 </Drawer>

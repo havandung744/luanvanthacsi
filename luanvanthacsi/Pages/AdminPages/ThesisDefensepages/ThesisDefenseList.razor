@@ -51,7 +51,7 @@
 <br />
 <Row>
     <AntDesign.Col Span="12">
-        @if (CurrentUser?.FacultyId == null)
+        @if (SessionData.CurrentUser?.FacultyId == null)
         {
             <Select TItem="Faculty" TItemValue="string" EnableSearch Placeholder="Chọn khoa"
                 DataSource="facultyList"
@@ -109,7 +109,7 @@
 </Table>
 
 <Drawer Closable="true" Visible="visible" Placement="right" Width=500 Title='("Đợt bảo vệ")' OnClose="OnClose">
-    <ThesisDefenseEdit @ref="thesisDefenseEdit" Cancel="() => visible = false" ValueChange="Save" CurrentUser="CurrentUser"
+    <ThesisDefenseEdit @ref="thesisDefenseEdit" Cancel="() => visible = false" ValueChange="Save"
                        FacultyId="@facultyId"></ThesisDefenseEdit>
 </Drawer>
 <Drawer Closable="true" Width="1500" Visible="visibleForDetail" OnClose="OnCloseForDetail" Title='(titleOfThesisDefenseDetail)'>

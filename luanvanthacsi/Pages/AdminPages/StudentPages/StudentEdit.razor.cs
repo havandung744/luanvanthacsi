@@ -4,6 +4,7 @@ using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
@@ -17,9 +18,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         [Inject] ISpecializedService SpecializedService { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
+        [CascadingParameter] SessionData SessionData { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<Student> ValueChange { get; set; }
-        [Parameter] public User CurrentUser { get; set; }
         [Parameter] public string facultyId { get; set; }
         StudentEditModel EditModel { get; set; } = new StudentEditModel();
         Form<StudentEditModel> form;
@@ -39,15 +40,15 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 EditModel.DateOfBirth = student.DateOfBirth;
             }
             EditModel.UpdateDate = student.UpdateDate;
-            if (CurrentUser.FacultyId == null)
+            if (SessionData.CurrentUser?.FacultyId == null)
             {
                 scientistList = await ScientistService.GetAllByIdAsync(facultyId);
                 specializedList = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
             }
             else
             {
-                scientistList = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
-                specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
+                scientistList = await ScientistService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
+                specializedList = await SpecializedService.GetAllByFacultyIdAsync(SessionData.CurrentUser.FacultyId);
             }
             StateHasChanged();
         }
@@ -68,13 +69,13 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 }
                 Student student = new Student();
                 student = _mapper.Map<Student>(EditModel);
-                if (CurrentUser.FacultyId == null)
+                if (SessionData.CurrentUser?.FacultyId == null)
                 {
                     student.FacultyId = facultyId;
                 }
                 else
                 {
-                    student.FacultyId = CurrentUser.FacultyId;
+                    student.FacultyId = SessionData.CurrentUser.FacultyId;
                 }
                 ValueChange.InvokeAsync(student);
             }

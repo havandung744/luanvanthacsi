@@ -7,6 +7,7 @@ using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Services;
 using AutoMapper;
 using MathNet.Numerics.Distributions;
+using luanvanthacsi.Models;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
@@ -14,7 +15,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
     {
         [Inject] IMapper _mapper { get; set; }
         [Inject] IThesisDefenseService ThesisDefenseService { get; set; }
-        [Parameter] public User CurrentUser { get; set; }
+        [CascadingParameter] SessionData SessionData { get; set; }
         [Parameter] public EventCallback Cancel { get; set; }
         [Parameter] public EventCallback<ThesisDefense> ValueChange { get; set; }
         [Parameter] public string FacultyId { get; set; }
@@ -41,14 +42,14 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         {
             ThesisDefense thesisDefense = new ThesisDefense();
             thesisDefense = _mapper.Map<ThesisDefense>(EditModel);
-            if (CurrentUser.FacultyId == null)
+            if (SessionData?.CurrentUser.FacultyId == null)
             {
 
                 thesisDefense.FacultyId = FacultyId;
             }
             else
             {
-                thesisDefense.FacultyId = CurrentUser.FacultyId;
+                thesisDefense.FacultyId = SessionData.CurrentUser.FacultyId;
             }
             ValueChange.InvokeAsync(thesisDefense);
         }

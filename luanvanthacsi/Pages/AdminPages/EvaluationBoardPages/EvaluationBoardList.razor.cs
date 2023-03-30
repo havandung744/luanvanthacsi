@@ -22,14 +22,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
     public partial class EvaluationBoardList : ComponentBase
     {
-        [CascadingParameter] SessionData SessionData { get; set; }
-
         [Inject] IJSRuntime JSRuntime { get; set; }
-        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] ExcelExporter ExcelExporter { get; set; }
-
-        [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
-        [Inject] IUserService UserService { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IEvaluationBoardService EvaluationBoardService { get; set; }
@@ -38,8 +33,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IFacultyService FacultyService { get; set; }
         [Inject] IMapper _mapper { get; set; }
         [Inject] ISpecializedService SpecializedService { get; set; }
-
-
+        [CascadingParameter] SessionData SessionData { get; set; }
         List<EvaluationBoardData>? evaluationBoardDatas { get; set; } = new();
         List<Scientist>? Scientists { get; set; } = new();
         bool visible = false;
@@ -49,7 +43,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         EvaluationBoardData? selectData;
         Table<EvaluationBoardData>? table;
         List<string>? ListSelectedEvaluationBoardDataIds;
-        User CurrentUser;
         bool addVisible;
         List<Faculty> facultyList { get; set; }
         List<ExcelSheetObject> Sheets { get; set; }
@@ -58,8 +51,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         protected override async Task OnInitializedAsync()
         {
-            string id = await getUserId();
-            CurrentUser = await UserService.GetUserByIdAsync(id);
             evaluationBoardDatas = new();
             facultyList = await FacultyService.GetAllAsync();
             Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HoiDong", "KEY_STAFFIMPORT", 4, null, GetTable().GetDataColumns(), 3) };
@@ -91,13 +82,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             }
         }
 
-        async Task<string> getUserId()
-        {
-            var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
-            var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
-            return UserId;
-        }
-
         public async Task LoadAsync()
         {
             try
@@ -108,27 +92,27 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 evaluationBoardDatas?.Clear();
                 List<EvaluationBoard> evaluationBoards = new List<EvaluationBoard>();
 
-                if (CurrentUser.FacultyId == null)
+                if (SessionData.CurrentUser?.FacultyId == null)
                 {
                     facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
                     evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(facultyId);
                 }
                 else
                 {
-                    evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(CurrentUser.FacultyId);
+                    evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
                 }
                 // hiển thị dữ liệu mới nhất lên đầu trang
                 var list = evaluationBoards.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
                 evaluationBoardDatas = _mapper.Map<List<EvaluationBoardData>>(list);
                 #region join bảng lấy dữ liệu
                 //List<Scientist> scientists = new List<Scientist>();
-                if (CurrentUser.FacultyId == null)
+                if (SessionData.CurrentUser?.FacultyId == null)
                 {
                     Scientists = await ScientistService.GetAllByIdAsync(facultyId);
                 }
                 else
                 {
-                    Scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                    Scientists = await ScientistService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
                 }
                 foreach (var item in evaluationBoardDatas)
                 {

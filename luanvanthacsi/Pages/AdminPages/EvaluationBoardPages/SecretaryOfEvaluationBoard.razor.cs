@@ -3,6 +3,7 @@ using AutoMapper;
 using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -10,16 +11,16 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
     public partial class SecretaryOfEvaluationBoard : ComponentBase
     {
-        [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] TableLocale? TableLocale { get; set; }
         [Inject] NotificationService? Notice { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
-        [Inject] IUserService? UserService { get; set; }
         [Inject] ISpecializedService SpecializedService { get; set; }
+        [CascadingParameter] public SessionData SessionData { get; set; }
         [Parameter] public int tab { get; set; }
         [Parameter] public string facultyId { get; set; }
-
+        [Parameter] public string EvaluationBoardCode { get; set; }
+        [Parameter] public List<string> SelectedScientistIds { get; set; }
         List<ScientistData>? scientistDatas { get; set; }
         IEnumerable<ScientistData> selectedRows;
         Scientist? selectData;
@@ -27,22 +28,10 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IMapper _mapper { get; set; }
         bool visible = false;
         bool loading = false;
-        User CurrentUser;
-        [Parameter] public string EvaluationBoardCode { get; set; }
-        [Parameter] public List<string> SelectedScientistIds { get; set; }
-
-
-        async Task<string> getUserId()
-        {
-            var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
-            var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
-            return UserId;
-        }
+      
         protected override async Task OnInitializedAsync()
         {
             SelectedScientistIds = new List<string>();
-            string id = await getUserId();
-            CurrentUser = await UserService.GetUserByIdAsync(id);
             scientistDatas = new();
             await LoadAsync();
         }
@@ -58,7 +47,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 List<Scientist> lecturers = new List<Scientist>();
                 List<Specialized> specializedList = new List<Specialized>();
                 List<Scientist> list = new List<Scientist>();
-                if (CurrentUser.FacultyId == null)
+                if (SessionData.CurrentUser?.FacultyId == null)
                 {
                     lecturers = await ScientistService.GetAllByIdAsync(facultyId);
                     list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == facultyId).ToList();
@@ -66,9 +55,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
                 else
                 {
-                    lecturers = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
-                    list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == CurrentUser.FacultyId).ToList();
-                    specializedList = await SpecializedService.GetAllByFacultyIdAsync(CurrentUser.FacultyId);
+                    lecturers = await ScientistService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
+                    list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == SessionData.CurrentUser.FacultyId).ToList();
+                    specializedList = await SpecializedService.GetAllByFacultyIdAsync(SessionData.CurrentUser.FacultyId);
                 }
                 foreach (var item in list)
                 {
@@ -85,19 +74,18 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 throw;
             }
         }
-
         public async Task SetSelectedRows(List<string> ids)
         {
             try
             {
                 List<Scientist> scientists = new List<Scientist>();
-                if (CurrentUser.FacultyId == null)
+                if (SessionData.CurrentUser?.FacultyId == null)
                 {
                     scientists = await ScientistService.GetAllByIdAsync(facultyId);
                 }
                 else
                 {
-                    scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                    scientists = await ScientistService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
                 }
                 var filteredObjects = scientists.Where(o => ids.Contains(o.Id));
                 scientists.RemoveAll(o => !filteredObjects.Contains(o));

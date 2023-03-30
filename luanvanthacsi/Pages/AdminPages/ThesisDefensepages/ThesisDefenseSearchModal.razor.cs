@@ -6,6 +6,7 @@ using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
@@ -13,7 +14,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
     public partial class ThesisDefenseSearchModal : ComponentBase
     {
-        [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] IUserService UserService { get; set; }
@@ -21,6 +21,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         [Inject] NotificationService Notice { get; set; }
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IMapper _mapper { get; set; }
+        [CascadingParameter] SessionData SessionData { get; set; }
         [Parameter] public bool ModalVisible { get; set; }
         [Parameter] public EventCallback<bool> ChanageModalVisible { get; set; }
         [Parameter] public EventCallback ReloadStudentList { get; set; }
@@ -31,7 +32,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         [Parameter] public EventCallback CancelChanged { get; set; }
         [Parameter] public EventCallback ChangeStudentList { get; set; }
         List<StudentData> studentDatas { get; set; } = new List<StudentData>();
-        User CurrentUser;
         string currentThesisDefenseId;
         Table<StudentData>? table;
         StudentData? selectData;
@@ -41,16 +41,9 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 
         protected override async Task OnInitializedAsync()
         {
-            string id = await getUserId();
-            CurrentUser = await UserService.GetUserByIdAsync(id);
             studentDatas = new();
         }
-        async Task<string> getUserId()
-        {
-            var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
-            var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
-            return UserId;
-        }
+       
         async Task HandleOk()
         {
             if (ListSelectedIds.Count > 0)
@@ -107,9 +100,9 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             studentDatas.Clear();
             // lấy dữ liệu học viên chưa đăng ký đợt bảo vệ
             List<Student> students = new List<Student>();
-            if (CurrentUser.FacultyId != null)
+            if (SessionData?.CurrentUser.FacultyId != null)
             {
-                students = await StudentService.GetAllByIdAsync(CurrentUser.FacultyId);
+                students = await StudentService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
             }
             else
             {

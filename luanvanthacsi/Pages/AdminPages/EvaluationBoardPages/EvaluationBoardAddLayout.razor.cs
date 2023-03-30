@@ -2,6 +2,8 @@
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
+using luanvanthacsi.Data.Services;
+using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
@@ -9,8 +11,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
     public partial class EvaluationBoardAddLayout : ComponentBase
     {
         [Inject] NotificationService Notice { get; set; }
-        [Inject] NavigationManager NavigationManager { get; set; }
-        [Parameter] public User CurrentUser { get; set; }
+        [CascadingParameter] public SessionData SessionData { get; set; }
         [Parameter] public EventCallback<EvaluationBoard> SaveChange { get; set; }
         [Parameter] public EventCallback CancelDetail { get; set; }
         [Parameter] public string FacultyId { get; set; }
@@ -23,93 +24,91 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         string idUpdate = "";
         List<string> selectedScientistIds;
 
-
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             selectedScientistIds = new List<string>();
         }
 
         void OnTabChange(string key)
         {
             selectedScientistIds.Clear();
-            if (key != "1")
-            {
-                string userId = StudentOfEvaluationBoardRef.GetStudentId();
-                if (userId == null)
-                {
-                    activeTab = "1";
-                    Notice.NotiWarning("Vui lòng chọn học viên.");
-                    return;
-                }
-            }
+            //if (key != "1")
+            //{
+            //    string userId = StudentOfEvaluationBoardRef.GetStudentId();
+            //    if (userId == null)
+            //    {
+            //        activeTab = "1";
+            //        Notice.NotiWarning("Vui lòng chọn học viên.");
+            //        return;
+            //    }
+            //}
             if (key != "2")
             {
                 var presidentId = PresidentRef.GetId();
-                if (presidentId.Count == 0 && key != "1")
-                {
-                    activeTab = "2";
-                    Notice.NotiWarning("Vui lòng chọn chủ tịch.");
-                    return;
-                }
-                else
-                {
+                //if (presidentId.Count == 0 && key != "1")
+                //{
+                //    activeTab = "2";
+                //    Notice.NotiWarning("Vui lòng chọn chủ tịch.");
+                //    return;
+                //}
+                //else
+                //{
                     if (presidentId.FirstOrDefault().IsNotNullOrEmpty())
                     {
                         selectedScientistIds.Add(presidentId?.FirstOrDefault());
                     }
-                }
+                //}
             }
             if (key != "3")
             {
                 var counterattackerRef = CounterattackerRef.GetId();
-                if (counterattackerRef.Count != 3 && key != "1" && key != "2")
-                {
-                    activeTab = "3";
-                    Notice.NotiWarning("Vui lòng chọ 3 phản biện.");
-                    return;
-                }
-                else
-                {
+                //if (counterattackerRef.Count != 3 && key != "1" && key != "2")
+                //{
+                //    activeTab = "3";
+                //    Notice.NotiWarning("Vui lòng chọ 3 phản biện.");
+                //    return;
+                //}
+                //else
+                //{
                     foreach (var item in counterattackerRef)
                     {
                         selectedScientistIds.Add(item);
                     }
-                }
+                //}
             }
             if (key != "4")
             {
                 var secretaryOfEvaluationBoardRef = SecretaryOfEvaluationBoardRef.GetId();
-                if (secretaryOfEvaluationBoardRef.Count == 0 && key != "1" && key != "2" && key != "3")
-                {
-                    activeTab = "4";
-                    Notice.NotiWarning("Vui lòng chọn thư ký.");
-                    return;
-                }
-                else
-                {
+                //if (secretaryOfEvaluationBoardRef.Count == 0 && key != "1" && key != "2" && key != "3")
+                //{
+                //    activeTab = "4";
+                //    Notice.NotiWarning("Vui lòng chọn thư ký.");
+                //    return;
+                //}
+                //else
+                //{
                     if (secretaryOfEvaluationBoardRef.FirstOrDefault().IsNotNullOrEmpty())
                     {
                         selectedScientistIds.Add(secretaryOfEvaluationBoardRef?.FirstOrDefault());
                     }
-                }
+                //}
             }
             if (key != "5")
             {
                 var scientistOfEvaluationBoardRef = ScientistOfEvaluationBoardRef.GetId();
-                if (scientistOfEvaluationBoardRef.Count != 2 && key != "1" && key != "2" && key != "3" && key != "4")
-                {
-                    activeTab = "5";
-                    Notice.NotiWarning("Vui lòng chọn 2 uỷ viên.");
-                    return;
-                }
-                else
-                {
+                //if (scientistOfEvaluationBoardRef.Count != 2 && key != "1" && key != "2" && key != "3" && key != "4")
+                //{
+                //    activeTab = "5";
+                //    Notice.NotiWarning("Vui lòng chọn 2 uỷ viên.");
+                //    return;
+                //}
+                //else
+                //{
                     foreach (var item in scientistOfEvaluationBoardRef)
                     {
                         selectedScientistIds.Add(item);
                     }
-                }
+                //}
             }
             activeTab = key;
         }
@@ -178,14 +177,14 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
                 // Thực hiện lưu
                 activeTab = "1";
-                if (CurrentUser.FacultyId == null)
+                if (SessionData.CurrentUser?.FacultyId == null)
                 {
                     evaluationBoard.FacultyId = FacultyId;
                     evaluationBoard.Status = 2;
                 }
                 else
                 {
-                    evaluationBoard.FacultyId = CurrentUser.FacultyId;
+                    evaluationBoard.FacultyId = SessionData.CurrentUser.FacultyId;
                     evaluationBoard.Status = 1;
                 }
                 evaluationBoard.Id = idUpdate;

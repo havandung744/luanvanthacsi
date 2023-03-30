@@ -3,7 +3,7 @@
     <TabBarExtraContent>
         <Space>
             <SpaceItem>
-                @if (CurrentUser?.FacultyId == null)
+                @if (SessionData.CurrentUser?.FacultyId == null)
                 {
                     <Button OnClick="SaveAsync" type="@ButtonType.Primary">Phê duyệt</Button>
                 }
@@ -38,7 +38,7 @@
                 <span><Icon Type="user" />Chủ tịch</span>
             </TabTemplate>
             <ChildContent>
-                <PresidentOfEvaluationBoard @ref="PresidentRef" SelectedScientistIds="selectedScientistIds" facultyId="@FacultyId"></PresidentOfEvaluationBoard>
+                <PresidentOfEvaluationBoard @ref="PresidentRef" SelectedScientistIds="selectedScientistIds" facultyId="@FacultyId" ></PresidentOfEvaluationBoard>
             </ChildContent>
         </TabPane>
         <TabPane Key="3" ForceRender>
@@ -54,7 +54,7 @@
                 <span><Icon Type="user" />Thư ký</span>
             </TabTemplate>
             <ChildContent>
-                <SecretaryOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds" facultyId="@FacultyId"></SecretaryOfEvaluationBoard>
+                <SecretaryOfEvaluationBoard @ref="SecretaryOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds" facultyId="@FacultyId" ></SecretaryOfEvaluationBoard>
             </ChildContent>
         </TabPane>
         <TabPane Key="5" ForceRender>
@@ -62,7 +62,7 @@
                 <span><Icon Type="user" />Ủy viên</span>
             </TabTemplate>
             <ChildContent>
-                <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds" facultyId="@FacultyId"></ScientistOfEvaluationBoard>
+                <ScientistOfEvaluationBoard @ref="ScientistOfEvaluationBoardRef" SelectedScientistIds="@selectedScientistIds" facultyId="@FacultyId" ></ScientistOfEvaluationBoard>
             </ChildContent>
         </TabPane>
     </ChildContent>

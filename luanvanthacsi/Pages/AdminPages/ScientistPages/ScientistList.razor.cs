@@ -7,6 +7,7 @@ using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
@@ -15,7 +16,6 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 {
     public partial class ScientistList : ComponentBase
     {
-        [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] IUserService UserService { get; set; }
@@ -24,8 +24,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         [Inject] IFacultyService FacultyService { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
-        List<ScientistData>? scientistDatas { get; set; }
         [Inject] IMapper _mapper { get; set; }
+        [CascadingParameter] SessionData SessionData { get; set; }
+        List<ScientistData>? scientistDatas { get; set; }
         List<Scientist>? scientists { get; set; }
         bool visible = false;
         ScientistEdit scientistEdit = new ScientistEdit();
@@ -34,16 +35,15 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         ScientistData? selectData;
         Table<ScientistData>? table;
         List<string>? ListSelectedScientistIds;
-        User CurrentUser;
+        //User CurrentUser;
         List<Faculty> facultyList { get; set; }
         List<Specialized> specializedList { get; set; }
         string facultyId;
         string value;
+      
 
         protected override async Task OnInitializedAsync()
         {
-            string id = await getUserId();
-            CurrentUser = await UserService.GetUserByIdAsync(id);
             scientistDatas = new();
             facultyList = await FacultyService.GetAllAsync();
             specializedList = await SpecializedService.GetAllAsync();
@@ -57,13 +57,6 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             }
         }
 
-        async Task<string> getUserId()
-        {
-            var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
-            var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
-            return UserId;
-        }
-
         public async Task LoadAsync()
         {
             try
@@ -73,14 +66,14 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 visible = false;
                 scientistDatas?.Clear();
                 List<Scientist> scientists = new List<Scientist>();
-                if (CurrentUser.FacultyId == null)
+                if (SessionData.CurrentUser?.FacultyId == null)
                 {
                     facultyId = await localStorage.GetItemAsync<string>("facultyIdOfScientist");
                     scientists = await ScientistService.GetAllByIdAsync(facultyId);
                 }
                 else
                 {
-                    scientists = await ScientistService.GetAllByIdAsync(CurrentUser.FacultyId);
+                    scientists = await ScientistService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
                 }
                 // hiển thị dữ liệu mới nhất lên đầu trang
                 var list = scientists.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
