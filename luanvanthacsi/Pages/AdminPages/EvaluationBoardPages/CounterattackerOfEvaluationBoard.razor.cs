@@ -46,6 +46,14 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             scientistDatas = new();
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await LoadAsync();
+            }
+        }
+
         public async Task LoadAsync()
         {
             try

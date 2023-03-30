@@ -21,7 +21,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         public ScientistOfEvaluationBoard ScientistOfEvaluationBoardRef { get; set; } = new();
         private string activeTab = "1";
         string idUpdate = "";
-        List<string> selectedScientistIds { get; set; }
+        List<string> selectedScientistIds;
 
 
         protected override async Task OnInitializedAsync()
@@ -178,7 +178,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
                 // Thực hiện lưu
                 activeTab = "1";
-                await CancelDetail.InvokeAsync();
                 if (CurrentUser.FacultyId == null)
                 {
                     evaluationBoard.FacultyId = FacultyId;
@@ -226,8 +225,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 await StudentOfEvaluationBoardRef.SetSelectedRows(data.StudentId, data.Id);
                 await PresidentRef.SetSelectedRows(PrersidentId);
                 await CounterattackerRef.SetSelectedRows(CounterattackerIds);
-                await ScientistOfEvaluationBoardRef.SetSelectedRows(ScientistIds);
                 await SecretaryOfEvaluationBoardRef.SetSelectedRows(SecretaryId);
+                await ScientistOfEvaluationBoardRef.SetSelectedRows(ScientistIds);
             }
             catch (Exception)
             {
@@ -246,10 +245,10 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         async Task CancelAsync()
         {
+            await CancelDetail.InvokeAsync();
+            activeTab = "1";
             idUpdate = "";
             selectedScientistIds.Clear();
-            activeTab = "1";
-            await CancelDetail.InvokeAsync();
         }
 
     }

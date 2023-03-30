@@ -23,7 +23,7 @@
                     @if (CurrentUser?.FacultyId != null)
                     {
                         <SpaceItem>
-                            <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" @onclick="AddEvaluationBoard">Lập hội đồng</Button>
+                            <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" OnClick ="AddEvaluationBoard">Lập hội đồng</Button>
                         </SpaceItem>
                     }
                     <SpaceItem>
@@ -149,7 +149,7 @@
 </div>
 
 
-<Drawer Closable="false" Visible="addVisible" Height="900" Class="DrawerOfEvaluation"
+<Drawer Visible="addVisible" Height="900" OnClose="() => addVisible = false"
         Title='("Lập hội đồng đánh giá")' Placement="bottom">
     <Template>
         <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CurrentUser="CurrentUser" CancelDetail="CancelDetail" FacultyId="@facultyId"></EvaluationBoardAddLayout>
