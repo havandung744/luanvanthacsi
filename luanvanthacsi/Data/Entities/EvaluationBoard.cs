@@ -16,11 +16,11 @@
         //Phản biện 2
         public virtual string CounterattackerIdTwo { get; set; }
         //Phản biện 3
-        public virtual string CounterattackerIdThree { get; set; }
+        public virtual string? CounterattackerIdThree { get; set; }
         //Nhà khoa học 1
         public virtual string ScientistIdOne { get; set; }
         //Nhà khoa học 2
-        public virtual string ScientistIdTwo { get; set; }
+        public virtual string? ScientistIdTwo { get; set; }
         //thư ký
         public virtual string SecretaryId { get; set; }
         public virtual int Status { get; set; }

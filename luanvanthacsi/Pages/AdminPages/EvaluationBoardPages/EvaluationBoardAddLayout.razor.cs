@@ -140,28 +140,32 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 }
                 // lấy danh sách id của giảng viên phản biện
                 var counterattackerIds = CounterattackerRef.GetId();
-                if (counterattackerIds.Count != 3)
+                if (SessionData.CurrentUser.FacultyId == null)
                 {
-                    Notice.NotiError("Vui lòng chọn ba phản biện!");
-                    return;
+                    if (counterattackerIds.Count != 2)
+                    {
+                        Notice.NotiError("Vui lòng chọn hai phản biện!");
+                        return;
+                    }
+                    else
+                    {
+                        evaluationBoard.CounterattackerIdOne = counterattackerIds[0];
+                        evaluationBoard.CounterattackerIdTwo = counterattackerIds[1];
+                    }
                 }
                 else
                 {
-                    evaluationBoard.CounterattackerIdOne = counterattackerIds[0];
-                    evaluationBoard.CounterattackerIdTwo = counterattackerIds[1];
-                    evaluationBoard.CounterattackerIdThree = counterattackerIds[2];
-                }
-                // lấy id của 2 nhà khoa học
-                var scientistIds = ScientistOfEvaluationBoardRef.GetId();
-                if (scientistIds.Count != 2)
-                {
-                    Notice.NotiError("Vui lòng chọn hai ủy viên!");
-                    return;
-                }
-                else
-                {
-                    evaluationBoard.ScientistIdOne = scientistIds[0];
-                    evaluationBoard.ScientistIdTwo = scientistIds[1];
+                    if (counterattackerIds.Count != 3)
+                    {
+                        Notice.NotiError("Vui lòng chọn ba phản biện!");
+                        return;
+                    }
+                    else
+                    {
+                        evaluationBoard.CounterattackerIdOne = counterattackerIds[0];
+                        evaluationBoard.CounterattackerIdTwo = counterattackerIds[1];
+                        evaluationBoard.CounterattackerIdThree = counterattackerIds[2];
+                    }
                 }
                 // lấy id của thư ký
                 var secretaryId = SecretaryOfEvaluationBoardRef.GetId();
@@ -174,6 +178,35 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 {
                     evaluationBoard.SecretaryId = secretaryId.First();
                 }
+                // lấy id của 2 nhà khoa học
+                var scientistIds = ScientistOfEvaluationBoardRef.GetId();
+                if (SessionData.CurrentUser.FacultyId == null)
+                {
+
+                    if (scientistIds.Count != 1)
+                    {
+                        Notice.NotiError("Vui lòng chọn một ủy viên!");
+                        return;
+                    }
+                    else
+                    {
+                        evaluationBoard.ScientistIdOne = scientistIds[0];
+                    }
+                }
+                else
+                {
+                    if (scientistIds.Count != 2)
+                    {
+                        Notice.NotiError("Vui lòng chọn hai ủy viên!");
+                        return;
+                    }
+                    else
+                    {
+                        evaluationBoard.ScientistIdOne = scientistIds[0];
+                        evaluationBoard.ScientistIdTwo = scientistIds[1];
+                    }
+                }
+
                 // Thực hiện lưu
                 activeTab = "1";
                 if (SessionData.CurrentUser?.FacultyId == null)
@@ -194,7 +227,6 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             {
                 throw;
             }
-
         }
 
         public async Task LoadDetail(EvaluationBoard data)

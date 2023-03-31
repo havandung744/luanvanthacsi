@@ -12,7 +12,6 @@ using luanvanthacsi.Excel.ClassExcel;
 using luanvanthacsi.Models;
 using luanvanthacsi.Ultils;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using OfficeOpenXml;
 using System.Data;
@@ -129,17 +128,17 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     // lấy thông tin chủ tịch
                     item.PresidentName = Scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
                     // lấy thông tin phản biện 1
-                    item.CounterattackerOne = Scientists.Where(x => x.Id == item.CounterattackerIdOne).Select(x => x.Name).First();
+                    item.CounterattackerOne = Scientists.Where(x => x.Id == item.CounterattackerIdOne).Select(x => x.Name).FirstOrDefault();
                     // lấy thông tin phản biện 2
-                    item.CounterattackerTwo = Scientists.Where(x => x.Id == item.CounterattackerIdTwo).Select(x => x.Name).First();
+                    item.CounterattackerTwo = Scientists.Where(x => x.Id == item.CounterattackerIdTwo).Select(x => x.Name).FirstOrDefault();
                     // lấy thông tin phản biện 3
-                    item.CounterattackerThree = Scientists.Where(x => x.Id == item.CounterattackerIdThree).Select(x => x.Name).First();
+                    item.CounterattackerThree = Scientists.Where(x => x.Id == item.CounterattackerIdThree).Select(x => x.Name).FirstOrDefault();
                     // lấy thông tin phản biện thư kí
-                    item.SecretaryName = Scientists.Where(x => x.Id == item.SecretaryId).Select(x => x.Name).First();
+                    item.SecretaryName = Scientists.Where(x => x.Id == item.SecretaryId).Select(x => x.Name).FirstOrDefault();
                     // lấy thông tin ủy viên 1
-                    item.ScientistOne = Scientists.Where(x => x.Id == item.ScientistIdOne).Select(x => x.Name).First();
+                    item.ScientistOne = Scientists.Where(x => x.Id == item.ScientistIdOne).Select(x => x.Name).FirstOrDefault();
                     // lấy thông tin ủy viên 2
-                    item.ScientistTwo = Scientists.Where(x => x.Id == item.ScientistIdTwo).Select(x => x.Name).First();
+                    item.ScientistTwo = Scientists.Where(x => x.Id == item.ScientistIdTwo).Select(x => x.Name).FirstOrDefault();
                 }
                 #endregion
                 int stt = 1;
