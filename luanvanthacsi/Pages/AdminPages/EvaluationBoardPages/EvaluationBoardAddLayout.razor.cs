@@ -2,7 +2,6 @@
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
-using luanvanthacsi.Data.Services;
 using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -11,18 +10,18 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
     public partial class EvaluationBoardAddLayout : ComponentBase
     {
         [Inject] NotificationService Notice { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [CascadingParameter] public SessionData SessionData { get; set; }
         [Parameter] public EventCallback<EvaluationBoard> SaveChange { get; set; }
         [Parameter] public EventCallback CancelDetail { get; set; }
-        [Parameter] public string FacultyId { get; set; }
         public StudentOfEvaluationBoard StudentOfEvaluationBoardRef { get; set; } = new();
         public PresidentOfEvaluationBoard PresidentRef { get; set; } = new();
         public CounterattackerOfEvaluationBoard CounterattackerRef { get; set; } = new();
         public SecretaryOfEvaluationBoard SecretaryOfEvaluationBoardRef { get; set; } = new();
         public ScientistOfEvaluationBoard ScientistOfEvaluationBoardRef { get; set; } = new();
+        List<string> selectedScientistIds;
         private string activeTab = "1";
         string idUpdate = "";
-        List<string> selectedScientistIds;
 
         protected override async Task OnInitializedAsync()
         {
@@ -53,10 +52,10 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 //}
                 //else
                 //{
-                    if (presidentId.FirstOrDefault().IsNotNullOrEmpty())
-                    {
-                        selectedScientistIds.Add(presidentId?.FirstOrDefault());
-                    }
+                if (presidentId.FirstOrDefault().IsNotNullOrEmpty())
+                {
+                    selectedScientistIds.Add(presidentId?.FirstOrDefault());
+                }
                 //}
             }
             if (key != "3")
@@ -70,10 +69,10 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 //}
                 //else
                 //{
-                    foreach (var item in counterattackerRef)
-                    {
-                        selectedScientistIds.Add(item);
-                    }
+                foreach (var item in counterattackerRef)
+                {
+                    selectedScientistIds.Add(item);
+                }
                 //}
             }
             if (key != "4")
@@ -87,10 +86,10 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 //}
                 //else
                 //{
-                    if (secretaryOfEvaluationBoardRef.FirstOrDefault().IsNotNullOrEmpty())
-                    {
-                        selectedScientistIds.Add(secretaryOfEvaluationBoardRef?.FirstOrDefault());
-                    }
+                if (secretaryOfEvaluationBoardRef.FirstOrDefault().IsNotNullOrEmpty())
+                {
+                    selectedScientistIds.Add(secretaryOfEvaluationBoardRef?.FirstOrDefault());
+                }
                 //}
             }
             if (key != "5")
@@ -104,10 +103,10 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 //}
                 //else
                 //{
-                    foreach (var item in scientistOfEvaluationBoardRef)
-                    {
-                        selectedScientistIds.Add(item);
-                    }
+                foreach (var item in scientistOfEvaluationBoardRef)
+                {
+                    selectedScientistIds.Add(item);
+                }
                 //}
             }
             activeTab = key;
@@ -179,7 +178,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 activeTab = "1";
                 if (SessionData.CurrentUser?.FacultyId == null)
                 {
-                    evaluationBoard.FacultyId = FacultyId;
+                    string facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
+                    evaluationBoard.FacultyId = facultyId;
                     evaluationBoard.Status = 2;
                 }
                 else

@@ -5,19 +5,18 @@ using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
     public partial class PresidentOfEvaluationBoard : ComponentBase
     {
         [Inject] TableLocale? TableLocale { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [Inject] NotificationService? Notice { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] ISpecializedService SpecializedService { get; set; }
         [CascadingParameter] public SessionData SessionData { get; set; }
         [Parameter] public int tab { get; set; }
-        [Parameter] public string facultyId { get; set; }
         [Parameter] public string EvaluationBoardCode { get; set; }
         [Parameter] public List<string> SelectedScientistIds { get; set; }
         List<ScientistData>? scientistDatas { get; set; }
@@ -55,6 +54,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 List<Scientist> list = new List<Scientist>();
                 if (SessionData.CurrentUser?.FacultyId == null)
                 {
+                    string facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
                     lecturers = await ScientistService.GetAllByIdAsync(facultyId);
                     list = lecturers.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).Where(x => x.FacultyId == facultyId).ToList();
                     specializedList = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
@@ -86,6 +86,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             {
                 if (SessionData.CurrentUser?.FacultyId == null)
                 {
+                    string facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
                     scientists = await ScientistService.GetAllByIdAsync(facultyId);
                 }
                 else

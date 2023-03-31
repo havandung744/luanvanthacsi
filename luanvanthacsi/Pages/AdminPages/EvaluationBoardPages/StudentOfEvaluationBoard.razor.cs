@@ -6,7 +6,6 @@ using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 {
@@ -17,9 +16,9 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] IStudentService StudentService { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] IEvaluationBoardService EvaluationBoardService { get; set; }
-        [CascadingParameter] public SessionData SessionData {get;set;}
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
+        [CascadingParameter] public SessionData SessionData { get; set; }
         [Parameter] public string EvaluationBoardCode { get; set; }
-        [Parameter] public string facultyId { get; set; }
         List<StudentData>? studentDatas { get; set; }
         IEnumerable<StudentData> selectedRows;
         StudentData? selectData;
@@ -61,6 +60,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             List<Student> students = new List<Student>();
             if (SessionData.CurrentUser?.FacultyId == null)
             {
+                string facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
                 students = await StudentService.GetAllByIdAsync(facultyId);
             }
             else
