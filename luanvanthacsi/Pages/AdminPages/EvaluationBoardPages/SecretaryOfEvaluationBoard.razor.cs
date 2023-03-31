@@ -31,7 +31,14 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             SelectedScientistIds = new List<string>();
             scientistDatas = new();
-            await LoadAsync();
+            //await LoadAsync();
+        }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await LoadAsync();
+            }
         }
 
         public async Task LoadAsync()

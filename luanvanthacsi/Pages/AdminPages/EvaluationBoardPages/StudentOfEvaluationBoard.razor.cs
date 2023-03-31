@@ -33,16 +33,16 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             studentDatas = new();
             scientists = await ScientistService.GetAll();
-            await LoadAsync();
+            //await LoadAsync();
         }
 
-        //protected override async Task OnAfterRenderAsync(bool firstRender)
-        //{
-        //    if (firstRender)
-        //    {
-        //        await LoadAsync();
-        //    }
-        //}
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await LoadAsync();
+            }
+        }
 
         public async Task SetSelectedRows(string id, string currentId)
         {
@@ -85,6 +85,13 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         public string GetStudentId()
         {
             return selectedRows?.FirstOrDefault()?.Id;
+        }
+        public List<string> GetInstructorIdsOfStudent()
+        {
+            List<string> ids = new List<string>();
+            ids.Add(selectedRows?.FirstOrDefault()?.InstructorIdOne);
+            ids.Add(selectedRows?.FirstOrDefault()?.InstructorIdTwo);
+            return ids;
         }
     }
 }

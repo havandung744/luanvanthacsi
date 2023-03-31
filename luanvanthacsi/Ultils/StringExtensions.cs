@@ -1,5 +1,4 @@
 ﻿using luanvanthacsi.Data.Extentions;
-using System.ComponentModel;
 using static luanvanthacsi.Data.Components.Enum;
 
 namespace luanvanthacsi.Ultils
@@ -41,12 +40,12 @@ namespace luanvanthacsi.Ultils
             else if (role == EvaluationRole.President)
             {
                 result = "450,000";
-            }   
+            }
             else if (role == EvaluationRole.Secretary)
             {
                 result = "400,000";
-            }        
-            else if(role == EvaluationRole.Instructor)
+            }
+            else if (role == EvaluationRole.Instructor)
             {
                 result = "250,000";
             }

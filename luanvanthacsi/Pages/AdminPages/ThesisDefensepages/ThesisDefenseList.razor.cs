@@ -9,7 +9,6 @@ using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
@@ -65,7 +64,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             thesisDefenseDatas.Clear();
             visibleForDetail = false;
             List<ThesisDefense> thesisDefenses = new List<ThesisDefense>();
-            if (SessionData?.CurrentUser.FacultyId == null)
+            if (SessionData.CurrentUser?.FacultyId == null)
             {
 
                 facultyId = await localStorage.GetItemAsync<string>("facultyIdOfThesisDefense");

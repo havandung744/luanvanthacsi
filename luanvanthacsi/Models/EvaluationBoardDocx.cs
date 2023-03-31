@@ -28,6 +28,7 @@ namespace luanvanthacsi.Models
             public string Name { get; set; }
             public string WorkUnit { get; set; }
             public string Title { get; set; }
+            public string AcademicRank { get; set; }
             public string Degree { get; set; }
             public string Price { get; set; }
             public virtual EvaluationRole EvaluationRole { get; set; }

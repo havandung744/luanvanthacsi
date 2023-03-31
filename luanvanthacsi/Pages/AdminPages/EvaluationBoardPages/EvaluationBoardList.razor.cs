@@ -252,7 +252,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             try
             {
-                var deleteModel = evaluationBoardDatas.Where(c => selectedRows.Select(r => r.Id).Contains(c.Id)).ToList();
+                var deleteModel = evaluationBoardDatas?.Where(c => selectedRows.Select(r => r.Id).Contains(c.Id)).ToList();
                 List<EvaluationBoard> evaluationBoards = new List<EvaluationBoard>();
                 // maping từ studentData thành student
                 foreach (var evaluationBoardData in deleteModel)
@@ -334,6 +334,15 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             await LoadAsync();
         }
 
+        async Task ExportListWordAsync()
+        {
+            var listEvaluationBoardData = evaluationBoardDatas?.Where(c => selectedRows.Select(r => r.Id).Contains(c.Id)).ToList();
+            foreach (var item in listEvaluationBoardData)
+            {
+                await ExportDocxAsync(item);
+            }
+        }
+
         async Task ExportDocxAsync(EvaluationBoardData dt)
         {
             try
@@ -348,35 +357,56 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 var president = Scientists.Where(c => c.Id == dt.PresidentId).ToList();
                 var secretary = Scientists.Where(c => c.Id == dt.SecretaryId).ToList();
 
+                Student student = await StudentService.GetStudentByIdAsync(dt.StudentId);
+                var instructorOne = Scientists.Where(c => c.Id == student?.InstructorIdOne).ToList();
+                var instructorTwo = Scientists.Where(c => c.Id == student?.InstructorIdTwo).ToList();
+
                 counters.ForEach(c => c.EvaluationRole = EvaluationRole.CounterAttack);
                 scientists.ForEach(c => c.EvaluationRole = EvaluationRole.Scientist);
                 president.ForEach(c => c.EvaluationRole = EvaluationRole.President);
                 secretary.ForEach(c => c.EvaluationRole = EvaluationRole.Secretary);
+                instructorOne.ForEach(c => c.EvaluationRole = EvaluationRole.Instructor);
+                instructorTwo.ForEach(c => c.EvaluationRole = EvaluationRole.Instructor);
 
                 var listEvaluationBoard = counters.Concat(scientists).Concat(president).Concat(secretary).ToList();
-                var listEvaluationBoardAll = counters.Concat(scientists).Concat(president).Concat(secretary).ToList();
-                listEvaluationBoardAll.Add(new()
-                {
-                    //Name = dt.InstructorOne,
-                    Name = dt.InstructorNameOne,
-                    WorkingAgency = "Đơn vị TEST",
-                    EvaluationRole = EvaluationRole.Instructor
-                });
+                var listEvaluationBoardAll = counters.Concat(scientists).Concat(president).Concat(secretary).Concat(instructorOne).Concat(instructorTwo).ToList();
+                //listEvaluationBoardAll.Add(new()
+                //{
+                //    //Name = dt.InstructorOne,
+                //    //Name = dt.InstructorNameOne,
+                //    //Name = $"{FormatAcademicAndDegree(item.AcademicRank, item.Degree)} {item.Name}"
+                //    WorkingAgency = "Đơn vị TEST",
+                //    EvaluationRole = EvaluationRole.Instructor
+                //});
 
                 int i = 1;
                 int j = 1;
                 #endregion
 
+                List<Specialized> specialized = new List<Specialized>();
+                if (SessionData.CurrentUser?.FacultyId == null)
+                {
+                    specialized = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
+
+                }
+                else
+                {
+                    specialized = await SpecializedService.GetAllByFacultyIdAsync(SessionData.CurrentUser?.FacultyId);
+                }
+                // lấy thông tin chuyên nghành của học viên
+                var specializedName = specialized.Where(x => x.Id == student.SpecializedId).Select(x => x.Name).FirstOrDefault();
+                // lấy mã số chuyên nghành của học viên
+                var specializedCode = specialized.Where(x => x.Id == student.SpecializedId).Select(x => x.Code).FirstOrDefault();
+
                 EvaluationBoardDocx documentData = new();
-                Student student = await StudentService.GetStudentByIdAsync(dt.StudentId);
                 documentData.Content = new EvaluationBoardDocx.Data
                 {
                     DateForm = DateTime.Now.FormatDayMonthYear(),
                     StudentName = dt.StudentName,
                     DOB = dt.DOB.ToShortDate(),
                     TopicName = dt.TopicName,
-                    FacultyName = facultyList?.Where(x => x.Id == dt?.FacultyId).Select(x => x.Name).FirstOrDefault(),
-                    FacultyCode = facultyList?.Where(x => x.Id == dt?.FacultyId).Select(x => x.Code).FirstOrDefault(),
+                    FacultyName = specializedName,
+                    FacultyCode = specializedCode,
                     InstructorName = dt.InstructorNameOne,
                     BoardTotal = listEvaluationBoard.Count().ToString(),
                     EvaluationBoards = _mapper.Map<List<EvaluationBoardDocx.EvaluationBoard>>(listEvaluationBoard.OrderBy(c => c.EvaluationRole.EnumToInt())),
@@ -388,7 +418,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     foreach (var item in documentData.Content.EvaluationBoards)
                     {
                         item.No = i++.ToString();
-                        item.Name = $"{item.Degree.FormatDegree()} {item.Name}";
+                        item.Name = $"{FormatAcademicAndDegree(item.AcademicRank, item.Degree)} {item.Name}";
                     }
                 }
                 if (documentData.Content.EvaluationBoardAll.Any())
@@ -396,7 +426,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     foreach (var item in documentData.Content.EvaluationBoardAll)
                     {
                         item.No = j++.ToString();
-                        item.Name = $"{item.Degree.FormatDegree()} {item.Name}";
+                        item.Name = $"{FormatAcademicAndDegree(item.AcademicRank, item.Degree)} {item.Name}";
                     }
                 }
 
@@ -410,6 +440,27 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
                 throw;
             }
+        }
+
+        public string FormatAcademicAndDegree(string academic, string degree)
+        {
+            string result = string.Empty;
+            if (degree.IsNotNullOrEmpty())
+            {
+                if (degree.Equals("Tiến sĩ", StringComparison.OrdinalIgnoreCase) && academic == "-1")
+                {
+                    result = "TS.";
+                }
+                else if (degree.Equals("Tiến sĩ", StringComparison.OrdinalIgnoreCase) && academic == "0")
+                {
+                    result = "PGS.TS.";
+                }
+                else if (degree.Equals("Tiến sĩ", StringComparison.OrdinalIgnoreCase) && academic == "1")
+                {
+                    result = "GS.TS.";
+                }
+            }
+            return result;
         }
 
 

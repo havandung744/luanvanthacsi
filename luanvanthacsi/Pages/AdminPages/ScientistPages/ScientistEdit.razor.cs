@@ -1,5 +1,6 @@
 ﻿using AntDesign;
 using AutoMapper;
+using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Edit;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
@@ -22,6 +23,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
         [Inject] ISpecializedService SpecializedService { get; set; }
+        [Inject] NotificationService Notice { get; set; }
         [Inject] IMapper _mapper { get; set; }
         [Inject] IFileReaderService FileReaderService { get; set; }
         User CurrentUser;
@@ -40,6 +42,9 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         List<selectAcademicRank> _selectAcademicRanks;
         string Id { get; set; }
         List<Specialized> specializedList { get; set; }
+        string templateUrl;
+        bool templateViewVisible;
+
         protected override async void OnInitialized()
         {
             string id = await getUserId();
@@ -226,6 +231,26 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             else
             {
                 EditModel.SpecializedId = specializedList?.Select(x => x.Id).FirstOrDefault();
+            }
+        }
+
+        private void OpenPdf()
+        {
+            try
+            {
+                if (EditModel.AttachFilePath.IsNotNullOrEmpty())
+                {
+                    templateViewVisible = true;
+                    templateUrl = Path.Combine(EditModel.AttachFilePath);
+                }
+                else
+                {
+                    Notice.NotiWarning("Chưa Upload CV.");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
 

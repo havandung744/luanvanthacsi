@@ -2,6 +2,7 @@
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
+using luanvanthacsi.Data.Services;
 using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
 
@@ -11,6 +12,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
     {
         [Inject] NotificationService Notice { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
+        [Inject] IStudentService StudentService { get; set; }
         [CascadingParameter] public SessionData SessionData { get; set; }
         [Parameter] public EventCallback<EvaluationBoard> SaveChange { get; set; }
         [Parameter] public EventCallback CancelDetail { get; set; }
@@ -31,16 +33,28 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         void OnTabChange(string key)
         {
             selectedScientistIds.Clear();
-            //if (key != "1")
-            //{
-            //    string userId = StudentOfEvaluationBoardRef.GetStudentId();
-            //    if (userId == null)
-            //    {
-            //        activeTab = "1";
-            //        Notice.NotiWarning("Vui lòng chọn học viên.");
-            //        return;
-            //    }
-            //}
+            if (key != "1")
+            {
+                //string userId = StudentOfEvaluationBoardRef.GetStudentId();
+                //selectedScientistIds = StudentOfEvaluationBoardRef.GetInstructorIdsOfStudent();
+                //if (userId == null)
+                //{
+                //    activeTab = "1";
+                //    Notice.NotiWarning("Vui lòng chọn học viên.");
+                //    return;
+                //}
+                List<string> instructors = StudentOfEvaluationBoardRef.GetInstructorIdsOfStudent();
+                if (instructors.Count >= 1)
+                {
+                    foreach (var item in instructors)
+                    {
+                        if (item != null)
+                        {
+                            selectedScientistIds.Add(item);
+                        }
+                    }
+                }
+            }
             if (key != "2")
             {
                 var presidentId = PresidentRef.GetId();

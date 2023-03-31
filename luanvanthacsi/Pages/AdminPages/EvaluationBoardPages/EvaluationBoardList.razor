@@ -23,7 +23,7 @@
                     @if (SessionData.CurrentUser?.FacultyId != null)
                     {
                         <SpaceItem>
-                            <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" OnClick ="AddEvaluationBoard">Lập hội đồng</Button>
+                            <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" OnClick="AddEvaluationBoard">Lập hội đồng</Button>
                         </SpaceItem>
                     }
                     <SpaceItem>
@@ -31,6 +31,14 @@
                             Xuất Excel
                         </Button>
                     </SpaceItem>
+                    @if (selectedRows?.Any() == true)
+                    {
+                        <SpaceItem>
+                            <Button Icon="file-word" type="@ButtonType.Primary" OnClick="ExportListWordAsync">
+                                Xuất Word
+                            </Button>
+                        </SpaceItem>
+                    }
                     <SpaceItem>
                         @if (selectedRows?.Any() == true)
                         {
@@ -120,7 +128,7 @@
                                     <Tooltip Placement="@Placement.Top" Title="@("Xem chi tiết")">
                                         <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation />
                                     </Tooltip>
-                                </SpaceItem>     
+                                </SpaceItem>
                                 <SpaceItem>
                                     <Tooltip Placement="@Placement.Top" Title="@("Tải quyết định")">
                                         <Icon Type="download" @onclick="() => ExportDocxAsync(context)" Theme="outline" Class="btn-icon-edit" StopPropagation />
@@ -152,6 +160,6 @@
 <Drawer Closable="false" Visible="addVisible" Height="SessionData.BrowserDimension.Height" OnClose="() => addVisible = false"
         Title='("Hội đồng đánh giá")' Placement="bottom">
     <Template>
-        <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CancelDetail="CancelDetail" ></EvaluationBoardAddLayout>
+        <EvaluationBoardAddLayout @ref="EvaluationBoardAddLayoutRef" SaveChange="Save" CancelDetail="CancelDetail"></EvaluationBoardAddLayout>
     </Template>
 </Drawer>

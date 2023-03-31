@@ -83,6 +83,7 @@
                         <Icon Class="upload pointer" Type="cloud-upload" Theme="outline" OnClick="() => Upload(EditModel)" Style="width:24px; height: 24px" />
                     </Tooltip>
                 </SpaceItem>
+                <SpaceItem><Button OnClick="OpenPdf">View file</Button></SpaceItem>
             </Space>
         </FormItem>
         <FormItem>
@@ -119,6 +120,12 @@
         <span><Icon Type="plus" Theme="outline" />Đính kèm</span>
         <input id="uploadBtn" type="file" class="upload" @ref=inputTypeFileElement @onchange="GetNameFile" />
     </div>
+</Modal>
+
+<Modal Title="@EditModel.Name" Closable Visible=templateViewVisible Footer="null" DestroyOnClose
+       Width="900" Style="top:0px;margin-top: 15px;" BodyStyle="height:90vh;padding: 0px !important; overflow-y: visible !important;" MaxBodyHeight="@("90vh")"
+       OnCancel="() => templateViewVisible = false">
+    <iframe src="@templateUrl" frameborder="0" style="overflow:hidden;height:100%;width:100%" height="100%" width="100%"></iframe>
 </Modal>
 
 @code {
