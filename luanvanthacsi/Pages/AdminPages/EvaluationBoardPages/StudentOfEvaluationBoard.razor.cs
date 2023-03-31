@@ -14,7 +14,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] TableLocale TableLocale { get; set; }
         [Inject] NotificationService Notice { get; set; }
         [Inject] IStudentService StudentService { get; set; }
-        [Inject] IUserService UserService { get; set; }
+        [Inject] IScientistService ScientistService { get; set; }
+        [Inject] IMapper _mapper { get; set; }
         [Inject] IEvaluationBoardService EvaluationBoardService { get; set; }
         [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [CascadingParameter] public SessionData SessionData { get; set; }
@@ -24,13 +25,14 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         StudentData? selectData;
         Table<StudentData> table;
         public EvaluationBoardEditModel evaluationBoardEditModel { get; set; } = new EvaluationBoardEditModel();
-        [Inject] IMapper _mapper { get; set; }
+        List<Scientist> scientists { get; set; }
         bool visible = false;
         bool loading = false;
 
         protected override async Task OnInitializedAsync()
         {
             studentDatas = new();
+            scientists = await ScientistService.GetAll();
             await LoadAsync();
         }
 
@@ -68,6 +70,11 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 students = await StudentService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
             }
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
+            foreach (var item in list)
+            {
+                item.InstructorNameOne = scientists.Where(x => x.Id == item?.InstructorIdOne).Select(x => x.Name).FirstOrDefault();
+                item.InstructorNameTwo = scientists.Where(x => x.Id == item?.InstructorIdTwo).Select(x => x.Name).FirstOrDefault();
+            }
             studentDatas = _mapper.Map<List<StudentData>>(list);
             int stt = 1;
             studentDatas.ForEach(x => { x.stt = stt++; });
