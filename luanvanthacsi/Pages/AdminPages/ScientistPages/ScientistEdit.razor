@@ -36,12 +36,12 @@
                     ValueName="@nameof(Specialized.Id)"
                     LabelName="@nameof(Specialized.Name)">
                 </Select>
-                </FormItem>
+            </FormItem>
         }
         else
         {
             <FormItem Label="Cơ quan công tác">
-                <Input @bind-Value="@context.WorkingAgency"  />
+                <Input @bind-Value="@context.WorkingAgency" />
             </FormItem>
         }
 
@@ -59,12 +59,12 @@
         <FormItem Label="CV">
             <Space>
                 <SpaceItem>
-                    <Tooltip Title="@("Tải xuống file đính kèm")">
+                    <Tooltip Title="@("Tải xuống CV")">
                         <Icon Type="download" Theme="outline" OnClick="() => GetFileAttachAsync(EditModel)" Class="pointer" />
                     </Tooltip>
                 </SpaceItem>
                 <SpaceItem>
-                    <Tooltip Title="@("Xóa file đính kèm")">
+                    <Tooltip Title="@("Xóa CV")">
                         <Popconfirm Placement="@Placement.LeftBottom"
                                     OnConfirm="() => ClearFile(context)"
                                     OkText="Đồng ý"
@@ -79,11 +79,15 @@
                     </Tooltip>
                 </SpaceItem>
                 <SpaceItem>
-                    <Tooltip Title="@("Tải lên file đính kèm")">
-                        <Icon Class="upload pointer" Type="cloud-upload" Theme="outline" OnClick="() => Upload(EditModel)" Style="width:24px; height: 24px" />
+                    <Tooltip Title="@("Tải lên file CV")">
+                        <Icon Type="upload" Theme="outline" OnClick="() => Upload(EditModel)" Class="pointer" />
                     </Tooltip>
                 </SpaceItem>
-                <SpaceItem><Button OnClick="OpenPdf">View file</Button></SpaceItem>
+                <SpaceItem>
+                    <Tooltip Title="@("Xem CV")">
+                        <Icon Type="file" Theme="outline" OnClick="() => OpenPdf()" Class="pointer" />
+                    </Tooltip>
+                </SpaceItem>
             </Space>
         </FormItem>
         <FormItem>

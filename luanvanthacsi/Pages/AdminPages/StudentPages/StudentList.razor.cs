@@ -1,6 +1,7 @@
 ﻿using AntDesign;
 using AntDesign.TableModels;
 using AutoMapper;
+using DocumentFormat.OpenXml.Office.CustomUI;
 using FluentNHibernate.Conventions;
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Data;
@@ -15,7 +16,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System.Data;
+using System.IO.Packaging;
 //using LightInject;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
@@ -31,6 +34,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         [Inject] IFacultyService FacultyService { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] IScientistService ScientistService { get; set; }
+        [Inject] ISpecializedService SpecializedService { get; set; }
         [Inject] IJSRuntime JSRuntime { get; set; }
         [Inject] IMapper _mapper { get; set; }
         [CascadingParameter] SessionData SessionData { get; set; }
@@ -53,6 +57,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
 
         ImportExcelForm importExcelFormRef;
         List<ExcelSheetObject> Sheets { get; set; }
+        List<Specialized> specializeds = new List<Specialized>();
+        List<Scientist> scientists = new List<Scientist>();
 
         void ImportExcelCancel(bool val)
         {
@@ -70,7 +76,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             try
             {
                 var fileBase64 = Convert.ToBase64String(GenerateTemplateExcel());
-                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "-DanhMucChucDanh.xlsx", fileBase64);
+                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "-DanhMucChucDanh" + "" + ".xlsx", fileBase64);
             }
             catch (Exception)
             {
@@ -87,6 +93,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 using (var stream = new FileStream(pathFile, FileMode.Open, FileAccess.Read))
                 {
                     var package = new ExcelPackage(stream);
+                    InsertReferenceTabToFile(ref package);
+                    package.Workbook.CalcMode = ExcelCalcMode.Automatic;
                     return package.GetAsByteArray();
                 }
             }
@@ -96,12 +104,6 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             }
         }
 
-        async Task<string> getUserId()
-        {
-            var user = (await _authenticationStateProvider.GetAuthenticationStateAsync()).User;
-            var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
-            return UserId;
-        }
         protected override async Task OnInitializedAsync()
         {
             try
@@ -152,16 +154,21 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             {
                 facultyId = await localStorage.GetItemAsync<string>("facultyIdOfStudent");
                 students = await StudentService.GetAllByIdAsync(facultyId);
+                specializeds = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
+                scientists = await ScientistService.GetAllByIdAsync(facultyId);
             }
             else
             {
                 students = await StudentService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
+                specializeds = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
+                scientists = await ScientistService.GetAllByIdAsync(facultyId);
             }
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             foreach (Student item in list)
             {
                 Scientist studentObj1 = scientistList?.FirstOrDefault(s => s.Id == item.InstructorIdOne);
                 Scientist studentObj2 = scientistList?.FirstOrDefault(s => s.Id == item.InstructorIdTwo);
+                Specialized specialized = specializeds?.FirstOrDefault(s => s.Id == item.SpecializedId);
                 if (studentObj1 != null)
                 {
                     item.InstructorNameOne = studentObj1?.Name;
@@ -170,7 +177,12 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 {
                     item.InstructorNameTwo = studentObj2?.Name;
                 }
+                if (specialized != null)
+                {
+                    item.SpecializedName = specialized?.Name;
+                }
             }
+
             studentDatas = _mapper.Map<List<StudentData>>(list);
             int stt = 1;
             studentDatas.ForEach(x => { x.stt = stt++; });
@@ -320,9 +332,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 importExcelFormRef.FileMauUrl = GetFileMauUrl();
                 importVisible = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -337,7 +349,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     Student student = new Student()
                     {
                         Id = ObjectExtentions.GenerateGuid(),
-                        FacultyId = SessionData?.CurrentUser.FacultyId,
+                        FacultyId = SessionData?.CurrentUser.FacultyId != null ? SessionData?.CurrentUser.FacultyId : facultyId,
                     };
                     #region convert data
 
@@ -345,10 +357,30 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     student.Name = result.Rows[i][nameof(Student.Name)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.Name)].ToString() : student.Name;
                     student.Email = result.Rows[i][nameof(Student.Email)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.Email)].ToString() : student.Email;
                     student.PhoneNumber = result.Rows[i][nameof(Student.PhoneNumber)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.PhoneNumber)].ToString() : student.PhoneNumber;
+                    foreach (var item in scientists)
+                    {
+                        if (item.Code == result.Rows[i][nameof(Student.InstructorIdOne)].ToString())
+                        {
+                            student.InstructorIdOne = item.Id;
+                        }
+                        if (item.Code == result.Rows[i][nameof(Student.InstructorIdTwo)].ToString())
+                        {
+                            student.InstructorIdTwo = item.Id;
+                        }
+                    }
                     student.TopicName = result.Rows[i][nameof(Student.TopicName)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.TopicName)].ToString() : student.TopicName;
-                    student.InstructorIdOne = result.Rows[i][nameof(Student.InstructorIdOne)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorIdOne)].ToString() : student.InstructorIdOne;
-                    student.InstructorIdTwo = result.Rows[i][nameof(Student.InstructorIdTwo)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorIdTwo)].ToString() : student.InstructorIdTwo;
+                    //student.InstructorIdOne = result.Rows[i][nameof(Student.InstructorIdOne)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorIdOne)].ToString() : student.InstructorIdOne;
+                    //student.InstructorIdTwo = result.Rows[i][nameof(Student.InstructorIdTwo)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorIdTwo)].ToString() : student.InstructorIdTwo;
                     student.DateOfBirth = result.Rows[i][nameof(Student.DateOfBirth)].IsNotNullOrEmpty() ? Convert.ToDateTime(result.Rows[i][nameof(Student.DateOfBirth)]) : student.DateOfBirth;
+                    foreach(var item in specializeds)
+                    {
+                        if(item.Name == result.Rows[i][nameof(Student.SpecializedId)].ToString())
+                        {
+                            student.SpecializedId = item.Id;
+                            break;
+                        }
+                    }
+                    //student.SpecializedId = result.Rows[i][nameof(Student.SpecializedId)].IsNotNullOrEmpty() ? result.Rows[i][nameof(Student.SpecializedId)].ToString() : student.SpecializedId;
                     #endregion
                     students.Add(student);
                 }
@@ -454,19 +486,10 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                         {
                             wSheet = package.Workbook.Worksheets[Sheets.First().Name];
                         }
-                        List<Student> data = new List<Student>();
-                        if (SessionData?.CurrentUser.FacultyId != null)
-                        {
-                            data = await StudentService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
-                        }
-                        else
-                        {
-                            data = await StudentService.GetAllByIdAsync(facultyId);
-                        }
-                        if (data.Any() == true)
+                        if (studentDatas?.Any() == true)
                         {
                             List<StudentExportExcel> studentExportExcels = new List<StudentExportExcel>();
-                            studentExportExcels = _mapper.Map<List<StudentExportExcel>>(data);
+                            studentExportExcels = _mapper.Map<List<StudentExportExcel>>(studentDatas);
                             int stt = 1;
                             foreach (var item in studentExportExcels)
                             {
@@ -478,10 +501,11 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                         }
                         else
                         {
-                            Notice.NotiError("Không có dữ liệu!");
+                            Notice.NotiError("Không có dữ liệu.");
                             return;
                         }
-                        //package.Workbook.CalcMode = ExcelCalcMode.Automatic;
+                        InsertReferenceTabToFile(ref package);
+                        package.Workbook.CalcMode = ExcelCalcMode.Automatic;
                         var fileBase64 = Convert.ToBase64String(package.GetAsByteArray());
                         JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy-HHmmss") + "-DanhSachHocVien.xlsx", fileBase64);
                     }
@@ -495,6 +519,57 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             {
                 throw;
             }
+        }
+
+        void InsertReferenceTabToFile(ref ExcelPackage package)
+        {
+            ExcelWorksheet wSheet1;
+            ExcelWorksheet wSheet2;
+
+            if (specializeds?.Any() == true)
+            {
+                wSheet1 = package.Workbook.Worksheets["ChuyenNghanh"];
+                wSheet1.Row(3).Height = 20;
+                wSheet1.Row(3).Style.Font.Bold = true;
+                int i = 4;
+                wSheet1.Cells[1, 1, 1, 2].Value = "Danh sách chuyên Nghành";
+                wSheet1.Cells[1, 1, 1, 2].Merge = true;
+                wSheet1.Cells[1, 1, 1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                wSheet1.Cells[3, 1].Value = "Mã chuyên nghành";
+                wSheet1.Cells[3, 2].Value = "Tên chuyên ngành";
+
+                foreach (var item in specializeds)
+                {
+                    wSheet1.Cells[i, 1].Style.Font.Size = 11;
+                    wSheet1.Cells[i, 1].Value = item.Code;
+                    wSheet1.Cells[i, 2].Value = item.Name;
+                    i++;
+                }
+                wSheet1.Cells[wSheet1.Dimension.Address].AutoFitColumns();
+            }
+
+            if (scientists?.Any() == true)
+            {
+                wSheet2 = package.Workbook.Worksheets["NhaKhoaHoc"];
+                wSheet2.Row(3).Height = 20;
+                wSheet2.Row(3).Style.Font.Bold = true;
+                int i = 4;
+                wSheet2.Cells[1, 1, 1, 2].Value = "Danh sách nhà khoa học";
+                wSheet2.Cells[1, 1, 1, 2].Merge = true;
+                wSheet2.Cells[1, 1, 1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                wSheet2.Cells[3, 1].Value = "Mã nhà khoa học";
+                wSheet2.Cells[3, 2].Value = "Tên nhà khoa học";
+
+                foreach (var item in scientists)
+                {
+                    wSheet2.Cells[i, 1].Style.Font.Size = 11;
+                    wSheet2.Cells[i, 1].Value = item.Code;
+                    wSheet2.Cells[i, 2].Value = item.Name;
+                    i++;
+                }
+                wSheet2.Cells[wSheet2.Dimension.Address].AutoFitColumns();
+            }
+
         }
 
         async Task ChangeFacultyId()

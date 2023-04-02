@@ -70,7 +70,7 @@
                 @bind-Value="@facultyId"
                 OnSelectedItemChanged="ChangeFacultyId">
             </Select>
-        }
+        } 
     </AntDesign.Col>
 </Row>
 <br />
@@ -85,6 +85,7 @@
         <Column @bind-Field="context.Email" Ellipsis Width="200"></Column>
         <Column @bind-Field="context.PhoneNumber" Ellipsis Filterable></Column>
         <Column @bind-Field="context.DateOfBirth" Format="dd/MM/yyyy" Sortable></Column>
+        <Column @bind-Field="context.SpecializedName" Width="250p" Ellipsis Sortable Filterable></Column>
         <Column @bind-Field="context.TopicName" Width="250p" Ellipsis Sortable Filterable></Column>
         <Column @bind-Field="context.InstructorNameOne" Width="150" Ellipsis Sortable Filterable></Column>
         <Column @bind-Field="context.InstructorNameTwo" Width="150" Ellipsis Sortable Filterable></Column>

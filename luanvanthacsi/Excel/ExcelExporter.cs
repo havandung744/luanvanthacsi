@@ -80,7 +80,7 @@ namespace luanvanthacsi.Excel
                 }
                 wSheet.DeleteRow(templateRow);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

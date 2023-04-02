@@ -14,5 +14,6 @@
         public virtual string? TopicName { get; set; }
         public virtual string? InstructorIdOne { get; set; }
         public virtual string? InstructorIdTwo { get; set; }
+        public virtual string? SpecializedId { get; set; }
     }
 }
