@@ -52,8 +52,9 @@ namespace luanvanthacsi.Data.Data
         public string? SecretaryName;
         [Display(Name = "Tên đề tài")]
         public string? TopicName;
+        public string SpecializedId;
         [Display(Name = "Chuyên ngành")]
-        public string Branch;
+        public string SpecializedName;
         [Display(Name = "Hướng dẫn 1")]
         public string InstructorNameOne;
         [Display(Name = "Hướng dẫn 2")]

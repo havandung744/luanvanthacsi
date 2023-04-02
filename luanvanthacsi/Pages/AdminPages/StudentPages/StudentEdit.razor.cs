@@ -64,7 +64,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             {
                 if (EditModel.InstructorIdOne == EditModel.InstructorIdTwo)
                 {
-                    Notice.NotiWarning("Hướng dẫn 1 và hướng dẫn 2 bị trùng lặp");
+                    Notice.NotiWarning("Hướng dẫn 1 và hướng dẫn 2 bị trùng lặp.");
                     return;
                 }
                 Student student = new Student();

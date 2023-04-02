@@ -35,6 +35,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [CascadingParameter] SessionData SessionData { get; set; }
         List<EvaluationBoardData>? evaluationBoardDatas { get; set; } = new();
         List<Scientist>? Scientists { get; set; } = new();
+        List<Specialized>? Specializeds { get; set; } = new();
         bool visible = false;
         EvaluationBoardEdit evaluationBoardEdit = new EvaluationBoardEdit();
         bool loading = false;
@@ -46,13 +47,14 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         List<Faculty> facultyList { get; set; }
         List<ExcelSheetObject> Sheets { get; set; }
         EvaluationBoardAddLayout EvaluationBoardAddLayoutRef { get; set; } = new();
+        List<Student> Students { get; set; }
         string facultyId;
 
         protected override async Task OnInitializedAsync()
         {
             evaluationBoardDatas = new();
             facultyList = await FacultyService.GetAllAsync();
-            Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HoiDong", "KEY_STAFFIMPORT", 4, null, GetTable().GetDataColumns(), 3) };
+            Sheets = new List<ExcelSheetObject> { new ExcelSheetObject("HoiDong", "KEY_EVALUATIONIMPORT", 4, null, GetTable().GetDataColumns(), 3) };
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -95,32 +97,30 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 {
                     facultyId = await localStorage.GetItemAsync<string>("facultyIdOfEvaluation");
                     evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(facultyId);
+                    Specializeds = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
+                    Scientists = await ScientistService.GetAllByIdAsync(facultyId);
+                    Students = await StudentService.GetAllByIdAsync(facultyId);
                 }
                 else
                 {
                     evaluationBoards = await EvaluationBoardService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
+                    Specializeds = await SpecializedService.GetAllByFacultyIdAsync(SessionData.CurrentUser.FacultyId);
+                    Scientists = await ScientistService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
+                    Students = await StudentService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
                 }
                 // hiển thị dữ liệu mới nhất lên đầu trang
                 var list = evaluationBoards.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
                 evaluationBoardDatas = _mapper.Map<List<EvaluationBoardData>>(list);
                 #region join bảng lấy dữ liệu
                 //List<Scientist> scientists = new List<Scientist>();
-                if (SessionData.CurrentUser?.FacultyId == null)
-                {
-                    Scientists = await ScientistService.GetAllByIdAsync(facultyId);
-                }
-                else
-                {
-                    Scientists = await ScientistService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
-                }
                 foreach (var item in evaluationBoardDatas)
                 {
                     // lấy thông tin student
-                    Student student = await StudentService.GetStudentByIdAsync(item.StudentId);
+                    Student student = Students.Where(x => x.Id == item.StudentId).FirstOrDefault();
                     item.StudentName = student?.Name;
                     item.TopicName = student?.TopicName;
                     item.DOB = student?.DateOfBirth;
-                    item.Branch = Scientists.Where(x => x.Id == item.PresidentId).Select(x => x.Name).First();
+                    item.SpecializedName = Specializeds.Where(x => x.Id == student.SpecializedId).Select(x => x.Name).FirstOrDefault();
                     // lấy thông tin hướng dẫn 1
                     item.InstructorNameOne = Scientists.Where(x => x.Id == student?.InstructorIdOne).Select(x => x.Name).FirstOrDefault();
                     // lấy thông tin hướng dẫn 2
@@ -168,28 +168,29 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         async Task Save(EvaluationBoard data)
         {
             addVisible = false;
+            var check = data?.Id;
             var resultAdd = await EvaluationBoardService.AddOrUpdateEvaluationBoard(data);
             if (resultAdd == true)
             {
-                if (data.Id.IsNotNullOrEmpty())
+                if (check != null)
                 {
-                    Notice.NotiSuccess("Cập nhật dữ liệu thành công");
+                    Notice.NotiSuccess("Cập nhật dữ liệu thành công.");
                 }
                 else
                 {
-                    Notice.NotiSuccess("Thêm dữ liệu thành công");
+                    Notice.NotiSuccess("Thêm dữ liệu thành công.");
                 }
                 await LoadAsync();
             }
             else
             {
-                if (data.Id.IsNotNullOrEmpty())
+                if (check != null)
                 {
-                    Notice.NotiError("Cập nhật dữ liệu thất bại");
+                    Notice.NotiError("Cập nhật dữ liệu thất bại.");
                 }
                 else
                 {
-                    Notice.NotiError("Thêm dữ liệu thất bại");
+                    Notice.NotiError("Thêm dữ liệu thất bại.");
                 }
             }
 
@@ -215,12 +216,12 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             var result = await EvaluationBoardService.DeleteEvaluationBoardAsync(evaluationBoard);
             if (result.Equals(true))
             {
-                Notice.NotiSuccess("Xóa dữ liệu thành công");
+                Notice.NotiSuccess("Xóa dữ liệu thành công.");
                 await LoadAsync();
             }
             else
             {
-                Notice.NotiError("Xóa dữ liệu thất bại");
+                Notice.NotiError("Xóa dữ liệu thất bại.");
             }
         }
 
@@ -264,12 +265,12 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 var result = await EvaluationBoardService.DeleteEvaluationBoardAsync(evaluationBoards);
                 if (result.Equals(true))
                 {
-                    Notice.NotiSuccess("Xóa dữ liệu thành công");
+                    Notice.NotiSuccess("Xóa dữ liệu thành công.");
                     await LoadAsync();
                 }
                 else
                 {
-                    Notice.NotiError("Xóa dữ liệu thất bại");
+                    Notice.NotiError("Xóa dữ liệu thất bại.");
                 }
 
             }
@@ -313,7 +314,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                             Notice.NotiError("Không có dữ liệu!");
                             return;
                         }
-                        //package.Workbook.CalcMode = ExcelCalcMode.Automatic;
+                        package.Workbook.CalcMode = ExcelCalcMode.Automatic;
                         var fileBase64 = Convert.ToBase64String(package.GetAsByteArray());
                         JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy-HHmmss") + "-HoiDongBaoVe.xlsx", fileBase64);
                     }
@@ -435,7 +436,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
                 var fileBytes = WordUltil.WriteDOCX("EvaluationBoardDocxTemplate.docx", documentData);
                 var fileBase64 = Convert.ToBase64String(fileBytes);
-                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy-HHmmss") + "-HoiDongBaoVe.docx", fileBase64);
+                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy-HHmmss-") + dt.StudentName + "-HoiDongBaoVe.docx", fileBase64);
 
             }
             catch (Exception)

@@ -60,7 +60,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
                 }
                 if (listStudentThenIds.Count == 0)
                 {
-                    Notice.NotiWarning("Không có học viên nào");
+                    Notice.NotiWarning("Không có học viên nào!");
                     ChangeModalVisible();
                 }
                 else
@@ -79,7 +79,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             var models = new List<Student>();
             if (datas.IsNullOrEmpty())
             {
-                Notice.NotiError("Không có học viên nào");
+                Notice.NotiError("Không có học viên nào!");
                 ChangeModalVisible();
                 return models;
             }

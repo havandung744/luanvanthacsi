@@ -119,15 +119,30 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         {
             var check = data?.Id;
             var resultAdd = await ScientistService.AddOrUpdateScientist(data);
-            await LoadAsync();
-            if (check != null)
+            if(resultAdd == true)
             {
-                Notice.NotiSuccess("Cập nhật dữ liệu thành công");
+                if (check != null)
+                {
+                    Notice.NotiSuccess("Cập nhật dữ liệu thành công.");
+                }
+                else
+                {
+                    Notice.NotiSuccess("Thêm dữ liệu thành công.");
+                }
+                await LoadAsync();
             }
             else
             {
-                Notice.NotiSuccess("Thêm dữ liệu thành công");
+                if (check != null)
+                {
+                    Notice.NotiSuccess("Cập nhật dữ liệu thất bại.");
+                }
+                else
+                {
+                    Notice.NotiSuccess("Thêm dữ liệu thất bại.");
+                }
             }
+            
         }
 
         void OnClose()
@@ -148,12 +163,12 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             var result = await ScientistService.DeleteScientistAsync(scientist);
             if (result.Equals(true))
             {
-                Notice.NotiSuccess("Xóa dữ liệu thành công");
+                Notice.NotiSuccess("Xóa dữ liệu thành công.");
                 await LoadAsync();
             }
             else
             {
-                Notice.NotiError("Xóa dữ liệu thất bại");
+                Notice.NotiError("Xóa dữ liệu thất bại.");
             }
         }
 
@@ -190,12 +205,12 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                 var result = await ScientistService.DeleteScientistListAsync(scientists);
                 if (result.Equals(true))
                 {
-                    Notice.NotiSuccess("Xóa dữ liệu thành công");
+                    Notice.NotiSuccess("Xóa dữ liệu thành công.");
                     await LoadAsync();
                 }
                 else
                 {
-                    Notice.NotiError("Xóa dữ liệu thất bại");
+                    Notice.NotiError("Xóa dữ liệu thất bại.");
                 }
 
             }

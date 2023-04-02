@@ -17,5 +17,6 @@ namespace luanvanthacsi.Excel.ClassExcel
         public virtual string ScientistOne { get; set; }
         public virtual string ScientistTwo { get; set; }
         public virtual string SecretaryName { get; set; }
+        public virtual string SpecialiezdName { get;set; }
     }
 }

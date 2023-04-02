@@ -49,7 +49,11 @@ namespace luanvanthacsi.Data.Components
              .ForMember(src => src.InstructorIdTwo, dest => dest.MapFrom(c => c.InstructorNameTwo))
              .ForMember(src => src.SpecializedId, dest => dest.MapFrom(c => c.SpecializedName)).ReverseMap();
 
-            CreateMap<EvaluationBoardData, EvaluationBoardExcel>().ReverseMap();
+            CreateMap<EvaluationBoardData, EvaluationBoardExcel>()
+                .ForMember(src => src.InstructorIdOne, dest => dest.MapFrom(c => c.InstructorNameOne))
+             .ForMember(src => src.InstructorIdTwo, dest => dest.MapFrom(c => c.InstructorNameTwo))
+             .ForMember(src => src.SpecialiezdName, dest => dest.MapFrom(c => c.SpecializedName)).ReverseMap();
+
             CreateMap<Scientist, EvaluationBoardDocx.EvaluationBoard>()
                 .ForMember(dest => dest.Title, src => src.MapFrom(c => c.EvaluationRole.GetDescription()))
                 .ForMember(dest => dest.Price, src => src.MapFrom(c => c.EvaluationRole.GetDegreeFee()))

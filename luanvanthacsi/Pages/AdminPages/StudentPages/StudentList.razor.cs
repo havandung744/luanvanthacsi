@@ -224,15 +224,30 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
 
         async Task Save(Student data)
         {
+            var check = data?.Id;
             var resultAdd = await StudentService.AddOrUpdateStudentAsync(data);
-            await LoadAsync();
-            if (data.Id.IsNotNullOrEmpty())
+            if (resultAdd == true)
             {
-                Notice.NotiSuccess("Cập nhật dữ liệu thành công");
+                if (check != null)
+                {
+                    Notice.NotiSuccess("Cập nhật dữ liệu thành công.");
+                }
+                else
+                {
+                    Notice.NotiSuccess("Thêm dữ liệu thành công.");
+                }
+                await LoadAsync();
             }
             else
             {
-                Notice.NotiSuccess("Thêm dữ liệu thành công");
+                if (check != null)
+                {
+                    Notice.NotiSuccess("Cập nhật dữ liệu thất bại.");
+                }
+                else
+                {
+                    Notice.NotiSuccess("Thêm dữ liệu thất bại.");
+                }
             }
         }
 
@@ -254,12 +269,12 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             var result = await StudentService.DeleteStudentAsync(student);
             if (result.Equals(true))
             {
-                Notice.NotiSuccess("Xóa dữ liệu thành công");
+                Notice.NotiSuccess("Xóa dữ liệu thành công.");
                 await LoadAsync();
             }
             else
             {
-                Notice.NotiError("Xóa dữ liệu thất bại");
+                Notice.NotiError("Xóa dữ liệu thất bại.");
             }
         }
 
@@ -303,12 +318,12 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 var result = await StudentService.DeleteStudentListAsync(students);
                 if (result.Equals(true))
                 {
-                    Notice.NotiSuccess("Xóa dữ liệu thành công");
+                    Notice.NotiSuccess("Xóa dữ liệu thành công.");
                     await LoadAsync();
                 }
                 else
                 {
-                    Notice.NotiError("Xóa dữ liệu thất bại");
+                    Notice.NotiError("Xóa dữ liệu thất bại.");
                 }
 
             }
@@ -372,9 +387,9 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     //student.InstructorIdOne = result.Rows[i][nameof(Student.InstructorIdOne)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorIdOne)].ToString() : student.InstructorIdOne;
                     //student.InstructorIdTwo = result.Rows[i][nameof(Student.InstructorIdTwo)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.InstructorIdTwo)].ToString() : student.InstructorIdTwo;
                     student.DateOfBirth = result.Rows[i][nameof(Student.DateOfBirth)].IsNotNullOrEmpty() ? Convert.ToDateTime(result.Rows[i][nameof(Student.DateOfBirth)]) : student.DateOfBirth;
-                    foreach(var item in specializeds)
+                    foreach (var item in specializeds)
                     {
-                        if(item.Name == result.Rows[i][nameof(Student.SpecializedId)].ToString())
+                        if (item.Name == result.Rows[i][nameof(Student.SpecializedId)].ToString())
                         {
                             student.SpecializedId = item.Id;
                             break;

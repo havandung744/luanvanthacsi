@@ -134,7 +134,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 var userId = StudentOfEvaluationBoardRef.GetStudentId();
                 if (userId == null)
                 {
-                    Notice.NotiError("Vui lòng chọn học viên!");
+                    Notice.NotiError("Vui lòng chọn học viên.");
                     return;
                 }
                 else
@@ -145,7 +145,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 var presidentId = PresidentRef.GetId();
                 if (presidentId.Count() == 0)
                 {
-                    Notice.NotiError("Vui lòng chọn chủ tịch hội đồng!");
+                    Notice.NotiError("Vui lòng chọn chủ tịch hội đồng.");
                     return;
                 }
                 else
@@ -158,7 +158,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 {
                     if (counterattackerIds.Count != 2)
                     {
-                        Notice.NotiError("Vui lòng chọn hai phản biện!");
+                        Notice.NotiError("Vui lòng chọn hai phản biện.");
                         return;
                     }
                     else
@@ -171,7 +171,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 {
                     if (counterattackerIds.Count != 3)
                     {
-                        Notice.NotiError("Vui lòng chọn ba phản biện!");
+                        Notice.NotiError("Vui lòng chọn ba phản biện.");
                         return;
                     }
                     else
@@ -185,7 +185,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 var secretaryId = SecretaryOfEvaluationBoardRef.GetId();
                 if (secretaryId.Count() == 0)
                 {
-                    Notice.NotiError("Vui lòng chọn thư ký!");
+                    Notice.NotiError("Vui lòng chọn thư ký.");
                     return;
                 }
                 else
@@ -199,7 +199,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
                     if (scientistIds.Count != 1)
                     {
-                        Notice.NotiError("Vui lòng chọn một ủy viên!");
+                        Notice.NotiError("Vui lòng chọn một ủy viên.");
                         return;
                     }
                     else
@@ -211,7 +211,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 {
                     if (scientistIds.Count != 2)
                     {
-                        Notice.NotiError("Vui lòng chọn hai ủy viên!");
+                        Notice.NotiError("Vui lòng chọn hai ủy viên.");
                         return;
                     }
                     else
