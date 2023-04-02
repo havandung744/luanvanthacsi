@@ -21,7 +21,7 @@ namespace luanvanthacsi.Data.Edit
         [Required(ErrorMessage = "Vui lòng chọn hướng dẫn 1")]
         public string InstructorIdOne { get; set; }
         public string InstructorIdTwo { get; set; }
-        [Required(ErrorMessage = "Vui lòng chọn chuyên nghành")]
+        [Required(ErrorMessage = "Vui lòng chọn chuyên ngành")]
         public string SpecializedId { get; set; }
 
     }

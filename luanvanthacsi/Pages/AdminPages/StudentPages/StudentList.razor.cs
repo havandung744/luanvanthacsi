@@ -1,7 +1,6 @@
 ﻿using AntDesign;
 using AntDesign.TableModels;
 using AutoMapper;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using FluentNHibernate.Conventions;
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Data;
@@ -18,7 +17,6 @@ using Microsoft.JSInterop;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Data;
-using System.IO.Packaging;
 //using LightInject;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
@@ -172,10 +170,12 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 if (studentObj1 != null)
                 {
                     item.InstructorNameOne = studentObj1?.Name;
+                    item.InstructorCodeOne = studentObj1?.Code;
                 }
                 if (studentObj2 != null)
                 {
                     item.InstructorNameTwo = studentObj2?.Name;
+                    item.InstructorCodeTwo = studentObj2?.Code;
                 }
                 if (specialized != null)
                 {
@@ -374,11 +374,11 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     student.PhoneNumber = result.Rows[i][nameof(Student.PhoneNumber)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.PhoneNumber)].ToString() : student.PhoneNumber;
                     foreach (var item in scientists)
                     {
-                        if (item.Code == result.Rows[i][nameof(Student.InstructorIdOne)].ToString())
+                        if (item.Code == GetStudentCode(result.Rows[i][nameof(Student.InstructorIdOne)].ToString()))
                         {
                             student.InstructorIdOne = item.Id;
                         }
-                        if (item.Code == result.Rows[i][nameof(Student.InstructorIdTwo)].ToString())
+                        if (item.Code == GetStudentCode(result.Rows[i][nameof(Student.InstructorIdTwo)].ToString()))
                         {
                             student.InstructorIdTwo = item.Id;
                         }
@@ -509,9 +509,16 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                             foreach (var item in studentExportExcels)
                             {
                                 item.stt = stt;
+                                if (item.InstructorCodeOne?.IsNotNullOrEmpty() == true && item.InstructorNameOne?.IsNotNullOrEmpty() == true)
+                                {
+                                    item.InstructorIdOne = item.InstructorCodeOne + "-" + item.InstructorNameOne;
+                                }
+                                if (item.InstructorCodeTwo?.IsNotNullOrEmpty() == true && item.InstructorNameTwo?.IsNotNullOrEmpty() == true)
+                                {
+                                    item.InstructorIdTwo = item.InstructorCodeTwo + "-" + item.InstructorNameTwo;
+                                }
                                 stt++;
                             }
-
                             ExcelExporter.WriteToSheet(studentExportExcels, wSheet, Sheets.First());
                         }
                         else
@@ -547,10 +554,10 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 wSheet1.Row(3).Height = 20;
                 wSheet1.Row(3).Style.Font.Bold = true;
                 int i = 4;
-                wSheet1.Cells[1, 1, 1, 2].Value = "Danh sách chuyên Nghành";
+                wSheet1.Cells[1, 1, 1, 2].Value = "Danh sách chuyên Ngành";
                 wSheet1.Cells[1, 1, 1, 2].Merge = true;
                 wSheet1.Cells[1, 1, 1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                wSheet1.Cells[3, 1].Value = "Mã chuyên nghành";
+                wSheet1.Cells[3, 1].Value = "Mã chuyên ngành";
                 wSheet1.Cells[3, 2].Value = "Tên chuyên ngành";
 
                 foreach (var item in specializeds)
@@ -569,17 +576,17 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 wSheet2.Row(3).Height = 20;
                 wSheet2.Row(3).Style.Font.Bold = true;
                 int i = 4;
-                wSheet2.Cells[1, 1, 1, 2].Value = "Danh sách nhà khoa học";
-                wSheet2.Cells[1, 1, 1, 2].Merge = true;
-                wSheet2.Cells[1, 1, 1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                wSheet2.Cells[3, 1].Value = "Mã nhà khoa học";
-                wSheet2.Cells[3, 2].Value = "Tên nhà khoa học";
+                wSheet2.Cells[1, 1, 1, 1].Value = "Danh sách nhà khoa học";
+                wSheet2.Cells[1, 1, 1, 1].Merge = true;
+                wSheet2.Cells[1, 1, 1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                wSheet2.Cells[3, 1].Value = "Mã - tên nhà khoa học";
+                //wSheet2.Cells[3, 2].Value = "Tên nhà khoa học";
 
                 foreach (var item in scientists)
                 {
                     wSheet2.Cells[i, 1].Style.Font.Size = 11;
-                    wSheet2.Cells[i, 1].Value = item.Code;
-                    wSheet2.Cells[i, 2].Value = item.Name;
+                    wSheet2.Cells[i, 1].Value = item.Code + "-" + item.Name;
+                    //wSheet2.Cells[i, 2].Value = item.Name;
                     i++;
                 }
                 wSheet2.Cells[wSheet2.Dimension.Address].AutoFitColumns();
@@ -592,5 +599,12 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             await localStorage.SetItemAsync("facultyIdOfStudent", facultyId);
             await LoadAsync();
         }
+
+        string GetStudentCode(string input)
+        {
+            string[] code = input.Split("-");
+            return code[0].ToString();
+        }
+
     }
 }
