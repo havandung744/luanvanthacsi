@@ -360,6 +360,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                 Student student = await StudentService.GetStudentByIdAsync(dt.StudentId);
                 var instructorOne = Scientists.Where(c => c.Id == student?.InstructorIdOne).ToList();
                 var instructorTwo = Scientists.Where(c => c.Id == student?.InstructorIdTwo).ToList();
+                string instructorOneName = $"{FormatAcademicAndDegree(instructorOne.FirstOrDefault()?.AcademicRank.ToString(), instructorOne.FirstOrDefault()?.Degree)} {instructorOne.FirstOrDefault()?.Name}";
+
 
                 counters.ForEach(c => c.EvaluationRole = EvaluationRole.CounterAttack);
                 scientists.ForEach(c => c.EvaluationRole = EvaluationRole.Scientist);
@@ -407,7 +409,8 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
                     TopicName = dt.TopicName,
                     FacultyName = specializedName,
                     FacultyCode = specializedCode,
-                    InstructorName = dt.InstructorNameOne,
+                    InstructorName = instructorOneName,
+                    //InstructorName = dt.InstructorNameOne,
                     BoardTotal = listEvaluationBoard.Count().ToString(),
                     EvaluationBoards = _mapper.Map<List<EvaluationBoardDocx.EvaluationBoard>>(listEvaluationBoard.OrderBy(c => c.EvaluationRole.EnumToInt())),
                     EvaluationBoardAll = _mapper.Map<List<EvaluationBoardDocx.EvaluationBoard>>(listEvaluationBoardAll.OrderBy(c => c.EvaluationRole.EnumToInt()))
