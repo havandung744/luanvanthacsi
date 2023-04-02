@@ -104,7 +104,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 
         async Task Save(ThesisDefense data)
         {
-            var checkExistId = data.Id;
+            string checkExistId = data.Id;
             var resultAdd = await ThesisDefenseService.AddOrUpdateThesisDefenseAsync(data);
             if (resultAdd)
             {

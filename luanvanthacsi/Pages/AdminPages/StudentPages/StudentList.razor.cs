@@ -160,8 +160,8 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             else
             {
                 students = await StudentService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
-                specializeds = await SpecializedService.GetAllByFacultyIdAsync(facultyId);
-                scientists = await ScientistService.GetAllByIdAsync(facultyId);
+                specializeds = await SpecializedService.GetAllByFacultyIdAsync(SessionData.CurrentUser.FacultyId);
+                scientists = await ScientistService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
             }
             var list = students.OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             foreach (Student item in list)
@@ -224,11 +224,11 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
 
         async Task Save(Student data)
         {
-            var check = data?.Id;
+            string check = data.Id;
             var resultAdd = await StudentService.AddOrUpdateStudentAsync(data);
             if (resultAdd == true)
             {
-                if (check != null)
+                if (check.IsNotNullOrEmpty())
                 {
                     Notice.NotiSuccess("Cập nhật dữ liệu thành công.");
                 }
@@ -240,7 +240,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             }
             else
             {
-                if (check != null)
+                if (check.IsNotNullOrEmpty())
                 {
                     Notice.NotiSuccess("Cập nhật dữ liệu thất bại.");
                 }

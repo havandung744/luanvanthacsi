@@ -168,11 +168,11 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         async Task Save(EvaluationBoard data)
         {
             addVisible = false;
-            var check = data?.Id;
+            string check = data.Id;
             var resultAdd = await EvaluationBoardService.AddOrUpdateEvaluationBoard(data);
             if (resultAdd == true)
             {
-                if (check != null)
+                if (check.IsNotNullOrEmpty())
                 {
                     Notice.NotiSuccess("Cập nhật dữ liệu thành công.");
                 }
@@ -184,7 +184,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
             }
             else
             {
-                if (check != null)
+                if (check.IsNotNullOrEmpty())
                 {
                     Notice.NotiError("Cập nhật dữ liệu thất bại.");
                 }

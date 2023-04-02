@@ -75,7 +75,7 @@
 </Row>
 <br />
 <Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
-       TItem="StudentData" ScrollX="1350" OnRowClick="OnRowClick" Size=@TableSize.Small
+       TItem="StudentData" ScrollX="1350" ScrollY="600" OnRowClick="OnRowClick" Size=@TableSize.Small
        @bind-SelectedRows="selectedRows">
     <ChildContent>
         <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>

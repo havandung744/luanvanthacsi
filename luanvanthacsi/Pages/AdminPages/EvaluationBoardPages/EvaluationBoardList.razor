@@ -26,18 +26,21 @@
                             <Button Icon="plus" Type="@ButtonType.Primary" Color="Color.Green7" OnClick="AddEvaluationBoard">Lập hội đồng</Button>
                         </SpaceItem>
                     }
-                    <SpaceItem>
-                        <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ExportExcelAsync">
-                            Xuất Excel
-                        </Button>
-                    </SpaceItem>
-                    @if (selectedRows?.Any() == true)
+                    @if (SessionData.CurrentUser?.FacultyId == null)
                     {
                         <SpaceItem>
-                            <Button Icon="file-word" type="@ButtonType.Primary" OnClick="ExportListWordAsync">
-                                Xuất Word
+                            <Button Icon="file-excel" type="@ButtonType.Primary" OnClick="ExportExcelAsync">
+                                Xuất Excel
                             </Button>
                         </SpaceItem>
+                        @if (selectedRows?.Any() == true)
+                        {
+                            <SpaceItem>
+                                <Button Icon="file-word" type="@ButtonType.Primary" OnClick="ExportListWordAsync">
+                                    Xuất Word
+                                </Button>
+                            </SpaceItem>
+                        }
                     }
                     <SpaceItem>
                         @if (selectedRows?.Any() == true)
@@ -130,11 +133,14 @@
                                         <Icon Type="edit" @onclick="() => Edit(context)" Theme="fill" Class="btn-icon-edit" StopPropagation />
                                     </Tooltip>
                                 </SpaceItem>
-                                <SpaceItem>
-                                    <Tooltip Placement="@Placement.Top" Title="@("Tải quyết định")">
-                                        <Icon Type="download" @onclick="() => ExportDocxAsync(context)" Theme="outline" Class="btn-icon-edit" StopPropagation />
-                                    </Tooltip>
-                                </SpaceItem>
+                                @if (SessionData.CurrentUser?.FacultyId == null)
+                                {
+                                    <SpaceItem>
+                                        <Tooltip Placement="@Placement.Top" Title="@("Tải quyết định")">
+                                            <Icon Type="download" @onclick="() => ExportDocxAsync(context)" Theme="outline" Class="btn-icon-edit" StopPropagation />
+                                        </Tooltip>
+                                    </SpaceItem>
+                                }
                                 <SpaceItem>
                                     <Tooltip Placement="@Placement.Top" Title="@("Xóa")">
                                         <Popconfirm Title="Xác nhận xóa?"

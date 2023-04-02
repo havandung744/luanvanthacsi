@@ -106,7 +106,7 @@ namespace luanvanthacsi.Pages
             facultyList = await FacultyService.GetAllAsync();
 
             ThesisDefenseList = await ThesisDefenseService.GetAllAsync();
-            yearList = ThesisDefenseList.Select(x => x.YearOfProtection.Year).Distinct().ToList();
+            yearList = ThesisDefenseList.Select(x => x.YearOfProtection.Year).Distinct().OrderBy(x => x).ToList();
         }
         async Task<string> getUserId()
         {

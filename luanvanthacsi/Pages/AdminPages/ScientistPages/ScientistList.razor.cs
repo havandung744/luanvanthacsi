@@ -117,11 +117,11 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
 
         async Task Save(Scientist data)
         {
-            var check = data?.Id;
+            string check = data.Id;
             var resultAdd = await ScientistService.AddOrUpdateScientist(data);
             if(resultAdd == true)
             {
-                if (check != null)
+                if (check.IsNotNullOrEmpty())
                 {
                     Notice.NotiSuccess("Cập nhật dữ liệu thành công.");
                 }
@@ -133,7 +133,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
             }
             else
             {
-                if (check != null)
+                if (check.IsNotNullOrEmpty())
                 {
                     Notice.NotiSuccess("Cập nhật dữ liệu thất bại.");
                 }
