@@ -39,7 +39,8 @@ namespace luanvanthacsi.Data.Data
         public string SpecializedId;
         [Display(Name = "Chuyên ngành")]
         public string SpecializedName;
-
+        public string InstructorCodeOne;
+        public string InstructorCodeTwo;
 
     }
 }

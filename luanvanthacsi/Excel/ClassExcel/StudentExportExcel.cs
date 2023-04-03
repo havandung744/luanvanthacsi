@@ -15,5 +15,9 @@
         public virtual string? InstructorIdOne { get; set; }
         public virtual string? InstructorIdTwo { get; set; }
         public virtual string? SpecializedId { get; set; }
+        public virtual string? InstructorCodeOne { get; set; }
+        public virtual string? InstructorCodeTwo { get; set; }
+        public virtual string? InstructorNameOne { get; set; }
+        public virtual string? InstructorNameTwo { get; set; }
     }
 }
