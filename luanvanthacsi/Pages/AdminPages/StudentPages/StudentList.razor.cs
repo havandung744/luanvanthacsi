@@ -1,7 +1,6 @@
 ﻿using AntDesign;
 using AntDesign.TableModels;
 using AutoMapper;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using FluentNHibernate.Conventions;
 using luanvanthacsi.Data.Components;
 using luanvanthacsi.Data.Data;
@@ -18,7 +17,6 @@ using Microsoft.JSInterop;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Data;
-using System.IO.Packaging;
 //using LightInject;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
@@ -547,10 +545,10 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 wSheet1.Row(3).Height = 20;
                 wSheet1.Row(3).Style.Font.Bold = true;
                 int i = 4;
-                wSheet1.Cells[1, 1, 1, 2].Value = "Danh sách chuyên Nghành";
+                wSheet1.Cells[1, 1, 1, 2].Value = "Danh sách chuyên Ngành";
                 wSheet1.Cells[1, 1, 1, 2].Merge = true;
                 wSheet1.Cells[1, 1, 1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                wSheet1.Cells[3, 1].Value = "Mã chuyên nghành";
+                wSheet1.Cells[3, 1].Value = "Mã chuyên ngành";
                 wSheet1.Cells[3, 2].Value = "Tên chuyên ngành";
 
                 foreach (var item in specializeds)

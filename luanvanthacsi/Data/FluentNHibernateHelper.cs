@@ -1,7 +1,6 @@
 ﻿using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using luanvanthacsi.Data.Entities;
-using Microsoft.IdentityModel.Protocols;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using ISession = NHibernate.ISession;
@@ -22,8 +21,8 @@ namespace luanvanthacsi.Data
         {
             try
             {
-                string connectionString = "Data Source=LAPTOP-EHJCF543\\SQLEXPRESS;Initial Catalog=luanvanthacsi;User ID=sa;Password=123456;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-                //string connectionString = "Data Source=172.16.10.59,1499;Initial Catalog=thesis;User ID=hrm;Password=hrm123456aA@;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+                //string connectionString = "Data Source=LAPTOP-EHJCF543\\SQLEXPRESS;Initial Catalog=luanvanthacsi;User ID=sa;Password=123456;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+                string connectionString = "Data Source=172.16.10.59,1499;Initial Catalog=thesis;User ID=hrm;Password=hrm123456aA@;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
 
                 var sessionFactory = Fluently.Configure().Database(MsSqlConfiguration.MsSql2012.
