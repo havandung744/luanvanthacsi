@@ -38,12 +38,18 @@
 
     protected async override Task OnInitializedAsync()
     {
+        //string id = await getUserId();
         _browserService.WindowSizeChanged += e => WindowSizeChanged(e);
         browserServiceRef = DotNetObjectReference.Create(_browserService);
         var user = (await AuthStat).User;
         if (user == null || !user.Identity.IsAuthenticated)
         {
             NavigationManager.NavigateTo($"Identity/Account/Login");
+        }
+        else
+        {
+            var UserId = user.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value;
+            sessionData.CurrentUser = await UserService.GetUserByIdAsync(UserId);
         }
         await base.OnInitializedAsync();
     }
@@ -52,10 +58,8 @@
     {
         if (firstRender)
         {
-            string id = await getUserId();
             WindowSizeChanged(await _browserService.GetDimensions());
             await _browserService.BindBrowserDimensionChange(browserServiceRef);
-            sessionData.CurrentUser = await UserService.GetUserByIdAsync(id);
         }
     }
 
