@@ -1,23 +1,4 @@
-﻿using AntDesign;
-using AntDesign.TableModels;
-using AutoMapper;
-using FluentNHibernate.Conventions;
-using luanvanthacsi.Data.Components;
-using luanvanthacsi.Data.Data;
-using luanvanthacsi.Data.Entities;
-using luanvanthacsi.Data.Extentions;
-using luanvanthacsi.Data.Services;
-using luanvanthacsi.Excel;
-using luanvanthacsi.Excel.ClassExcel;
-using luanvanthacsi.Models;
-using luanvanthacsi.Ultils;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using System.Data;
-//using LightInject;
+﻿//using LightInject;
 
 namespace luanvanthacsi.Pages.AdminPages.StudentPages
 {
