@@ -170,10 +170,12 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 if (studentObj1 != null)
                 {
                     item.InstructorNameOne = studentObj1?.Name;
+                    item.InstructorCodeOne = studentObj1?.Code;
                 }
                 if (studentObj2 != null)
                 {
                     item.InstructorNameTwo = studentObj2?.Name;
+                    item.InstructorCodeTwo = studentObj2?.Code;
                 }
                 if (specialized != null)
                 {
@@ -372,11 +374,11 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                     student.PhoneNumber = result.Rows[i][nameof(Student.PhoneNumber)].IsNotNullOrEmpty() ? result.Rows[i][nameof(student.PhoneNumber)].ToString() : student.PhoneNumber;
                     foreach (var item in scientists)
                     {
-                        if (item.Code == result.Rows[i][nameof(Student.InstructorIdOne)].ToString())
+                        if (item.Code == GetStudentCode(result.Rows[i][nameof(Student.InstructorIdOne)].ToString()))
                         {
                             student.InstructorIdOne = item.Id;
                         }
-                        if (item.Code == result.Rows[i][nameof(Student.InstructorIdTwo)].ToString())
+                        if (item.Code == GetStudentCode(result.Rows[i][nameof(Student.InstructorIdTwo)].ToString()))
                         {
                             student.InstructorIdTwo = item.Id;
                         }
@@ -508,9 +510,16 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                             {
                                 item.stt = stt;
                                 stt++;
+                                if (item.InstructorCodeOne?.IsNotNullOrEmpty() == true && item.InstructorNameOne?.IsNotNullOrEmpty() == true)
+                                {
+                                    item.InstructorIdOne = item.InstructorCodeOne + "-" + item.InstructorNameOne;
+                                }
+                                if (item.InstructorCodeTwo?.IsNotNullOrEmpty() == true && item.InstructorNameTwo?.IsNotNullOrEmpty() == true)
+                                {
+                                    item.InstructorIdTwo = item.InstructorCodeTwo + "-" + item.InstructorNameTwo;
+                                }
+                                ExcelExporter.WriteToSheet(studentExportExcels, wSheet, Sheets.First());
                             }
-
-                            ExcelExporter.WriteToSheet(studentExportExcels, wSheet, Sheets.First());
                         }
                         else
                         {
@@ -576,7 +585,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 foreach (var item in scientists)
                 {
                     wSheet2.Cells[i, 1].Style.Font.Size = 11;
-                    wSheet2.Cells[i, 1].Value = item.Code;
+                    wSheet2.Cells[i, 1].Value = item.Code + "-" + item.Name;
                     wSheet2.Cells[i, 2].Value = item.Name;
                     i++;
                 }
@@ -590,5 +599,12 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             await localStorage.SetItemAsync("facultyIdOfStudent", facultyId);
             await LoadAsync();
         }
+
+        string GetStudentCode(string input)
+        {
+            string[] code = input.Split("-");
+            return code[0].ToString();
+        }
+
     }
 }
