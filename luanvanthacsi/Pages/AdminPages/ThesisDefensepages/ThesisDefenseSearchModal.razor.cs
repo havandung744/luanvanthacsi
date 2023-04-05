@@ -8,7 +8,6 @@ using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
@@ -28,35 +27,31 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         [Parameter] public bool MultipleSelect { get; set; }
         [Parameter] public EventCallback<ThesisDefenseData> ValueChanged { get; set; }
         [Parameter] public EventCallback<List<ThesisDefenseData>> ListSelectedChanged { get; set; }
-        private IEnumerable<StudentData> _selectedRows;
         [Parameter] public EventCallback CancelChanged { get; set; }
         [Parameter] public EventCallback ChangeStudentList { get; set; }
-        List<StudentData> studentDatas { get; set; } = new List<StudentData>();
+        List<StudentData> studentDatas { get; set; }
         string currentThesisDefenseId;
         Table<StudentData>? table;
         StudentData? selectData;
-        List<string> ListSelectedIds = new();
         IEnumerable<StudentData>? selectedRows;
         string facultyId { get; set; }
+        List<StudentData> listStudentThenIds { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
             studentDatas = new();
+            listStudentThenIds = new();
         }
-       
+
         async Task HandleOk()
         {
-            if (ListSelectedIds.Count > 0)
+            if (selectedRows?.Any() == true)
             {
                 List<Student> convert = new List<Student>();
-                List<StudentData> listStudentThenIds = new List<StudentData>();
-                foreach (string item in ListSelectedIds)
+                listStudentThenIds.Clear();
+                foreach (var item in selectedRows)
                 {
-                    var student = studentDatas.Where(x => x.Id == item).FirstOrDefault();
-                    if (student != null)
-                    {
-                        listStudentThenIds.Add(student);
-                    }
+                    listStudentThenIds.Add(item);
                 }
                 if (listStudentThenIds.Count == 0)
                 {
@@ -100,25 +95,24 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             studentDatas.Clear();
             // lấy dữ liệu học viên chưa đăng ký đợt bảo vệ
             List<Student> students = new List<Student>();
-            if (SessionData?.CurrentUser.FacultyId != null)
+            if (SessionData.CurrentUser?.FacultyId != null)
             {
                 students = await StudentService.GetAllByIdAsync(SessionData.CurrentUser.FacultyId);
             }
             else
             {
-                try
-                {
-                    facultyId = await localStorage.GetItemAsync<string>("facultyIdOfThesisDefense");
-                }
-                catch
-                {
-                    facultyId = null;
-                }
+                facultyId = await localStorage.GetItemAsync<string>("facultyIdOfThesisDefense");
                 students = await StudentService.GetAllByIdAsync(facultyId);
             }
             // hiển thị dữ liệu mới nhất lên đầu trang
             var list = students.Where(x => x.ThesisDefenseId == null).OrderByDescending(x => x.UpdateDate).ThenByDescending(x => x.UpdateDate).ToList();
             studentDatas = _mapper.Map<List<StudentData>>(list);
+            int stt = 1;
+            foreach (var student in studentDatas)
+            {
+                student.stt = stt;
+                stt++;
+            }
         }
 
         void ChangeModalVisible()
@@ -142,7 +136,6 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
                     ids.Add(selectData.Id);
                 }
                 table?.SetSelection(ids.ToArray());
-                ListSelectedIds = ids;
             }
             catch (Exception)
             {

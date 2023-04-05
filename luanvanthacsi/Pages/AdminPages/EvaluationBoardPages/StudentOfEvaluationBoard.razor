@@ -5,8 +5,8 @@
 <PageTitle>Quản lý học viên</PageTitle>
 <br />
 <Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
-       TItem="StudentData" ScrollX="1350"
-       @bind-SelectedRows="selectedRows">
+       TItem="StudentData" ScrollX="1350" Size=@TableSize.Small
+       @bind-SelectedRows="selectedRows"> 
     <ChildContent>
         <Selection Key="@context.Id" Type="radio" Fixed="left" Width="50"></Selection>
         <Column @bind-Field="context.stt" Width="100" Sortable Fixed="left"></Column>

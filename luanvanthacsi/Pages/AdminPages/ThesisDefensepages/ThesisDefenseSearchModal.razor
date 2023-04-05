@@ -5,7 +5,7 @@
        OnCancel="ChangeModalVisible">
     <Row>
         <Table @ref="table" TItem="StudentData" DataSource="studentDatas" Locale="TableLocale"
-               OnRowClick="OnRowClick"
+               OnRowClick="OnRowClick" Size=@TableSize.Small
                @bind-SelectedRows="selectedRows">
             <Selection Key="@context.Id" Width="50" Fixed="true" />
             <Column @bind-Field="@context.stt" Width="50" Fixed="true"></Column>

@@ -4,10 +4,11 @@
 <Row Gutter="8">
     <AntDesign.Col Span="24">
         <Button Icon="plus" OnClick="AddListThesisDefenseAsync" Color="Color.Green7">Chọn học viên</Button>
-    </AntDesign.Col> 
+    </AntDesign.Col>
     <br />
     <AntDesign.Col Span="24">
-        <Table Context="tableContext" TItem="StudentData" DataSource="@studentDatas" Class="table-striped" ScrollY="300">
+        <Table Context="tableContext" TItem="StudentData" DataSource="@studentDatas" Class="table-striped" ScrollY="600"
+               Size=@TableSize.Small>
             <Column @bind-Field="@tableContext.Code" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.Name" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.Email" Ellipsis="true"></Column>
