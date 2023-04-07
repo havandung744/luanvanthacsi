@@ -50,7 +50,7 @@
                         }
                         else
                         {
-                            <strong> @selectedRows.Count()</strong> <span>nhân viên?</span>
+                            <strong> @selectedRows.Count()</strong> <span>Học viên?</span>
                         }
                     </TitleTemplate>
                 </Popconfirm>
@@ -127,5 +127,5 @@
                  IsCustomTemplateFile="true" CustomTemplateFileChange="GetTemplateFileAsync" />
 
 <Modal Title="@("Thông báo")" Visible="existModalVisible" OnOk="SaveAndUpdateAsync" OnCancel="CancelImport">
-    <p>Danh sách gồm những mã nhân viên đã tồn tại trên hệ thống? Bạn có muốn cập nhật không?</p>
+    <p>Danh sách gồm những mã học viên đã tồn tại trên hệ thống? Bạn có muốn cập nhật không?</p>
 </Modal>
