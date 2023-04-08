@@ -128,7 +128,8 @@ namespace luanvanthacsi.Areas.Identity.Pages.Account.Manage
                     "Confirm your email",
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                //StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "Tính năng gửi email đang phát triển.";
                 return RedirectToPage();
             }
 
