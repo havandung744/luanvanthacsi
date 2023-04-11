@@ -2,10 +2,9 @@
 @using luanvanthacsi.Data.Data;
 @using System.ComponentModel;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
-<PageTitle>Quản lý học viên</PageTitle>
 <br />
-<Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale"
-       TItem="StudentData" ScrollX="1350" ScrollY="600" Size=@TableSize.Small PageSize="1000" HidePagination
+<Table @ref="table" DataSource="studentDatas" Loading="loading" Locale="TableLocale" ScrollBarWidth="5px"
+       TItem="StudentData" ScrollX="1500" ScrollY="600" Size=@TableSize.Small PageSize="1000" HidePagination
        @bind-SelectedRows="selectedRows">
     <Selection Key="@context.Id" Type="radio" Fixed="left" Width="50"></Selection>
     <Column @bind-Field="context.stt" Width="100" Sortable Fixed="left"></Column>

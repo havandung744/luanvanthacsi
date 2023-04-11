@@ -2,7 +2,6 @@
 @using luanvanthacsi.Data.Data;
 @using System.ComponentModel;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
-<PageTitle>Quản lý nhà khoa học</PageTitle>
 
 <Table @ref="table" DataSource="scientistDatas" Loading="loading" Locale="TableLocale"
        TItem="ScientistData" ScrollX="1350" Size=@TableSize.Small PageSize="1000" HidePagination
