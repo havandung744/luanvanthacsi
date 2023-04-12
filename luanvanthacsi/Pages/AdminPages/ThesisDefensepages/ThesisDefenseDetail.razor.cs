@@ -4,7 +4,6 @@ using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
 {
@@ -30,6 +29,8 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
         {
             currentThesisDefense = id;
             studentDatas = _mapper.Map<List<StudentData>>(students);
+            int stt = 1;
+            studentDatas.ForEach(x => { x.stt = stt++; });
             StateHasChanged();
         }
         public void Close()
@@ -52,6 +53,8 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
             }
             var list = students.OrderByDescending(x => x.CreateDate).ToList();
             studentDatas = _mapper.Map<List<StudentData>>(list);
+            int stt = 1;
+            studentDatas.ForEach(x => { x.stt = stt++; });
             StateHasChanged();
         }
 

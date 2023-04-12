@@ -7,12 +7,14 @@
         <Table @ref="table" TItem="StudentData" DataSource="studentDatas" Locale="TableLocale"
                OnRowClick="OnRowClick" Size=@TableSize.Small
                @bind-SelectedRows="selectedRows">
-            <Selection Key="@context.Id" Width="50" Fixed="true" />
-            <Column @bind-Field="@context.stt" Width="50" Fixed="true"></Column>
-            <Column @bind-Field="@context.Code" Ellipsis="true" Width="150" Fixed="true"></Column>
-            <Column @bind-Field="@context.Name" Ellipsis="true" Width="200" Fixed="true"></Column>
-            <Column @bind-Field="@context.Email" Ellipsis="true" Width="200"></Column>
-            <Column @bind-Field="@context.PhoneNumber" Ellipsis="true" Width="200"></Column>
+            <Selection Key="@context.Id" Fixed="true" />
+            <Column @bind-Field="@context.stt" Fixed="true"></Column>
+            <Column @bind-Field="@context.Code" Ellipsis="true" Fixed="true"></Column>
+            <Column @bind-Field="@context.Name" Ellipsis="true" Fixed="true"></Column>
+            <Column @bind-Field="@context.Email" Ellipsis="true"></Column>
+            <Column @bind-Field="@context.PhoneNumber" Ellipsis="true"></Column>
+            <Column @bind-Field="@context.DateOfBirth" Format="dd/MM/yyyy" Ellipsis="true"></Column>
+            <Column @bind-Field="@context.TopicName" Ellipsis="true"></Column>
         </Table>
     </Row>
 

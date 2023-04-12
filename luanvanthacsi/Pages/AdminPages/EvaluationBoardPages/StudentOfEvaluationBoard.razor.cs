@@ -20,6 +20,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         [CascadingParameter] public SessionData SessionData { get; set; }
         [Parameter] public string EvaluationBoardCode { get; set; }
+        [Parameter] public bool CheckIsAdd { get; set; }
         List<StudentData>? studentDatas { get; set; }
         IEnumerable<StudentData> selectedRows;
         StudentData? selectData;
