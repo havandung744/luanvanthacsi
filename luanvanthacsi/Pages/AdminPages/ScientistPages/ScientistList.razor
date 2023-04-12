@@ -98,7 +98,7 @@
             }
         </Column>
         <Column @bind-Field="context.Degree"></Column>
-        
+
         <ActionColumn Title="Thao tác" Width="80">
             <ChildContent>
                 <Row>
@@ -123,6 +123,9 @@
             </ChildContent>
         </ActionColumn>
     </ChildContent>
+    <TitleTemplate>
+        <TableFilterTagRow @ref="tableFilterTagRow" TItem="ScientistData" HasSelectionColumn></TableFilterTagRow>
+    </TitleTemplate>
     <PaginationTemplate>
         <PaginationCustom Context="context"></PaginationCustom>
     </PaginationTemplate>
