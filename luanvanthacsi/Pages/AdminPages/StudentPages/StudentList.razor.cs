@@ -551,7 +551,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
 
             if (specializeds?.Any() == true)
             {
-                wSheet1 = package.Workbook.Worksheets["ChuyenNghanh"];
+                wSheet1 = package.Workbook.Worksheets["ChuyenNganh"];
                 wSheet1.Row(3).Height = 20;
                 wSheet1.Row(3).Style.Font.Bold = true;
                 int i = 4;
