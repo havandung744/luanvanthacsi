@@ -232,7 +232,7 @@ namespace luanvanthacsi.Pages.AdminPages.ThesisDefensepages
                 }
                 else
                 {
-                    StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(SessionData?.CurrentUser.FacultyId, data.Id).Result;
+                    StudentOfthesisDefense = ThesisDefenseService.GetCurrentListStaff(SessionData?.CurrentUser?.FacultyId, data.Id).Result;
                 }
                 ThesisDefenseDetail.loadData(StudentOfthesisDefense, data.Id);
                 visibleForDetail = true;

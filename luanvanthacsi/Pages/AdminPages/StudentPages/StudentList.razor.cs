@@ -57,6 +57,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         List<ExcelSheetObject> Sheets { get; set; }
         List<Specialized> specializeds = new List<Specialized>();
         List<Scientist> scientists = new List<Scientist>();
+        TableFilterTagRow<StudentData> tableFilterTagRow;
 
         void ImportExcelCancel(bool val)
         {

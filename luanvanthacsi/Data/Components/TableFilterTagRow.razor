@@ -1,0 +1,23 @@
+﻿@using luanvanthacsi.Models;
+@typeparam TItem
+@if (HasFilterValue)
+{
+    <Row>
+        <AntDesign.Col Span="22">
+            @foreach (var tag in sortFilterTags)
+            {
+                @if (tag.Type == SortFilterTagType.Sort)
+                {
+                    <Tag @key="tag" Closable Color="success" Icon=@("sort-" + @tag.Direction + "ing") OnClose="() => CloseTag(tag)">@tag.SortText</Tag>
+                }
+                else
+                {
+                    <Tag @key="tag" Closable Color="processing" OnClose="() => CloseTag(tag)">@tag.FilterText</Tag>
+                }
+            }
+        </AntDesign.Col>
+        <AntDesign.Col Span="2" Class="flex-end-end">
+            <Button Type="@ButtonType.Primary" Size=@ButtonSize.Small OnClick="CLearFilter">Xóa lọc</Button>
+        </AntDesign.Col>
+    </Row>
+}

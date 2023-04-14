@@ -9,19 +9,20 @@
     <AntDesign.Col Span="24">
         <Table Context="tableContext" TItem="StudentData" DataSource="@studentDatas" Class="table-striped" ScrollY="600"
                Size=@TableSize.Small>
+            <Column @bind-Field="@tableContext.stt" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.Code" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.Name" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.Email" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.PhoneNumber" Ellipsis="true"></Column>
-            <Column @bind-Field="@tableContext.DateOfBirth" Format="dd/mm/yyyy" Ellipsis="true"></Column>
+            <Column @bind-Field="@tableContext.DateOfBirth" Format="dd/MM/yyyy" Ellipsis="true"></Column>
             <Column @bind-Field="@tableContext.TopicName" Ellipsis="true"></Column>
-            <ActionColumn Ellipsis="true">
-                <Popconfirm Placement="Placement.LeftBottom" Title="Bạn có chắc chắn muốn xóa dữ liệu đã chọn?"
-                            OnConfirm="() => RemoveThesisDefense(tableContext)"
-                            OkText="Đồng ý"
-                            CancelText="Hủy">
-                    <Button Icon="close" Type="@ButtonType.Primary" Danger>Xóa</Button>
-                </Popconfirm>
+            <ActionColumn Ellipsis="true" Title="Thao tác">
+                @*<Popconfirm Placement="Placement.LeftBottom" Title="Bạn có chắc chắn muốn xóa dữ liệu đã chọn?"
+                OnConfirm="() => RemoveThesisDefense(tableContext)"
+                OkText="Đồng ý"
+                CancelText="Hủy">*@
+                <Button Icon="close" Type="@ButtonType.Primary" OnClick="() => RemoveThesisDefense(tableContext)" Danger>Xóa</Button>
+                @*</Popconfirm>*@
             </ActionColumn>
         </Table>
     </AntDesign.Col>

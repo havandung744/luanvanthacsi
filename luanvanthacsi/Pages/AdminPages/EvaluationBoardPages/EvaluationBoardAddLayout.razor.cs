@@ -24,6 +24,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         List<string> selectedScientistIds;
         private string activeTab = "1";
         string idUpdate = "";
+        bool checkIsAdd;
 
         protected override async Task OnInitializedAsync()
         {
@@ -247,6 +248,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
         {
             try
             {
+                checkIsAdd = false;
                 idUpdate = data.Id;
                 // lấy danh sách id phản biện
                 List<string> CounterattackerIds = new List<string>();
@@ -281,6 +283,7 @@ namespace luanvanthacsi.Pages.AdminPages.EvaluationBoardPages
 
         public async Task LoadAddAsync()
         {
+            checkIsAdd = true;
             await StudentOfEvaluationBoardRef.LoadAsync();
             await PresidentRef.LoadAsync();
             await CounterattackerRef.LoadAsync();

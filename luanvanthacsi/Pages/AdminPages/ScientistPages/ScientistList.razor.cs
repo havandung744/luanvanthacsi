@@ -9,7 +9,6 @@ using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
 using luanvanthacsi.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 
 namespace luanvanthacsi.Pages.AdminPages.ScientistPages
@@ -39,6 +38,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         List<Specialized> specializedList { get; set; }
         string facultyId;
         string value;
+        TableFilterTagRow<ScientistData> tableFilterTagRow;
 
         protected override async Task OnInitializedAsync()
         {
@@ -119,7 +119,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
         {
             string check = data.Id;
             var resultAdd = await ScientistService.AddOrUpdateScientist(data);
-            if(resultAdd == true)
+            if (resultAdd == true)
             {
                 if (check.IsNotNullOrEmpty())
                 {
@@ -142,7 +142,7 @@ namespace luanvanthacsi.Pages.AdminPages.ScientistPages
                     Notice.NotiSuccess("Thêm dữ liệu thất bại.");
                 }
             }
-            
+
         }
 
         void OnClose()

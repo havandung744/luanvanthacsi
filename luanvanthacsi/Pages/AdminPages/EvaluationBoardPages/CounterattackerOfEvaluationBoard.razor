@@ -3,12 +3,12 @@
 @using System.ComponentModel;
 @attribute [Authorize(Roles = "Admin,Bcnkhoa")]
 
-<Table @ref="table" DataSource="scientistDatas" Loading="loading" Locale="TableLocale"
-       TItem="ScientistData" ScrollX="1350" Size=@TableSize.Small PageSize="1000" HidePagination
-       @bind-SelectedRows="selectedRows">
+<Table @ref="table" DataSource="scientistDatas" Loading="loading" Locale="TableLocale" ScrollBarWidth="5px"
+       TItem="ScientistData" ScrollX="1350" ScrollY="600" Size=@TableSize.Small PageSize="1000" HidePagination
+       Bordered @bind-SelectedRows="selectedRows">
     @if (!SelectedScientistIds.Contains(context.Id))
     {
-        <Selection Key="@context.Id" Fixed="left" Width="50"></Selection>
+        <Selection Key="@context.Id"></Selection>
         <Column @bind-Field="context.Code" Filterable Sortable></Column>
         <Column @bind-Field="context.Name" Filterable Sortable></Column>
         <Column @bind-Field="context.Email" Filterable></Column>
