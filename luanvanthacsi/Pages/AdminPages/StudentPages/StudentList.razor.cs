@@ -74,7 +74,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
             try
             {
                 var fileBase64 = Convert.ToBase64String(GenerateTemplateExcel());
-                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "-DanhMucChucDanh" + "" + ".xlsx", fileBase64);
+                JSRuntime.SaveAsFile(DateTime.Now.ToString("ddMMyyyy") + "-DanhSachHocVien" + "" + ".xlsx", fileBase64);
             }
             catch (Exception)
             {
@@ -334,7 +334,7 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
         }
         public string GetFileMauUrl()
         {
-            return "/template/DanhMucChucDanh.xlsx";
+            return "/template/DanhSachHocVien.xlsx";
         }
 
         async Task ShowImport()

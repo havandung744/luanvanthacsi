@@ -4,6 +4,7 @@ using luanvanthacsi.Data.Data;
 using luanvanthacsi.Data.Entities;
 using luanvanthacsi.Data.Extentions;
 using luanvanthacsi.Data.Services;
+using luanvanthacsi.Models;
 using luanvanthacsi.Pages.AdminPages.ScientistPages;
 using luanvanthacsi.Pages.AdminPages.StudentPages;
 using luanvanthacsi.Pages.AdminPages.ThesisDefensepages;
@@ -26,6 +27,7 @@ namespace luanvanthacsi.Pages
         [Inject] IFacultyService FacultyService { get; set; }
         [Inject] IUserService UserService { get; set; }
         [Inject] AuthenticationStateProvider _authenticationStateProvider { get; set; }
+        [Inject] Blazored.LocalStorage.ILocalStorageService localStorage { get; set; }
         List<StaffTypeViewModel> DataStatisticalScient { get; set; } = new List<StaffTypeViewModel>();
         User CurrentUser;
         object[] data2 { get; set; } = new object[100];
@@ -42,6 +44,13 @@ namespace luanvanthacsi.Pages
         string facultyIdOfStudent;
         protected override async Task OnInitializedAsync()
         {
+            try
+            {
+                facultyIdOfStudent = await localStorage.GetItemAsync<string>("facultyIdOfStudent");
+            }
+            catch
+            {
+            }
             string id = await getUserId();
             CurrentUser = await UserService.GetUserByIdAsync(id);
             DataStatisticalScient = new() { };
