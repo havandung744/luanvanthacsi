@@ -420,12 +420,12 @@ namespace luanvanthacsi.Pages.AdminPages.StudentPages
                 }
                 if (save == true)
                 {
-                    Notice.NotiSuccess("Thêm mới và cập nhật danh sách học viên từ Excel thành công.");
+                    Notice.NotiSuccess("Thêm mới, cập nhật danh sách học viên từ Excel thành công.");
                     await LoadAsync();
                 }
                 else
                 {
-                    Notice.NotiWarning("Thêm mới và cập nhật danh sách học viên từ Excel thất bại.");
+                    Notice.NotiWarning("Thêm mới, cập nhật danh sách học viên từ Excel thất bại.");
                 }
                 existModalVisible = false;
             }

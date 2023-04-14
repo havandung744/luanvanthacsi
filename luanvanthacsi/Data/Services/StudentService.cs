@@ -100,12 +100,14 @@ namespace luanvanthacsi.Data.Services
                                 {
                                     student.DateOfBirth = null;
                                 }
+                                exist.UpdateDate = DateTime.Now;
                                 exist.Code = student.Code;
                                 exist.Name = student.Name;
                                 exist.DateOfBirth = student.DateOfBirth;
                                 exist.Email = student.Email;
                                 exist.PhoneNumber = student.PhoneNumber;
                                 exist.TopicName = student.TopicName;
+                                exist.SpecializedId = student.SpecializedId;    
                                 exist.InstructorIdOne = student.InstructorIdOne;
                                 exist.InstructorIdTwo = student.InstructorIdTwo;
                                 await session.MergeAsync(exist);
